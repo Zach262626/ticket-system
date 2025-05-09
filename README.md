@@ -9,4 +9,10 @@
 -   php artisan migrate:fresh and php artisan db:seed
 -   run php artisan reverb:start, php artisan queue:work, php artisan queue:work --queue=broadcast, npm run dev
 
+## How to install Laravel Sail
 
+-   Download Docker for desktop
+-   if on window Download WSL if on window and run these command on ubuntu
+-   run php artisan sail:install
+-   run wsl
+-   cd to project file (cd /mnt/c/wamp64/www/htdocs/ticket-system)
