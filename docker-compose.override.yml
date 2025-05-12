@@ -1,9 +1,10 @@
 services:
-  phpmyadmin:
-   image: 'phpmyadmin:latest'
-   ports:
-      - 8080:80
-   networks:
-      - sail
-   environment:
-      - PMA_ARBITRARY=1
+   phpmyadmin:
+      image: 'phpmyadmin:latest'
+      ports:
+         - 8080:80
+      networks:
+         - sail
+      environment:
+         - PMA_ARBITRARY=1
+  
