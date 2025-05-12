@@ -39,6 +39,6 @@ class EventBroadcastTest implements ShouldBroadcast
      */
     public function broadcastQueue(): string
     {
-        return 'default';
+        return 'broadcast';
     }
 }
