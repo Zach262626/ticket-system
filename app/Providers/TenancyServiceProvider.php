@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use \Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -103,6 +104,9 @@ class TenancyServiceProvider extends ServiceProvider
         $this->mapRoutes();
 
         $this->makeTenancyMiddlewareHighestPriority();
+        InitializeTenancyByDomain::$onFail = function () {
+            return redirect('https://localhost/');
+        };
     }
 
     protected function bootEvents()
