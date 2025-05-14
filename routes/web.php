@@ -14,5 +14,13 @@ foreach (config('tenancy.central_domains') as $domain) {
             broadcast(new EventBroadcastTest());
             return redirect('/');
         });
+        Route::get('/login', function () {
+            broadcast(new EventBroadcastTest());
+            return redirect('/');
+        })->name('login');
+        Route::get('/register', function () {
+            broadcast(new EventBroadcastTest());
+            return redirect('/');
+        })->name('register');
     });
 }
