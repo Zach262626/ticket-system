@@ -1,12 +1,48 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-## How to install Project
+# Laravel 12 Multi-Tenant Support Ticket System
 
--   Clone Project
--   copy env.example add a empty local database
--   Setup virtual host
--   run npm install and composer install
--   php artisan migrate:fresh and php artisan db:seed
--   run php artisan reverb:start, php artisan queue:work, php artisan queue:work --queue=broadcast, npm run dev
+[![laravel](https://img.shields.io/badge/Github_repository-000?style=for-the-badge&logoColor=white)](https://github.com/Zach262626/broadcast-project)
 
 
+
+
+
+
+## Packages
+
+ - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+ - [Laravel Sail](https://laravel.com/docs/12.x/sail)
+ - [Laravel Telescope](https://laravel.com/docs/12.x/telescope)
+ - [Laravel Horizon](https://laravel.com/docs/12.x/horizon)
+ - [Laravel Broadcasting](https://laravel.com/docs/12.x/broadcasting)
+ - [Laravel Reverb](https://laravel.com/docs/12.x/reverb)
+ - [Stancl/Tenancy](https://tenancyforlaravel.com/)
+
+
+## Installation
+
+-   Clone this Repository
+    
+
+        git clone https://github.com/Zach262626/ticket-system.git
+-   Create .env file from .env.example and fill in all field required
+-   Install Dependencies
+        
+        npm install
+        composer install
+-   Build frontend
+
+        npm run dev
+-   install docker desktop
+-   if on window, install wsl. inside docker resources in option enable wsl. Make sure your project runs directly inside wsl
+
+-   alias sail for easier workflow, create an alias:
+
+        alias sail='[ -f sail ] && sh sail || sh vendor/bin/sail'
+-   start environment:
+        
+        sail up -d
+-   migrate
+
+        sail artisan migrate
+        sail artisan storage:link
