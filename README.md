@@ -1,4 +1,5 @@
 
+
 # Laravel 12 Multi-Tenant Support Ticket System
 
 [![laravel](https://img.shields.io/badge/Github_repository-000?style=for-the-badge&logoColor=white)](https://github.com/Zach262626/broadcast-project)
@@ -34,6 +35,29 @@
 
         npm run dev
 -   install docker desktop
+-   create tenant
+
+        <?php
+
+        namespace App\Models;
+
+        use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
+        use Stancl\Tenancy\Contracts\TenantWithDatabase;
+        use Stancl\Tenancy\Database\Concerns\HasDatabase;
+        use Stancl\Tenancy\Database\Concerns\HasDomains;
+
+        class Tenant extends BaseTenant implements            TenantWithDatabase
+        {
+            use HasDatabase, HasDomains;
+        }
+-   All your route file should be inside this function located in routes/web:
+
+
+        foreach (config('tenancy.central_domains') as $domain) {
+            Route::domain($domain)->group(function () {
+                // your actual routes
+            });
+        }
 -   if on window, install wsl. inside docker resources in option enable wsl. Make sure your project runs directly inside wsl
 
 -   alias sail for easier workflow, create an alias:
@@ -46,3 +70,4 @@
 
         sail artisan migrate
         sail artisan storage:link
+
