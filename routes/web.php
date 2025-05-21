@@ -15,10 +15,10 @@ foreach (config('tenancy.central_domains') as $domain) {
             return redirect('/');
         });
         Route::get('/login', function () {
-            return redirect('/');
+            return view('auth.login');
         })->name('login');
         Route::get('/register', function () {
-            return redirect('/');
+            return view('auth.register');
         })->name('register');
     });
 }
