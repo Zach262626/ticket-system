@@ -28,4 +28,8 @@ Route::middleware([
         User::factory()->create();
         return view('welcome')->with(['tenant_id' => tenant('id'),]);
     });
+
+    Route::get('auth/password/reset', function () {
+        return view('auth.passwords.reset');
+    })->name('password.request');
 });
