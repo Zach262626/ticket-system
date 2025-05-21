@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
         $tenant2 = Tenant::query()->create([
             'id' => 'bar',
         ]);
-
+        
         $tenant->domains()->create([
             'domain' => 'foo.localhost',
         ]);

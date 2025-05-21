@@ -7,7 +7,7 @@ foreach (config('tenancy.central_domains') as $domain) {
     Route::domain($domain)->group(function () {
 
         Route::get('/', function () {
-            return view('welcome');
+            return view('home');
         });
 
         Route::get('/test', function () {
@@ -15,11 +15,9 @@ foreach (config('tenancy.central_domains') as $domain) {
             return redirect('/');
         });
         Route::get('/login', function () {
-            broadcast(new EventBroadcastTest());
             return redirect('/');
         })->name('login');
         Route::get('/register', function () {
-            broadcast(new EventBroadcastTest());
             return redirect('/');
         })->name('register');
     });
