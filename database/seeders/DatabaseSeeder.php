@@ -18,10 +18,10 @@ class DatabaseSeeder extends Seeder
     {
         DB::statement("DROP DATABASE IF EXISTS ticket_system_tenant_foo");
         DB::statement("DROP DATABASE IF EXISTS ticket_system_tenant_bar");
-        $tenant = Tenant::query()->create([
+        $tenant = Tenant::create([
             'id' => 'foo',
         ]);
-        $tenant2 = Tenant::query()->create([
+        $tenant2 = Tenant::create([
             'id' => 'bar',
         ]);
 
