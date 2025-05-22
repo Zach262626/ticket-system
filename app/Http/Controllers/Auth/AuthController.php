@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,7 +23,7 @@ class AuthController extends Controller
         $fields = $request->validate([
             "name" => ['required', 'max:255'],
             "email" => ['required', 'max:255', 'email'],
-            "password" => ['required', 'max:255', 'min:8']
+            "password" => ['required', 'max:255', 'min:8'],
         ]);
         $user = User::create($fields);
         Auth::login($user);

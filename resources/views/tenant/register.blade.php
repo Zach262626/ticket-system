@@ -3,7 +3,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12 p-5">
-                <x-forms.auth :type="'User'" :login="false" />
+                <x-forms.auth :type="'Tenant'" :login="false" />
             </div>
 
         </div>

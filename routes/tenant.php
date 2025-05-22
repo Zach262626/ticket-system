@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
@@ -26,8 +26,10 @@ Route::middleware([
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
-    Route::get('/login', [LoginController::class, 'showLogin'])->name('login')->name('index');
-    Route::get('/register', [RegisterController::class, 'showRegister'])->name('register')->name('index');
+    Route::get('/login', [LoginController::class, 'showLogin'])->name('login')->name('user-login');
+    Route::get('/register', [RegisterController::class, 'showRegister'])->name('register')->name('user-register');
+    Route::post('/login', [LoginController::class, 'login'])->name('login')->name('user-login');
+    Route::post('/register', [RegisterController::class, 'register'])->name('register')->name('user-register');
 
     Route::get('/', function () {
         return view('welcome')->with(['tenant_id' => tenant('id'),]);

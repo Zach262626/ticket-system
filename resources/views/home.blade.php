@@ -6,13 +6,12 @@
             <div class="col-md-12">
                 <h1>Welcome to the Home Page</h1>
                 @if (isset($tenant_id))
-                    <a href="{{ route('login') }}" class="btn btn-primary">Login</a>
-                    <a href="{{ route('register') }}" class="btn btn-secondary">Register</a>
+                    <a href="{{ route('user-login') }}" class="btn btn-primary">Login</a>
+                    <a href="{{ route('user-register') }}" class="btn btn-secondary">Register</a>
                 @else
-                    @foreach ($domains as $domain)
-                        <a href="{{ route('home', ['domain' => $domain['domain']]) }}"
-                            class="btn btn-primary">{{ $domain['domain'] }}</a>
-                    @endforeach
+                    <a href="{{ route('tenant-register') }}" class="btn btn-secondary">Register New Tenant</a>
+                    <a href="{{ route('tenant-login') }}" class="btn btn-primary">Login</a>
+
                 @endif
             </div>
 
