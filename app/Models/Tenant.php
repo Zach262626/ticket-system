@@ -16,15 +16,10 @@ class Tenant extends BaseTenant implements TenantWithDatabase
     {
         return [
             'id',
-            'tenancy_db_username',
-            'tenancy_db_password',
-            'tenancy_db_email',
         ];
     }
 
     protected $casts = [
-        'tenancy_db_email' => 'encrypted',
-        'tenancy_db_username' => 'encrypted',
-        'tenancy_db_password' => 'encrypted',
+
     ];
 }
