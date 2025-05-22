@@ -8,17 +8,25 @@ use App\Models\Tenant;
 
 class TenantController extends Controller
 {
-    public function test() {
-        $tenant = Tenant::create();
+    public function test()
+    {
+        $tenant = Tenant::create(
+            [
+                'id' => 'test' . uniqid(),
+            ]
+        );
+        $tenant->domains()->create([
+            'domain' => $tenant->id . '.localhost',
+        ]);
         return redirect()->route('home');
     }
     public function showRegister(Request $request)
     {
-        return view("tenant.register");
+        return view("auth.tenant.register");
     }
     public function showLogin(Request $request)
     {
-        return view("tenant.login");
+        return view("auth.tenant.login");
     }
     public function register(Request $request)
     {

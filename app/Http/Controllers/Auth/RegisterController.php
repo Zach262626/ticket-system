@@ -16,7 +16,7 @@ class RegisterController extends Controller
      */
     public function showRegister(Request $request)
     {
-        return view("auth.login");
+        return view("auth.user.login");
     }
     /**
      * register the user and login.
@@ -34,7 +34,4 @@ class RegisterController extends Controller
         Auth::login($user);
         return redirect()->route('home');
     }
-
-
-
 }

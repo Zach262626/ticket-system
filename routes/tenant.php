@@ -26,12 +26,12 @@ Route::middleware([
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
-    Route::get('/login', [LoginController::class, 'showLogin'])->name('login')->name('user-login');
-    Route::get('/register', [RegisterController::class, 'showRegister'])->name('register')->name('user-register');
-    Route::post('/login', [LoginController::class, 'login'])->name('login')->name('user-login');
-    Route::post('/register', [RegisterController::class, 'register'])->name('register')->name('user-register');
+    Route::get('login', [LoginController::class, 'showLogin'])->name('user-login');
+    Route::get('register', [RegisterController::class, 'showRegister'])->name('user-register');
+    Route::post('login', [LoginController::class, 'login'])->name('user-login');
+    Route::post('register', [RegisterController::class, 'register'])->name('user-register');
 
     Route::get('/', function () {
         return view('home')->with(['tenant_id' => tenant('id'),]);
-    });
+    })->name('home');
 });

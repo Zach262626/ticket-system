@@ -1,4 +1,5 @@
 <div class="mb-3 bg-light p-3 rounded">
+    <a href="{{ route('home') }}" class="btn btn btn-primary">Home</a>
     <h1 class="text-center">Login {{ $type }}</h1>
     @if($type == 'Tenant')
     @else

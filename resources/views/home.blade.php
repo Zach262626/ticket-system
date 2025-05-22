@@ -5,6 +5,7 @@
         <div class="row">
             <div class="col-md-12">
                 <h1>Welcome to the Home Page</h1>
+
                 @if (isset($tenant_id))
                     <a href="{{ route('user-login') }}" class="btn btn-primary">Login</a>
                     <a href="{{ route('user-register') }}" class="btn btn-secondary">Register</a>
