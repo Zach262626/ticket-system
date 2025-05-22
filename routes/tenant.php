@@ -32,6 +32,6 @@ Route::middleware([
     Route::post('/register', [RegisterController::class, 'register'])->name('register')->name('user-register');
 
     Route::get('/', function () {
-        return view('welcome')->with(['tenant_id' => tenant('id'),]);
+        return view('home')->with(['tenant_id' => tenant('id'),]);
     });
 });

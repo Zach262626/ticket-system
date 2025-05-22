@@ -4,9 +4,14 @@ namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Tenant;
 
 class TenantController extends Controller
 {
+    public function test() {
+        $tenant = Tenant::create();
+        return redirect()->route('home');
+    }
     public function showRegister(Request $request)
     {
         return view("tenant.register");

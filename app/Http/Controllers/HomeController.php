@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Domains;
+use App\Models\Domain;
 use App\Models\Tenant;
 use Illuminate\Http\Request;
 
@@ -17,7 +17,7 @@ class HomeController extends Controller
     {
         return view('home', [
             'tenants' => Tenant::all(),
-            'domains' => Domains::get('domain')->toArray()
+            'domains' => Domain::get('domain')->toArray()
         ]);
     }
 
