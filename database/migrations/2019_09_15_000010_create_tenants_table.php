@@ -19,6 +19,9 @@ class CreateTenantsTable extends Migration
             $table->string('id')->primary();
 
             // your custom columns may go here
+            $table->string('tenancy_db_username', 512)->nullable();
+            $table->string('tenancy_db_password', 512)->nullable();
+            $table->string('tenancy_db_email', 512)->nullable();
 
             $table->timestamps();
             $table->json('data')->nullable();

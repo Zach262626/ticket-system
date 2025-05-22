@@ -1,9 +1,11 @@
 <div class="mb-3 bg-light p-3 rounded">
-    <h1>Login {{ $type }}</h1>
+    <h1 class="text-center">Login {{ $type }}</h1>
     @if($type == 'Tenant')
     @else
-        <label for="exampleInputName" class="form-label">Name</label>
-        <input name='name' type="text" class="form-control" id="exampleInputName" aria-describedby="nameHelp">
+        <div class="mb-3">
+            <label for="exampleInputName" class="form-label">Name</label>
+            <input name='name' type="text" class="form-control" id="exampleInputName" aria-describedby="nameHelp">
+        </div>
     @endif
     <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Email address</label>
