@@ -1,0 +1,33 @@
+/* Change variables here */
+@import url("https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Dela+Gothic+One&display=swap");
+
+$font: 'Poppins', sans-serif;
+$primary: #009bdf;
+$secondary: #ffffff;
+$info: #777;
+$light: #ffffff;
+$dark: #1D2127;
+
+
+$font-family-base: "Arimo", sans-serif;
+
+$headings-font-family: "Arimo", sans-serif;
+
+$body-bg: #ECEDF0;
+
+$enable-transitions: "true";
+
+$enable-shadows: "true";
+
+// 1. Set the typed text color to a near-white
+$input-bg :hsl(0, 0%, 98%);
+// $input-color: $light;
+
+@import 'bootstrap/scss/bootstrap';
+
+/* Use variables here and import style sheets */
+@import '../css/app.css';
+
+.alpha {
+  color: $purple;
+}
