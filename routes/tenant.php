@@ -2,9 +2,12 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +26,9 @@ Route::middleware([
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
+    Route::get('/login', [LoginController::class, 'showLogin'])->name('login')->name('index');
+    Route::get('/register', [RegisterController::class, 'showRegister'])->name('register')->name('index');
+
     Route::get('/', function () {
         return view('welcome')->with(['tenant_id' => tenant('id'),]);
     });
