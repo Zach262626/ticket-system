@@ -1,7 +1,7 @@
 import './bootstrap';
 
 import "bootstrap";             // Bootstrap's JS (requires Popper internally)
-import "../css/app.css";        // Import your CSS (with Bootstrap included)
+import "../scss/app.scss";        // Import your SASS (with Bootstrap included)
 
 // Optional: enable Bootstrap tooltips globally
 document.addEventListener('DOMContentLoaded', () => {

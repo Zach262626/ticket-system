@@ -34,11 +34,12 @@
     </div>
     <div class="mb-3">
         <label for="InputPassword1" class="form-label">Password</label>
-        <input name="password" type="password" class="form-control" id="InputPassword1">
+        <input name="password" type="password" class="form-control" id="InputPassword1" value="ThisIsTemporary2025*">
     </div>
     <div class="mb-3">
         <label for="InputComfirmPassword1" class="form-label">Password Comfirmation</label>
-        <input name="password_comfirm" type="password" class="form-control" id="InputComfirmPassword1">
+        <input name="password_confirmation" type="password" class="form-control" id="InputComfirmPassword1"
+            value="ThisIsTemporary2025*">
     </div>
     {{-- <div class="mb-3 form-check">
         <input type="checkbox" class="form-check-input" id="Check1">
