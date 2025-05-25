@@ -107,18 +107,18 @@ class TenancyServiceProvider extends ServiceProvider
 
         $this->makeTenancyMiddlewareHighestPriority();
 
-        // // enable cache
-        // DomainTenantResolver::$shouldCache = true;
+        // enable cache
+        DomainTenantResolver::$shouldCache = true;
 
-        // // seconds, 3600 is the default value
-        // DomainTenantResolver::$cacheTTL = 3600;
+        // seconds, 3600 is the default value
+        DomainTenantResolver::$cacheTTL = 3600;
 
-        // // specify some cache store
-        // // null resolves to the default cache store
-        // DomainTenantResolver::$cacheStore = 'redis';
-        // InitializeTenancyByDomain::$onFail = function () {
-        //     return redirect($_ENV['APP_URL']);
-        // };
+        // specify some cache store
+        // null resolves to the default cache store
+        DomainTenantResolver::$cacheStore = 'redis';
+        InitializeTenancyByDomain::$onFail = function () {
+            return redirect($_ENV['APP_URL']);
+        };
     }
 
     protected function bootEvents()

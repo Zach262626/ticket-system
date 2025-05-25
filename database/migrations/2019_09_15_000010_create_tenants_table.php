@@ -1,7 +1,8 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types = 1);
 
+use App\Models\Tenant;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,9 +17,10 @@ class CreateTenantsTable extends Migration
     public function up(): void
     {
         Schema::create('tenants', function (Blueprint $table) {
-            $table->string('id')->primary();
+            $table->increments('id')->primary();
 
             // your custom columns may go here
+            $table->string('name');
             $table->string('tenancy_db_username', 512)->nullable();
             $table->string('tenancy_db_password', 512)->nullable();
 

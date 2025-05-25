@@ -3,7 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
@@ -22,6 +27,20 @@ class LoginController extends Controller
             "email" => ['required', 'max:255', 'email'],
             "password" => ['required', 'max:255']
         ]);
+        try {
+            $user = User::where('email', $request['email'])->firstOrFail();
+            
+            if (Hash::check($request['password'], $user['password'])) {
+                throw new ModelNotFoundException;
+            }
+            Auth::login($user);
+        } catch (ModelNotFoundException $e) {
+            throw ValidationException::withMessages(
+                ['email' => 'These credentials do not match our records.']
+            );
+        }
+
+        
         return redirect()->route('home');
     }
 
@@ -32,7 +51,10 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
-        // Handle the logout logic here
+        Auth::logout();
+
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
         return redirect()->route('home');
     }
 }

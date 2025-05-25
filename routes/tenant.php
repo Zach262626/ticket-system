@@ -30,8 +30,9 @@ Route::middleware([
     Route::get('register', [RegisterController::class, 'showRegister'])->name('user-register');
     Route::post('login', [LoginController::class, 'login'])->name('user-login');
     Route::post('register', [RegisterController::class, 'register'])->name('user-register');
+    Route::get('logout', [LoginController::class, 'logout'])->name('user-logout');
 
     Route::get('/', function () {
-        return view('home')->with(['tenant_id' => tenant('id'),]);
+        return view('home')->with(['tenant_id' => tenant('id'),'tenant_name' => tenant('name')]);
     })->name('home');
 });

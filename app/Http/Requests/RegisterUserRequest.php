@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
-class RegisterTenantRequest extends FormRequest
+class RegisterUserRequest extends FormRequest
 {
     /**
      * The URI that users should be redirected to if validation fails.
@@ -31,15 +31,12 @@ class RegisterTenantRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'company_name' => ['required', 'string', 'max:255'],
-            'sub_domain' => [
-                'required',
-                'max:50',
-            ],
+            'name' => ['required', 'string', 'max:255'],
             'email' => [
                 'required',
                 'email',
                 'max:255',
+                Rule::unique('users', 'email'),
             ],
             'password' => [
                 'required',

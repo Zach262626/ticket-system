@@ -3,18 +3,14 @@
     <h1 class="text-center">Login {{ $type }}</h1>
     @if($type == 'Tenant')
     @else
-        <div class="mb-3">
-            <label for="exampleInputName" class="form-label">Name</label>
-            <input name='name' type="text" class="form-control" id="exampleInputName" aria-describedby="nameHelp">
-        </div>
     @endif
     <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Email address</label>
-        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+        <input name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
     </div>
     <div class="mb-3">
         <label for="exampleInputPassword1" class="form-label">Password</label>
-        <input type="password" class="form-control" id="exampleInputPassword1">
+        <input name="password" type="password" class="form-control" id="exampleInputPassword1">
     </div>
     {{-- <div class="mb-3 form-check">
         <input type="checkbox" class="form-check-input" id="exampleCheck1">

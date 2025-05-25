@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
@@ -8,18 +7,17 @@ use App\Models\Tenant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-
 class TenantRegisterController extends Controller
 {
     public function test()
     {
         $tenant = Tenant::create(
             [
-                'id' => 'test' . uniqid(),
+                'name' => 'test' . uniqid(),
             ]
         );
         $tenant->domains()->create([
-            'domain' => $tenant->id . '.localhost',
+            'domain' => $tenant->name . '.localhost',
         ]);
         return redirect()->route('home');
     }
@@ -29,22 +27,20 @@ class TenantRegisterController extends Controller
     }
     public function register(RegisterTenantRequest $request)
     {
-        // The incoming request is valid...
-        // Retrieve the validated input data...
         $validated = $request->validated();
-        $username = Str::slug($validated['email'], '_'); // “gp5_gmail_com”
-        Tenant::create(
+        $username  = Str::slug($validated['email'], '_'); // “gp5_gmail_com”
+        $tenant    = Tenant::create(
             [
-                'id' => $validated['sub_domain'],
+                'name'                => $validated['sub_domain'],
                 'tenancy_db_username' => $username,
                 'tenancy_db_password' => $validated['password'],
             ]
-        )->domains()->create([
+        );
+        $tenant->domains()->create([
             'domain' => $validated['sub_domain'] . '.localhost',
         ]);
         // $tenant->createDatabase();
         // $tenant->createDatabaseUser();
-
-        return redirect()->to(config('app.url') . '/' . $validated['sub_domain'] . '/login')->with('success', 'Tenant created successfully');
+        return redirect($validated['sub_domain'] . '.localhost:2000/login');
     }
 }

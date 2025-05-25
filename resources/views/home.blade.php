@@ -6,7 +6,7 @@
             <div class="col-md-12 text-center">
 
                 @if (isset($tenant_id))
-                    <h1>Welcome to the Home Page of {{ $tenant_id }}</h1>
+                    <h1>Welcome to the Home Page of {{ $tenant_name }}</h1>
                     <a href="{{ route('user-login') }}" class="btn btn-primary">Login</a>
                     <a href="{{ route('user-register') }}" class="btn btn-secondary">Register</a>
                 @else
@@ -15,8 +15,12 @@
                     <a href="{{ route('tenant-login') }}" class="btn btn-primary">Login</a>
 
                 @endif
+                @auth
+                    <a href="{{ route('user-logout') }}" class="btn btn-secondary">Logout</a>
+                    <div>This user is logged in</div>
+                @endauth
             </div>
-
+            
         </div>
     </div>
 @endsection
