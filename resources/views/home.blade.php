@@ -19,17 +19,16 @@
             <a href="{{ route('user-logout') }}" class="btn btn-secondary">Logout</a>
             <div>This user is logged in</div>
             @endauth
-            @if (isset($tenants))
-                <h2>Available Tenants</h2>
-                <div class="list-group">
-                    @foreach ($tenants as $tenant)
-                    <a href="{{ route('tenant-login', ['tenant_id' => $tenant->id]) }}"
-                        class="list-group-item list-group-item-action">
-                        {{ $tenant->name }}
-                    </a>
-                    @endforeach
-                </div>
-            @endif
+        </div>
+        <div class="col-md-12 text-center mt-3">
+            <h2>Available Tenants</h2>
+            <ul class="list-group">
+                @foreach ($tenants as $tenant)
+                <li class="list-group-item">
+                    <a href="{{ route('tenant-login', ['tenant_id' => $tenant->id]) }}">{{ $tenant->name }}</a>
+                </li>
+                @endforeach
+            </ul>
         </div>
 
     </div>
