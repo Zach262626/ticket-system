@@ -8,23 +8,31 @@ use App\Models\Domain;
 use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
+use Stancl\Tenancy\Middleware\ScopeSessions;
 
-class TenantController extends Controller
+class TenantController extends Controller implements HasMiddleware
 {
-    public function test()
+    /**
+     * Get the middleware that should be assigned to the controller.
+     */
+    public static function middleware(): array
     {
-        $tenant = Tenant::create(
-            [
-                'name' => 'test' . uniqid(),
-            ]
-        );
-        $tenant->domains()->create([
-            'domain' => $tenant->name . '.localhost',
-        ]);
-        return redirect(tenant_route($tenant->domains()->first()->domain, 'home'));
+        return [
+            new Middleware([
+                InitializeTenancyByDomain::class,
+                ScopeSessions::class,
+                PreventAccessFromCentralDomains::class,
+            ], only: ['logout']),
+        ];
     }
+
     public function showRegister(Request $request)
     {
         return view("auth.tenant.register");

@@ -6,12 +6,30 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
+use Stancl\Tenancy\Middleware\ScopeSessions;
 
-class LoginController extends Controller
+class LoginController extends Controller implements HasMiddleware
 {
+    /**
+     * Get the middleware that should be assigned to the controller.
+     */
+    public static function middleware(): array
+    {
+        return [
+
+            InitializeTenancyByDomain::class,
+            ScopeSessions::class,
+            PreventAccessFromCentralDomains::class,
+
+        ];
+    }
     /**
      * show login page
      * @param \Illuminate\Http\Request $request
@@ -28,9 +46,7 @@ class LoginController extends Controller
             "password" => ['required', 'max:255']
         ]);
         if (! Auth::attempt($validated)) {
-            throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
-            ]);
+            return redirect()->back()->withErrors(['email' => 'The provided credentials are incorrect.']);
         }
 
         $request->session()->regenerate();

@@ -21,10 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
         }
     )
     ->withMiddleware(function (Middleware $middleware) {
-        if (tenant()) {
-        }
-        $middleware->redirectGuestsTo('/login');
-        $middleware->redirectGuestsTo(fn(Request $request) => route('login'));
+        $middleware->redirectGuestsTo('/');
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

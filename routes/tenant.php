@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Tenant\TenantController;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use Stancl\Tenancy\Middleware\ScopeSessions;
+
 
 
 
@@ -38,7 +40,5 @@ Route::middleware([
     Route::get('logout', [LoginController::class, 'logout'])->name('user-logout')->middleware('auth');
     Route::get('/tenant/logout', [TenantController::class, 'logout'])->name('tenant-logout');
 
-    Route::get('/', function () {
-        return view('home')->with(['tenant_id' => tenant('id'), 'tenant_name' => tenant('name')]);
-    })->name('home');
+    Route::get('/', [HomeController::class, 'indexTenant'])->name('home');
 });

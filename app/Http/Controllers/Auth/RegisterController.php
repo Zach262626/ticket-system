@@ -8,9 +8,25 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
+use Stancl\Tenancy\Middleware\ScopeSessions;
 
 class RegisterController extends Controller
 {
+    /**
+     * Get the middleware that should be assigned to the controller.
+     */
+    public static function middleware(): array
+    {
+        return [
+
+            InitializeTenancyByDomain::class,
+            ScopeSessions::class,
+            PreventAccessFromCentralDomains::class,
+
+        ];
+    }
     /**
      * return the view for the register page.
      * @param \Illuminate\Http\Request $request

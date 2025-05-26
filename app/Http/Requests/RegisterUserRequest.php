@@ -8,12 +8,7 @@ use Illuminate\Validation\Rules\Password;
 
 class RegisterUserRequest extends FormRequest
 {
-    /**
-     * The URI that users should be redirected to if validation fails.
-     *
-     * @var string
-     */
-    protected $redirect = '/';
+
 
     /**
      * Determine if the user is authorized to make this request.
