@@ -7,18 +7,18 @@
 
                 @if (isset($tenant_id))
                     <h1>Welcome to the Home Page of {{ $tenant_name }}</h1>
-                    <a href="{{ route('user-login') }}" class="btn btn-primary">Login</a>
-                    <a href="{{ route('user-register') }}" class="btn btn-secondary">Register</a>
+                    @auth
+                        <a href="{{ route('user-logout') }}" class="btn btn-primary">Logout</a>
+                    @else
+                        <a href="{{ route('user-login') }}" class="btn btn-primary">Login</a>
+                        <a href="{{ route('user-register') }}" class="btn btn-secondary">Register</a>
+                    @endauth
                     <a href="{{ route('tenant-logout') }}" class="btn btn-secondary">Tenant Logout</a>
 
                 @else
                     <h1>Welcome to the Home Page</h1>
                     <a href="{{ route('tenant-register') }}" class="btn btn-primary">Register New Tenant</a>
                 @endif
-                @auth
-                    <a href="{{ route('user-logout') }}" class="btn btn-secondary">Logout</a>
-                    <div>This user is logged in</div>
-                @endauth
             </div>
             @if (isset($tenants) && !isset($tenant_id))
                 <div class="col-md-12 text-center mt-3">

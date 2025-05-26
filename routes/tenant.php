@@ -32,6 +32,7 @@ Route::middleware([
     InitializeTenancyByDomain::class,
     ScopeSessions::class,
     PreventAccessFromCentralDomains::class,
+
 ])->group(function () {
     Route::get('login', [LoginController::class, 'showLogin'])->name('user-login');
     Route::get('register', [RegisterController::class, 'showRegister'])->name('user-register');
@@ -40,5 +41,5 @@ Route::middleware([
     Route::get('logout', [LoginController::class, 'logout'])->name('user-logout')->middleware('auth');
     Route::get('/tenant/logout', [TenantController::class, 'logout'])->name('tenant-logout');
 
-    Route::get('/', [HomeController::class, 'indexTenant'])->name('home');
+    Route::get('/', [HomeController::class, 'indexTenant'])->name('home')->middleware('auth');
 });

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
@@ -24,6 +25,7 @@ class RegisterController extends Controller
             InitializeTenancyByDomain::class,
             ScopeSessions::class,
             PreventAccessFromCentralDomains::class,
+            new Middleware(['auth'], except: ['register', 'showRegister']),
 
         ];
     }
