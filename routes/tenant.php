@@ -38,8 +38,21 @@ Route::middleware([
     Route::get('register', [RegisterController::class, 'showRegister'])->name('user-register');
     Route::post('login', [LoginController::class, 'login'])->name('user-login');
     Route::post('register', [RegisterController::class, 'register'])->name('user-register');
-    Route::get('logout', [LoginController::class, 'logout'])->name('user-logout')->middleware('auth');
     Route::get('/tenant/logout', [TenantController::class, 'logout'])->name('tenant-logout');
+});
+/*
+|--------------------------------------------------------------------------
+| Auth Routes
+|--------------------------------------------------------------------------
+*/
+Route::middleware([
+    'auth',
+    'web',
+    InitializeTenancyByDomain::class,
+    ScopeSessions::class,
+    PreventAccessFromCentralDomains::class,
 
-    Route::get('/', [HomeController::class, 'indexTenant'])->name('home')->middleware('auth');
+])->group(function () {
+    Route::get('logout', [LoginController::class, 'logout'])->name('user-logout')->middleware('auth');
+    Route::get('/', [HomeController::class, 'index'])->name('home')->middleware('auth');
 });

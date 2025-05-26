@@ -26,25 +26,12 @@ class HomeController extends Controller implements HasMiddleware
             ], only: ['indexTenant']),
         ];
     }
-
     /**
      * Show the application dashboard.
      *
      * @return \Illuminate\Contracts\View\View
      */
     public function index()
-    {
-        return view('home', [
-            'tenants' => Tenant::all(),
-            'domains' => Domain::get('domain')->toArray()
-        ]);
-    }
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function indexTenant()
     {
         return view('home')->with(['tenant_id' => tenant('id'), 'tenant_name' => tenant('name')]);
     }
