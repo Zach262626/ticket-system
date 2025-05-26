@@ -13,7 +13,7 @@ class RegisterTenantRequest extends FormRequest
      *
      * @var string
      */
-    protected $redirect = '/';
+    // protected $redirect = '/register';
 
     /**
      * Determine if the user is authorized to make this request.
@@ -31,15 +31,11 @@ class RegisterTenantRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'company_name' => ['required', 'string', 'max:255'],
+            'company_name' => ['required', 'string', 'max:255', Rule::unique('tenants', 'name'),],
             'sub_domain' => [
+                "regex:/^[a-zA-Z0-9]+$/",
                 'required',
                 'max:50',
-            ],
-            'email' => [
-                'required',
-                'email',
-                'max:255',
             ],
             'password' => [
                 'required',

@@ -8,6 +8,8 @@ use App\Http\Controllers\Tenant\TenantController;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
+use Stancl\Tenancy\Middleware\ScopeSessions;
+
 
 
 
@@ -26,6 +28,7 @@ use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 Route::middleware([
     'web',
     InitializeTenancyByDomain::class,
+    ScopeSessions::class,
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
     Route::get('login', [LoginController::class, 'showLogin'])->name('user-login');
@@ -36,6 +39,6 @@ Route::middleware([
     Route::get('/tenant/logout', [TenantController::class, 'logout'])->name('tenant-logout');
 
     Route::get('/', function () {
-        return view('home')->with(['tenant_id' => tenant('id'),'tenant_name' => tenant('name')]);
+        return view('home')->with(['tenant_id' => tenant('id'), 'tenant_name' => tenant('name')]);
     })->name('home');
 });
