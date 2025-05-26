@@ -24,9 +24,10 @@
             <h2>Available Tenants</h2>
             <ul class="list-group">
                 @foreach ($tenants as $tenant)
-                <li class="list-group-item">
-                    <a href="{{ route('tenant-login', ['tenant_id' => $tenant->id]) }}">{{ $tenant->name }}</a>
-                </li>
+                <a href="{{ route('tenant-login', ['tenant_id' => $tenant->id]) }}"
+                    class="list-group-item list-group-item-action">
+                    {{ $tenant->name }}
+                </a>
                 @endforeach
             </ul>
         </div>
