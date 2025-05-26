@@ -34,15 +34,22 @@ Route::middleware([
     PreventAccessFromCentralDomains::class,
 
 ])->group(function () {
-    Route::get('login', [LoginController::class, 'showLogin'])->name('user-login');
-    Route::get('register', [RegisterController::class, 'showRegister'])->name('user-register');
-    Route::post('login', [LoginController::class, 'login'])->name('user-login');
-    Route::post('register', [RegisterController::class, 'register'])->name('user-register');
+    /*
+|--------------------------------------------------------------------------
+| Auth Routes
+|--------------------------------------------------------------------------
+*/
+    Route::middleware('guest')->group(function () {
+        Route::get('login', [LoginController::class, 'showLogin'])->name('user-login');
+        Route::post('login', [LoginController::class, 'login'])->name('user-login');
+        Route::get('register', [RegisterController::class, 'showRegister'])->name('user-register');
+        Route::post('register', [RegisterController::class, 'register'])->name('user-register');
+    });
     Route::get('/tenant/logout', [TenantController::class, 'logout'])->name('tenant-logout');
 });
 /*
 |--------------------------------------------------------------------------
-| Auth Routes
+| User Routes
 |--------------------------------------------------------------------------
 */
 Route::middleware([

@@ -17,8 +17,5 @@ foreach (config('tenancy.central_domains') as $domain) {
         Route::get('/register', [TenantController::class, 'showRegister'])->name('tenant-register');
         Route::post('/register', [TenantController::class, 'register'])->name('tenant-register');
         Route::get('/login', [TenantController::class, 'login'])->name('tenant-login');
-
-
-        Route::get('/create-test', [TenantController::class, 'test'])->name('user.test');
     });
 }
