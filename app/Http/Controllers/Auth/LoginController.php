@@ -23,22 +23,17 @@ class LoginController extends Controller
     }
     public function login(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             "email" => ['required', 'max:255', 'email'],
             "password" => ['required', 'max:255']
         ]);
-        try {
-            $user = User::where('email', $request['email'])->firstOrFail();
-            
-            if (Hash::check($request['password'], $user['password'])) {
-                throw new ModelNotFoundException;
-            }
-            Auth::login($user);
-        } catch (ModelNotFoundException $e) {
-            throw ValidationException::withMessages(
-                ['email' => 'These credentials do not match our records.']
-            );
+        if (! Auth::attempt($validated)) {
+            throw ValidationException::withMessages([
+                'email' => ['The provided credentials are incorrect.'],
+            ]);
         }
+
+        $request->session()->regenerate();
 
         
         return redirect()->route('home');
