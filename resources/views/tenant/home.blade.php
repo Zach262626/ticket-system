@@ -11,12 +11,12 @@
                 <div class="col-md-12 text-center mt-3">
                     <h2>Available Tenants</h2>
                     <ul class="list-group">
-                        @foreach ($tenants as $tenant)
-                            <a href="{{ route('tenant-login', ['tenant_id' => $tenant->id]) }}"
-                                class="list-group-item list-group-item-action">
-                                {{ $tenant->name }}
-                            </a>
-                        @endforeach
+                        <form method="post" action="{{ route('tenant-login') }}" class="mb-3">
+                            @csrf
+                            @foreach ($tenants as $tenant)
+                                <button class="list-group-item list-group-item-action" type="submit" name="tenant_id" value={{  $tenant->id }}>{{ $tenant->name }}</button>
+
+                            @endforeach
                     </ul>
                 </div>
             @endif
