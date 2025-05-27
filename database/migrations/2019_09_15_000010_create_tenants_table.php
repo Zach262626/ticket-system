@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 use App\Models\Tenant;
 use Illuminate\Database\Migrations\Migration;
@@ -38,8 +38,7 @@ class CreateTenantsTable extends Migration
     {
         Tenant::forAll()->each(function ($tenant) {
             Schema::dropIfExists(config('tenancy.database.tenant_database_prefix')
-                . $tenant->id
-                . config('tenancy.database.tenant_database_suffix'));
+                . $tenant->id);
         });
         Schema::dropIfExists('tenants');
     }

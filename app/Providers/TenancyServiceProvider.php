@@ -5,12 +5,18 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use \Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use App\Models\Tenant;
+use Database\Seeders\Tenant\TagsTableSeeder;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Stancl\JobPipeline\JobPipeline;
 use Stancl\Tenancy\Events;
+use Stancl\Tenancy\Events\TenantCreated;
 use Stancl\Tenancy\Jobs;
+use Stancl\Tenancy\Jobs\CreateDatabase;
+use Stancl\Tenancy\Jobs\MigrateDatabase;
+use Stancl\Tenancy\Jobs\SeedDatabase;
 use Stancl\Tenancy\Listeners;
 use Stancl\Tenancy\Middleware;
 use Stancl\Tenancy\Resolvers;
@@ -30,7 +36,8 @@ class TenancyServiceProvider extends ServiceProvider
                 JobPipeline::make([
                     Jobs\CreateDatabase::class,
                     Jobs\MigrateDatabase::class,
-                    // Jobs\SeedDatabase::class,
+                    Jobs\SeedDatabase::class,
+                    // TagsTableSeeder::class,
 
                     // Your own jobs to prepare the tenant.
                     // Provision API keys, create S3 buckets, anything you want!
@@ -102,6 +109,7 @@ class TenancyServiceProvider extends ServiceProvider
 
     public function boot()
     {
+
         $this->bootEvents();
         $this->mapRoutes();
 
@@ -116,6 +124,8 @@ class TenancyServiceProvider extends ServiceProvider
         // specify some cache store
         // null resolves to the default cache store
         DomainTenantResolver::$cacheStore = 'redis';
+
+
         InitializeTenancyByDomain::$onFail = function () {
             return redirect($_ENV['APP_URL']);
         };
