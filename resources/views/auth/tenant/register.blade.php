@@ -30,12 +30,12 @@
                         <div class="mb-3">
                             <label for="InputPassword1" class="form-label">DB Password</label>
                             <input name="password" type="password" class="form-control" id="InputPassword1"
-                                value="ThisIsTemporary2025*" required>
+                                value="ThisIsTemporary2025*" required> {{-- !Temporary! --}}
                         </div>
                         <div class="mb-3">
                             <label for="InputComfirmPassword1" class="form-label">Password Comfirmation</label>
                             <input name="password_confirmation" type="password" class="form-control"
-                                id="InputComfirmPassword1" value="ThisIsTemporary2025*" required>
+                                id="InputComfirmPassword1" value="ThisIsTemporary2025*" required> {{-- !Temporary! --}}
                         </div>
                         {{-- <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="Check1">

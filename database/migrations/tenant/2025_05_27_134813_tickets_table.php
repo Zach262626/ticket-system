@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id('ticket_number');
             $table->longText('description');
             $table->foreignId('status_id')->constrained('ticket_status', 'id')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreignId('level_id')->constrained('ticket_level', 'id')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreignId('type_id')->constrained('ticket_type', 'id')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('level_id')->constrained('ticket_levels', 'id')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('type_id')->constrained('ticket_types', 'id')->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('created_by')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('accepted_by')->nullable()->constrained('users')->onUpdate('cascade');
             $table->timestamps();

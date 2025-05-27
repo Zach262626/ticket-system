@@ -16,12 +16,12 @@ return new class extends Migration
             $table->string('name');
             $table->timestamps();
         });
-        Schema::create('ticket_level', function (Blueprint $table) {
+        Schema::create('ticket_levels', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->timestamps();
         });
-        Schema::create('ticket_type', function (Blueprint $table) {
+        Schema::create('ticket_types', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->timestamps();
@@ -34,7 +34,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('ticket_status');
-        Schema::dropIfExists('ticket_leveltags');
-        Schema::dropIfExists('ticket_type');
+        Schema::dropIfExists('ticket_levels');
+        Schema::dropIfExists('ticket_types');
     }
 };

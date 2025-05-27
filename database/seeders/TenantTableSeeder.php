@@ -18,12 +18,12 @@ class TenantTableSeeder extends Seeder
             ['name' => 'in_progress'],
             ['name' => 'closed'],
         ]);
-        DB::table('ticket_type')->insert([
+        DB::table('ticket_types')->insert([
             ['name' => 'general'],
             ['name' => 'bug'],
             ['name' => 'feature_request'],
         ]);
-        DB::table('ticket_level')->insert([
+        DB::table('ticket_levels')->insert([
             ['name' => 'low'],
             ['name' => 'medium'],
             ['name' => 'high'],

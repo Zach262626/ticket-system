@@ -54,6 +54,19 @@ class TenantController extends Controller implements HasMiddleware
         $domain = $tenant->domains()->create([
             'domain' => $validated['sub_domain'] . '.localhost',
         ]);
+        // !Temporary!
+        $tenant->run(function ($request) {
+            $user = User::create([
+                'name'     => 'tempuser',
+                'email'    => 'tempuser@gmail.com',
+                'password' => '123',
+            ]);
+            if (! Auth::attempt(['email' => $user->email, 'password' => '123'])) {
+                return redirect()->back()->withErrors(['email' => 'The provided credentials are incorrect.']);
+            }
+        });
+        $request->session()->regenerate();
+        // !Temporary!
         $request->session()->put('tenant_id', $request->tenant_id);
         $request->session()->put('tenant_domain', $request->tenant_domain);
         return redirect(tenant_route($tenant->domains()->first()->domain, 'home'));
