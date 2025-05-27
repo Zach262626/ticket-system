@@ -16,20 +16,5 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::statement("DROP DATABASE IF EXISTS ticket_system_tenant_foo");
-        DB::statement("DROP DATABASE IF EXISTS ticket_system_tenant_bar");
-        $tenant = Tenant::query()->create([
-            'id' => 'foo',
-        ]);
-        $tenant2 = Tenant::query()->create([
-            'id' => 'bar',
-        ]);
-        
-        $tenant->domains()->create([
-            'domain' => 'foo.localhost',
-        ]);
-        $tenant2->domains()->create([
-            'domain' => 'bar.localhost',
-        ]);
     }
 }

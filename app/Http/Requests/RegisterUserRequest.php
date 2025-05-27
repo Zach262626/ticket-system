@@ -42,6 +42,14 @@ class RegisterUserRequest extends FormRequest
                     ->symbols()
                     ->uncompromised(),
             ],
+            'phone_number' => [
+                // 'required',
+                'nullable',
+                'string',
+                'max:20',
+                'min:10',
+                Rule::unique('users', 'phone_number'),
+            ],
         ];
     }
 }
