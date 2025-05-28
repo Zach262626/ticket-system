@@ -14,6 +14,9 @@ use Illuminate\Validation\ValidationException;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use Stancl\Tenancy\Middleware\ScopeSessions;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+
 
 class LoginController extends Controller implements HasMiddleware
 {
@@ -54,6 +57,8 @@ class LoginController extends Controller implements HasMiddleware
         }
         // !Temporary! add a remember me functionality
 
+
+        $user = Auth::user();
         $request->session()->regenerate();
 
 

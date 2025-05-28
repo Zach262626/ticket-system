@@ -36,6 +36,7 @@ Route::middleware([
     PreventAccessFromCentralDomains::class,
 
 ])->group(function () {
+    Route::get('/tenant/logout', [TenantController::class, 'logout'])->name('tenant-logout');
     /*
     |--------------------------------------------------------------------------
     | Auth Routes
@@ -54,7 +55,6 @@ Route::middleware([
     */
     Route::middleware('auth')->group(function () {
         Route::get('logout', [LoginController::class, 'logout'])->name('user-logout');
-        Route::get('/tenant/logout', [TenantController::class, 'logout'])->name('tenant-logout');
         Route::get('/', [HomeController::class, 'index'])->name('home');
         /*
         |--------------------------------------------------------------------------
