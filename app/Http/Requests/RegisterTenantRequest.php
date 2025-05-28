@@ -46,6 +46,7 @@ class RegisterTenantRequest extends FormRequest
                     ->symbols()
                     ->uncompromised(),
             ],
+            'remember' => ['boolean', 'nullable'],
         ];
     }
 }

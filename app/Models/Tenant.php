@@ -11,7 +11,17 @@ use Stancl\Tenancy\Database\Concerns\HasDomains;
 class Tenant extends BaseTenant implements TenantWithDatabase
 {
     use HasDatabase, HasDomains, HasFactory;
-
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'tenants';
+    /**
+     * The database connection that should be used by the model.
+     * @var string
+     */
+    protected $connection = 'mysql';
     public static function getCustomColumns(): array
     {
         return [

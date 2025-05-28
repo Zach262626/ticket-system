@@ -46,13 +46,17 @@ class LoginController extends Controller implements HasMiddleware
             "email" => ['required', 'max:255', 'email'],
             "password" => ['required', 'max:255']
         ]);
+        $remember = $request->validate([
+            "remember" => ['boolean', 'nullable']
+        ]);
         if (! Auth::attempt($validated)) {
             return redirect()->back()->withErrors(['email' => 'The provided credentials are incorrect.']);
         }
+        // !Temporary! add a remember me functionality
 
         $request->session()->regenerate();
 
-        
+
         return redirect()->route('home');
     }
 

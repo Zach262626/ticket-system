@@ -3,7 +3,10 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Ticket\Ticket;
+use App\Models\Ticket\TicketAttachment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -11,6 +14,12 @@ class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'users';
 
     /**
      * The attributes that are mass assignable.
@@ -44,5 +53,26 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    /**
+     * A user can have many tickets.
+     */
+    public function tickets(): HasMany
+    {
+        return $this->hasMany(Ticket::class);
+    }
+    /**
+     * A user can have many attachments.
+     */
+    public function attachments(): HasMany
+    {
+        return $this->hasMany(TicketAttachment::class, 'uploaded_by');
+    }
+    /**
+     * A user can have many messages.
+     */
+    public function messages(): HasMany
+    {
+        return $this->hasMany(Message::class);
     }
 }

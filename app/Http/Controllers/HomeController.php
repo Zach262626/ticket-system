@@ -27,7 +27,7 @@ class HomeController extends Controller implements HasMiddleware
         ];
     }
     /**
-     * Show the application dashboard.
+     * Show the application home.
      *
      * @return \Illuminate\Contracts\View\View
      */
