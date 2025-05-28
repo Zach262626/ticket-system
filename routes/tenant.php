@@ -6,10 +6,12 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Tenant\TenantController;
+use App\Http\Controllers\TicketController;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use Stancl\Tenancy\Middleware\ScopeSessions;
+
 
 
 
@@ -35,10 +37,10 @@ Route::middleware([
 
 ])->group(function () {
     /*
-|--------------------------------------------------------------------------
-| Auth Routes
-|--------------------------------------------------------------------------
-*/
+    |--------------------------------------------------------------------------
+    | Auth Routes
+    |--------------------------------------------------------------------------
+    */
     Route::middleware('guest')->group(function () {
         Route::get('login', [LoginController::class, 'showLogin'])->name('user-login');
         Route::post('login', [LoginController::class, 'login'])->name('user-login');
@@ -46,14 +48,19 @@ Route::middleware([
         Route::post('register', [RegisterController::class, 'register'])->name('user-register');
     });
     /*
-|--------------------------------------------------------------------------
-| User Routes
-|--------------------------------------------------------------------------
-*/
+    |--------------------------------------------------------------------------
+    | User Routes
+    |--------------------------------------------------------------------------
+    */
     Route::middleware('auth')->group(function () {
-        Route::get('logout', [LoginController::class, 'logout'])->name('user-logout')->middleware('auth');
-        Route::get('/', [HomeController::class, 'index'])->name('home')->middleware('auth');
+        Route::get('logout', [LoginController::class, 'logout'])->name('user-logout');
+        Route::get('/tenant/logout', [TenantController::class, 'logout'])->name('tenant-logout');
+        Route::get('/', [HomeController::class, 'index'])->name('home');
+        /*
+        |--------------------------------------------------------------------------
+        | Ticket Routes
+        |--------------------------------------------------------------------------
+        */
+        Route::get('/ticket', [TicketController::class, 'index'])->name('ticket-index');
     });
-    Route::get('/tenant/logout', [TenantController::class, 'logout'])->name('tenant-logout');
 });
-

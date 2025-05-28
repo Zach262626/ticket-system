@@ -15,11 +15,7 @@ class TicketAttachment extends Model
      * @var string
      */
     protected $table = 'ticket_attachments';
-    /**
-     * The database connection that should be used by the model.
-     * @var string
-     */
-    protected $connection = 'mysql';
+
     /**
      * The attributes that are mass assignable.
      *

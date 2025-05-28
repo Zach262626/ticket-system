@@ -5,27 +5,45 @@ namespace App\Http\Controllers;
 use App\Models\Ticket\Ticket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Routing\Controllers\Middleware;
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
+use Stancl\Tenancy\Middleware\ScopeSessions;
 
 class TicketController extends Controller
 {
     /**
-     * Display a listing of the tickets.
+     * Get the middleware that should be assigned to the controller.
+     */
+    public static function middleware(): array
+    {
+        return [
+            new Middleware([
+                InitializeTenancyByDomain::class,
+                ScopeSessions::class,
+                PreventAccessFromCentralDomains::class,
+            ]),
+        ];
+    }
+    /**
+     * Show the application home.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function index()
     {
-        // Eager load relationships to avoid N+1
         $tickets = Ticket::with(['status', 'level', 'type', 'createdBy', 'acceptedBy'])
             ->paginate(15);
 
-        return view('tickets.index', compact('tickets'));
+        return view('ticket.index')->with([
+            'tickets' => $tickets
+        ]);
     }
 
     /**
      * Show the form for creating a new ticket.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function create()
     {
@@ -37,7 +55,7 @@ class TicketController extends Controller
      * Store a newly created ticket in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\redirectResponse
      */
     public function store(Request $request)
     {
@@ -55,15 +73,15 @@ class TicketController extends Controller
         $ticket = Ticket::create($data);
 
         return redirect()
-            ->route('tickets.show', $ticket)
+            ->route('tickets.index', $ticket)
             ->with('success', 'Ticket created successfully.');
     }
 
     /**
      * Display the specified ticket.
      *
-     * @param  \App\Models\Ticket  $ticket
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Ticket\Ticket  $ticket
+     * @return \Illuminate\Contracts\View\View
      */
     public function show(Ticket $ticket)
     {
@@ -75,8 +93,8 @@ class TicketController extends Controller
     /**
      * Show the form for editing the specified ticket.
      *
-     * @param  \App\Models\Ticket  $ticket
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Ticket\Ticket  $ticket
+     * @return \Illuminate\Contracts\View\View
      */
     public function edit(Ticket $ticket)
     {
@@ -87,8 +105,8 @@ class TicketController extends Controller
      * Update the specified ticket in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Ticket  $ticket
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Ticket\Ticket  $ticket
+     * @return \Illuminate\Http\redirectResponse
      */
     public function update(Request $request, Ticket $ticket)
     {
@@ -111,7 +129,7 @@ class TicketController extends Controller
      * Remove the specified ticket from storage.
      *
      * @param  \App\Models\Ticket  $ticket
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\redirectResponse
      */
     public function destroy(Ticket $ticket)
     {

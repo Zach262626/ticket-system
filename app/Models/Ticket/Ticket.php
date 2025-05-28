@@ -17,11 +17,7 @@ class Ticket extends Model
      * @var string
      */
     protected $table = 'tickets';
-    /**
-     * The database connection that should be used by the model.
-     * @var string
-     */
-    protected $connection = 'mysql';
+
     /**
      * The attributes that are mass assignable.
      *

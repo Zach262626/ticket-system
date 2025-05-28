@@ -20,11 +20,7 @@ class User extends Authenticatable
      * @var string
      */
     protected $table = 'users';
-    /**
-     * The database connection that should be used by the model.
-     * @var string
-     */
-    protected $connection = 'mysql';
+
     /**
      * The attributes that are mass assignable.
      *

@@ -16,11 +16,7 @@ class Message extends Model
      * @var string
      */
     protected $table = 'messages';
-    /**
-     * The database connection that should be used by the model.
-     * @var string
-     */
-    protected $connection = 'mysql';
+
     /**
      * The attributes that are mass assignable.
      *
