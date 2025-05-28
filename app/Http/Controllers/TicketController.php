@@ -25,7 +25,7 @@ class TicketController extends Controller implements HasMiddleware
                 ScopeSessions::class,
                 PreventAccessFromCentralDomains::class,
             ]),
-            new Middleware('role:admin|developer|support', only: ['index', 'showEdit']),
+            new Middleware('role:admin|developer|support', only: ['edit', 'showEdit']),
             new Middleware('role:admin|developer', only: ['delete']),
         ];
     }
