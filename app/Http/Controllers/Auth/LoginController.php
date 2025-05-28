@@ -49,9 +49,10 @@ class LoginController extends Controller implements HasMiddleware
         $remember = $request->validate([
             "remember" => ['boolean', 'nullable']
         ]);
-        if (! Auth::attempt($validated, $remember['remember'] ?? false)) {
+        if (! Auth::attempt($validated)) {
             return redirect()->back()->withErrors(['email' => 'The provided credentials are incorrect.']);
         }
+        // !Temporary! add a remember me functionality
 
         $request->session()->regenerate();
 

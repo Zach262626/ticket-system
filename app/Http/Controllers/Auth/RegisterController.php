@@ -51,9 +51,10 @@ class RegisterController extends Controller
             'email'    => $validated['email'],
             'password' => Hash::make($validated['password']),
         ]);
-        if (! Auth::attempt($validated, $request->boolean('remember'))) {
+        if (! Auth::attempt($validated)) {
             return redirect('/login')->withErrors(['email' => 'Could not log you in.']);
         }
+        // !Temporary! add a remember me functionality
         Auth::login($user);
         $request->session()->regenerate();
 
