@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tickets', function (Blueprint $table) {
-            $table->id('ticket_number');
+            $table->id();
             $table->longText('description');
             $table->foreignId('status_id')->constrained('ticket_status', 'id')->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('level_id')->constrained('ticket_levels', 'id')->onDelete('cascade')->onUpdate('cascade');
@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('file_type'); // image, video, document, etc.
             $table->string('file_path');
             $table->string('file_name');
-            $table->foreignId('ticket_number')->constrained('tickets', 'ticket_number')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('ticket_id')->constrained('tickets', 'id')->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('uploaded_by')->constrained('users')->onUpdate('cascade');
             $table->timestamps();
         });
@@ -34,7 +34,7 @@ return new class extends Migration
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
             $table->longText('content');
-            $table->foreignId('ticket_number')->constrained('tickets', 'ticket_number')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('ticket_id')->constrained('tickets', 'id')->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('sender_id')->constrained('users')->onUpdate('cascade');
             $table->foreignId('receiver_id')->constrained('users')->onUpdate('cascade');
             $table->timestamps();

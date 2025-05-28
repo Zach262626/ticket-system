@@ -5,15 +5,15 @@ namespace App\Models\Ticket;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class TicketType extends Model
+class TicketStatus extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'ticket_types';
-    /**
+    protected $table = 'ticket_status';
+     /**
      * The database connection that should be used by the model.
      * @var string
      */
@@ -27,10 +27,10 @@ class TicketType extends Model
         'name',
     ];
     /**
-     * Get the tickets associated with this type.
+     * Get the tickets associated with this status.
      */
     public function tickets(): HasMany
     {
-        return $this->hasMany(Ticket::class, 'type_id');
+        return $this->hasMany(Ticket::class, 'status_id');
     }
 }
