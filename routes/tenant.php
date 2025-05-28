@@ -5,12 +5,14 @@ declare(strict_types=1);
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\Tenant\TenantController;
 use App\Http\Controllers\TicketController;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use Stancl\Tenancy\Middleware\ScopeSessions;
+
 
 
 
@@ -68,5 +70,14 @@ Route::middleware([
         Route::post('/ticket/create', [TicketController::class, 'create'])->name('ticket-create');
         Route::post('/ticket/edit', [TicketController::class, 'edit'])->name('ticket-edit');
         Route::post('/ticket/delete', [TicketController::class, 'delete'])->name('ticket-delete');
+        Route::get('admin/users/roles', [RoleController::class, 'create'])
+        /*
+        |--------------------------------------------------------------------------
+        | Roles Routes
+        |--------------------------------------------------------------------------
+        */
+            ->name('users-roles');
+        Route::post('admin/users/roles', [RoleController::class, 'store'])
+            ->name('users-asign-roles');
     });
 });
