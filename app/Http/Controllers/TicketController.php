@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Ticket\Ticket;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Auth;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use Stancl\Tenancy\Middleware\ScopeSessions;
 
-class TicketController extends Controller
+class TicketController extends Controller implements HasMiddleware
 {
     /**
      * Get the middleware that should be assigned to the controller.
@@ -19,11 +20,12 @@ class TicketController extends Controller
     {
         return [
             new Middleware([
+                'web',
                 InitializeTenancyByDomain::class,
                 ScopeSessions::class,
                 PreventAccessFromCentralDomains::class,
             ]),
-            new Middleware('role:admin|developer|support', only: ['edit', 'showEdit']),
+            new Middleware('role:admin|developer|support', only: ['index', 'showEdit']),
             new Middleware('role:admin|developer', only: ['delete']),
         ];
     }

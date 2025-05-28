@@ -23,7 +23,7 @@ class HomeController extends Controller implements HasMiddleware
                 InitializeTenancyByDomain::class,
                 ScopeSessions::class,
                 PreventAccessFromCentralDomains::class,
-            ], only: ['indexTenant']),
+            ], only: ['index']),
         ];
     }
     /**

@@ -70,14 +70,14 @@ Route::middleware([
         Route::post('/ticket/create', [TicketController::class, 'create'])->name('ticket-create');
         Route::post('/ticket/edit', [TicketController::class, 'edit'])->name('ticket-edit');
         Route::post('/ticket/delete', [TicketController::class, 'delete'])->name('ticket-delete');
-        Route::get('admin/users/roles', [RoleController::class, 'create'])
         /*
         |--------------------------------------------------------------------------
         | Roles Routes
         |--------------------------------------------------------------------------
         */
-            ->name('users-roles');
-        Route::post('admin/users/roles', [RoleController::class, 'store'])
-            ->name('users-asign-roles');
+        Route::group(['middleware' => ['role_or_permission:assign roles']], function () {
+            Route::get('admin/users/roles', [RoleController::class, 'create'])->name('users-roles');
+            Route::post('admin/users/roles', [RoleController::class, 'store'])->name('users-asign-roles');
+        });
     });
 });

@@ -57,6 +57,6 @@ class TenantTableSeeder extends Seeder
         $permissions[] = Permission::create(['name' => 'create roles']);
         $permissions[] = Permission::create(['name' => 'assign roles']);
         $role1->givePermissionTo($permissions); // Developer can view/edit/create users
-        $role3->givePermissionTo([$permissions[0], $permissions[4]]); // Admin can view/edit/create users and roles
+        $role3->givePermissionTo([$permissions[0], $permissions[4]]); // Admin can view/assign
     }
 }
