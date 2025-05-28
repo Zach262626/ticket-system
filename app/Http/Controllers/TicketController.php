@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Ticket\Ticket;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Auth;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use Stancl\Tenancy\Middleware\ScopeSessions;
 
-class TicketController extends Controller
+class TicketController extends Controller implements HasMiddleware
 {
     /**
      * Get the middleware that should be assigned to the controller.
@@ -19,10 +20,13 @@ class TicketController extends Controller
     {
         return [
             new Middleware([
+                'web',
                 InitializeTenancyByDomain::class,
                 ScopeSessions::class,
                 PreventAccessFromCentralDomains::class,
             ]),
+            new Middleware('role:admin|developer|support', only: ['edit', 'showEdit']),
+            new Middleware('role:admin|developer', only: ['delete']),
         ];
     }
     /**
@@ -48,7 +52,7 @@ class TicketController extends Controller
     public function showCreate()
     {
         // You might want to pass lists for status, level, type dropdowns
-        return view('tickets.create');
+        return view('ticket.create');
     }
 
     /**
@@ -73,7 +77,7 @@ class TicketController extends Controller
         $ticket = Ticket::create($data);
 
         return redirect()
-            ->route('tickets.index', $ticket)
+            ->route('ticket.index', $ticket)
             ->with('success', 'Ticket created successfully.');
     }
 
@@ -87,7 +91,7 @@ class TicketController extends Controller
     {
         $ticket->load(['status', 'level', 'type', 'createdBy', 'acceptedBy', 'attachments']);
 
-        return view('tickets.show');
+        return view('ticket.show');
     }
 
     /**
@@ -98,7 +102,7 @@ class TicketController extends Controller
      */
     public function showEdit(Ticket $ticket)
     {
-        return view('tickets.edit');
+        return view('ticket.edit');
     }
 
     /**
@@ -121,7 +125,7 @@ class TicketController extends Controller
         $ticket->update($data);
 
         return redirect()
-            ->route('tickets.show', $ticket)
+            ->route('ticket.show', $ticket)
             ->with('success', 'Ticket updated successfully.');
     }
 
@@ -136,7 +140,7 @@ class TicketController extends Controller
         $ticket->delete();
 
         return redirect()
-            ->route('tickets.index')
+            ->route('ticket.index')
             ->with('success', 'Ticket deleted successfully.');
     }
 }

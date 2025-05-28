@@ -5,4 +5,5 @@ return [
     App\Providers\HorizonServiceProvider::class,
     App\Providers\TelescopeServiceProvider::class,
     App\Providers\TenancyServiceProvider::class,
+    Spatie\Permission\PermissionServiceProvider::class
 ];

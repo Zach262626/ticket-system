@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use Stancl\Tenancy\Middleware\ScopeSessions;
@@ -54,6 +55,7 @@ class RegisterController extends Controller
         if (! Auth::attempt($validated)) {
             return redirect('/login')->withErrors(['email' => 'Could not log you in.']);
         }
+        $user->syncRoles(Role::where('name', 'member')->get());
         // !Temporary! add a remember me functionality
         Auth::login($user);
         $request->session()->regenerate();

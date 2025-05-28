@@ -38,13 +38,15 @@
                         <button type="submit" class="btn btn-primary">Submit</button>
                         <a href="{{ route('user-login') }}" class="btn btn-secondary">Login</a>
                     </div>
+
                     @if ($errors->any())
-                        <div class="alert alert-danger">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             <ul class="list-disc list-inside text-sm text-red-600">
                                 @foreach ($errors->all() as $error)
                                     <li>{{ $error }}</li>
                                 @endforeach
                             </ul>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     @endif
                 </form>

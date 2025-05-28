@@ -39,7 +39,6 @@ class RegisterUserRequest extends FormRequest
                 Password::min(8)
                     ->mixedCase()
                     ->numbers()
-                    ->symbols()
                     ->uncompromised(),
             ],
             'phone_number' => [

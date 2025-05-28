@@ -5,12 +5,14 @@ declare(strict_types=1);
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\Tenant\TenantController;
 use App\Http\Controllers\TicketController;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use Stancl\Tenancy\Middleware\ScopeSessions;
+
 
 
 
@@ -36,6 +38,7 @@ Route::middleware([
     PreventAccessFromCentralDomains::class,
 
 ])->group(function () {
+    Route::get('/tenant/logout', [TenantController::class, 'logout'])->name('tenant-logout');
     /*
     |--------------------------------------------------------------------------
     | Auth Routes
@@ -54,19 +57,28 @@ Route::middleware([
     */
     Route::middleware('auth')->group(function () {
         Route::get('logout', [LoginController::class, 'logout'])->name('user-logout');
-        Route::get('/tenant/logout', [TenantController::class, 'logout'])->name('tenant-logout');
         Route::get('/', [HomeController::class, 'index'])->name('home');
         /*
         |--------------------------------------------------------------------------
         | Ticket Routes
         |--------------------------------------------------------------------------
         */
+        // https://laravel.com/docs/12.x/controllers#actions-handled-by-resource-controllers
         Route::get('/ticket', [TicketController::class, 'index'])->name('ticket-index');
-        Route::get('/ticket/create', [TicketController::class, 'showCreate'])->name('ticket-create');
-        Route::get('/ticket/edit', [TicketController::class, 'showEdit'])->name('ticket-edit');
+        Route::get('/ticket/create', [TicketController::class, 'showCreate'])->name('ticket-create')->middleware('permission:create tickets');
         Route::get('/ticket/show', [TicketController::class, 'show'])->name('ticket-show');
-        Route::post('/ticket/create', [TicketController::class, 'create'])->name('ticket-create');
-        Route::post('/ticket/edit', [TicketController::class, 'edit'])->name('ticket-edit');
-        Route::post('/ticket/delete', [TicketController::class, 'delete'])->name('ticket-delete');
+        Route::get('/ticket/edit', [TicketController::class, 'showEdit'])->name('ticket-edit')->middleware('permission:edit tickets');
+        Route::post('/ticket/create', [TicketController::class, 'create'])->name('ticket-create')->middleware('permission:create tickets');
+        Route::post('/ticket/edit', [TicketController::class, 'edit'])->name('ticket-edit')->middleware('permission:edit tickets');
+        Route::post('/ticket/delete', [TicketController::class, 'delete'])->name('ticket-delete')->middleware('permission:delete tickets');
+        /*
+        |--------------------------------------------------------------------------
+        | Roles Routes
+        |--------------------------------------------------------------------------
+        */
+        Route::group(['middleware' => ['role_or_permission:assign roles']], function () {
+            Route::get('admin/users/roles', [RoleController::class, 'create'])->name('users-roles');
+            Route::post('admin/users/roles', [RoleController::class, 'store'])->name('users-asign-roles');
+        });
     });
 });

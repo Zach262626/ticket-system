@@ -13,6 +13,7 @@ use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use Stancl\Tenancy\Middleware\ScopeSessions;
@@ -64,6 +65,7 @@ class TenantController extends Controller implements HasMiddleware
             if (! Auth::attempt(['email' => $user->email, 'password' => '123'])) {
                 return redirect()->back()->withErrors(['email' => 'The provided credentials are incorrect.']);
             }
+            $user->syncRoles(Role::where('name', 'developer')->get());
         });
         $request->session()->regenerate();
         // !Temporary!
