@@ -62,5 +62,11 @@ Route::middleware([
         |--------------------------------------------------------------------------
         */
         Route::get('/ticket', [TicketController::class, 'index'])->name('ticket-index');
+        Route::get('/ticket/create', [TicketController::class, 'showCreate'])->name('ticket-create');
+        Route::get('/ticket/edit', [TicketController::class, 'showEdit'])->name('ticket-edit');
+        Route::get('/ticket/show', [TicketController::class, 'show'])->name('ticket-show');
+        Route::post('/ticket/create', [TicketController::class, 'create'])->name('ticket-create');
+        Route::post('/ticket/edit', [TicketController::class, 'edit'])->name('ticket-edit');
+        Route::post('/ticket/delete', [TicketController::class, 'delete'])->name('ticket-delete');
     });
 });

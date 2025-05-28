@@ -45,19 +45,19 @@ class TicketController extends Controller
      *
      * @return \Illuminate\Contracts\View\View
      */
-    public function create()
+    public function showCreate()
     {
         // You might want to pass lists for status, level, type dropdowns
         return view('tickets.create');
     }
 
     /**
-     * Store a newly created ticket in storage.
+     * Create a newly created ticket in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\redirectResponse
      */
-    public function store(Request $request)
+    public function create(Request $request)
     {
         $data = $request->validate([
             'description'   => 'required|string|max:1000',
@@ -87,7 +87,7 @@ class TicketController extends Controller
     {
         $ticket->load(['status', 'level', 'type', 'createdBy', 'acceptedBy', 'attachments']);
 
-        return view('tickets.show', compact('ticket'));
+        return view('tickets.show');
     }
 
     /**
@@ -96,23 +96,23 @@ class TicketController extends Controller
      * @param  \App\Models\Ticket\Ticket  $ticket
      * @return \Illuminate\Contracts\View\View
      */
-    public function edit(Ticket $ticket)
+    public function showEdit(Ticket $ticket)
     {
-        return view('tickets.edit', compact('ticket'));
+        return view('tickets.edit');
     }
 
     /**
-     * Update the specified ticket in storage.
+     * Edit the specified ticket in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Ticket\Ticket  $ticket
      * @return \Illuminate\Http\redirectResponse
      */
-    public function update(Request $request, Ticket $ticket)
+    public function edit(Request $request, Ticket $ticket)
     {
         $data = $request->validate([
             'description'   => 'required|string|max:1000',
-            'status_id'     => 'nullable|exists:ticket_statuses,id',
+            'status_id'     => 'nullable|exists:ticket_status,id',
             'level_id'      => 'nullable|exists:ticket_levels,id',
             'type_id'       => 'nullable|exists:ticket_types,id',
             'accepted_by'   => 'nullable|exists:users,id',
@@ -128,10 +128,10 @@ class TicketController extends Controller
     /**
      * Remove the specified ticket from storage.
      *
-     * @param  \App\Models\Ticket  $ticket
+     * @param  \App\Models\Ticket\Ticket  $ticket
      * @return \Illuminate\Http\redirectResponse
      */
-    public function destroy(Ticket $ticket)
+    public function delete(Ticket $ticket)
     {
         $ticket->delete();
 
