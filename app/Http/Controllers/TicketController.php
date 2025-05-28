@@ -50,7 +50,7 @@ class TicketController extends Controller
     public function showCreate()
     {
         // You might want to pass lists for status, level, type dropdowns
-        return view('tickets.create');
+        return view('ticket.create');
     }
 
     /**
@@ -75,7 +75,7 @@ class TicketController extends Controller
         $ticket = Ticket::create($data);
 
         return redirect()
-            ->route('tickets.index', $ticket)
+            ->route('ticket.index', $ticket)
             ->with('success', 'Ticket created successfully.');
     }
 
@@ -89,7 +89,7 @@ class TicketController extends Controller
     {
         $ticket->load(['status', 'level', 'type', 'createdBy', 'acceptedBy', 'attachments']);
 
-        return view('tickets.show');
+        return view('ticket.show');
     }
 
     /**
@@ -100,7 +100,7 @@ class TicketController extends Controller
      */
     public function showEdit(Ticket $ticket)
     {
-        return view('tickets.edit');
+        return view('ticket.edit');
     }
 
     /**
@@ -123,7 +123,7 @@ class TicketController extends Controller
         $ticket->update($data);
 
         return redirect()
-            ->route('tickets.show', $ticket)
+            ->route('ticket.show', $ticket)
             ->with('success', 'Ticket updated successfully.');
     }
 
@@ -138,7 +138,7 @@ class TicketController extends Controller
         $ticket->delete();
 
         return redirect()
-            ->route('tickets.index')
+            ->route('ticket.index')
             ->with('success', 'Ticket deleted successfully.');
     }
 }
