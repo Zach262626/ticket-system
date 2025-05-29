@@ -12,8 +12,18 @@ use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use Stancl\Tenancy\Middleware\ScopeSessions;
 
-class TenantHomeController extends Controller
+class TenantHomeController extends Controller implements HasMiddleware
 {
+    /**
+     * Get the middleware that should be assigned to the controller.
+     */
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('role:admin|developer', only: ['index']),
+        ];
+    }
+
     /**
      * Show the application dashboard.
      *
@@ -25,5 +35,14 @@ class TenantHomeController extends Controller
             'tenants' => Tenant::all(),
             'domains' => Domain::get('domain')->toArray()
         ]);
+    }
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function unauthorized()
+    {
+        return view('tenant.unauthorized');
     }
 }

@@ -26,10 +26,6 @@ class LoginController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-
-            InitializeTenancyByDomain::class,
-            ScopeSessions::class,
-            PreventAccessFromCentralDomains::class,
             new Middleware(['auth'], except: ['login', 'showLogin']),
 
         ];
