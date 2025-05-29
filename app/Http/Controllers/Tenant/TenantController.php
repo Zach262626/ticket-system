@@ -35,11 +35,17 @@ class TenantController extends Controller implements HasMiddleware
         ];
     }
 
+    /**
+     * Display the tenant registration form.
+     */
     public function showRegister(Request $request)
     {
         return view("auth.tenant.register");
     }
 
+    /**
+     * Validate and register a new tenant with its domain and default user.
+     */
     public function register(RegisterTenantRequest $request)
     {
         $validated = $request->validated();
@@ -74,6 +80,10 @@ class TenantController extends Controller implements HasMiddleware
         $request->session()->put('tenant_domain', $request->tenant_domain);
         return redirect(tenant_route($tenant->domains()->first()->domain, 'home'));
     }
+
+    /**
+     * Log in to a tenant context by setting session identifiers.
+     */
     public function login(Request $request)
     {
         $tenant = Tenant::where('id', $request->tenant_id)
@@ -82,6 +92,10 @@ class TenantController extends Controller implements HasMiddleware
         $request->session()->put('tenant_domain', $tenant->domains()->first()->domain);
         return redirect(tenant_route($tenant->domains()->first()->domain, 'home'));
     }
+
+    /**
+     * Log out of the tenant context and clear session identifiers.
+     */
     public function logout(Request $request)
     {
         $request->session()->forget('tenant_id');

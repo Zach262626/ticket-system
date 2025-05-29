@@ -45,18 +45,17 @@ class TicketController extends Controller implements HasMiddleware
     }
 
     /**
-     * Show the form for creating a new ticket.
+     * Show form to create a new ticket.
      *
      * @return \Illuminate\Contracts\View\View
      */
     public function showCreate()
     {
-        // You might want to pass lists for status, level, type dropdowns
         return view('ticket.create');
     }
 
     /**
-     * Create a newly created ticket in storage.
+     * store a new ticket.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\redirectResponse
@@ -71,7 +70,6 @@ class TicketController extends Controller implements HasMiddleware
             'accepted_by'   => 'nullable|exists:users,id',
         ]);
 
-        // Attach the current user as creator
         $data['created_by'] = Auth::id();
 
         $ticket = Ticket::create($data);
@@ -95,7 +93,7 @@ class TicketController extends Controller implements HasMiddleware
     }
 
     /**
-     * Show the form for editing the specified ticket.
+     * Show form to edit an existing ticket.
      *
      * @param  \App\Models\Ticket\Ticket  $ticket
      * @return \Illuminate\Contracts\View\View
@@ -106,7 +104,7 @@ class TicketController extends Controller implements HasMiddleware
     }
 
     /**
-     * Edit the specified ticket in storage.
+     * update the specified ticket.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Ticket\Ticket  $ticket
@@ -130,7 +128,7 @@ class TicketController extends Controller implements HasMiddleware
     }
 
     /**
-     * Remove the specified ticket from storage.
+     * Delete the specified ticket.
      *
      * @param  \App\Models\Ticket\Ticket  $ticket
      * @return \Illuminate\Http\redirectResponse

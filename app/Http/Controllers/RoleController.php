@@ -14,7 +14,7 @@ use Stancl\Tenancy\Middleware\ScopeSessions;
 class RoleController extends Controller implements HasMiddleware
 {
     /**
-     * Get the middleware that should be assigned to the controller.
+     * Restrict access to users with the 'admin' or 'developer' role.
      */
     public static function middleware(): array
     {
@@ -22,6 +22,9 @@ class RoleController extends Controller implements HasMiddleware
             new Middleware('role:admin|developer'),
         ];
     }
+    /**
+     * Display the role assignment form with all users and roles.
+     */
     public function create()
     {
         return view('roles.assign-user', [
@@ -29,7 +32,9 @@ class RoleController extends Controller implements HasMiddleware
             'roles' => Role::orderBy('name')->get(),
         ]);
     }
-
+    /**
+     * Validate input and synchronize the selected role onto the user.
+     */
     public function store(Request $request)
     {
         $request->validate([
