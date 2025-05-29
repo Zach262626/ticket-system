@@ -39,7 +39,7 @@ foreach (config('tenancy.central_domains') as $domain) {
         */
             Route::get('/', [TenantHomeController::class, 'unauthorized'])->name('unauthorized');
             Route::group(['middleware' => ['role:developer']], function () {
-                Route::get('/tenant', [TenantHomeController::class, 'index'])->name('home');
+                Route::get('/tenant', [TenantHomeController::class, 'index'])->name('index');
                 Route::get('/tenant/register', [TenantController::class, 'showRegister'])->name('tenant-register');
                 Route::post('/tenant/register', [TenantController::class, 'register'])->name('tenant-register');
                 Route::post('/tenant/login', [TenantController::class, 'login'])->name('tenant-login');
