@@ -7,8 +7,6 @@
                 <form action="{{ route('user-register') }}" method="POST">
                     @csrf
                     <div class="mb-3 bg-light p-3 rounded">
-                        <a href="{{ route('home') }}" class="btn btn btn-primary">Home</a>
-                        <a href="{{ route('tenant-logout') }}" class="btn btn btn-secondary">Logout tenant</a>
                         <h1 class="text-center">Register New User</h1>
                         <div class="mb-3">
                             <label for="InputName" class="form-label">Name</label>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -14,7 +15,8 @@ use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use Stancl\Tenancy\Middleware\ScopeSessions;
 
-class RegisterController extends Controller
+
+class RegisterController extends Controller implements HasMiddleware
 {
     /**
      * Get the middleware that should be assigned to the controller.
@@ -22,10 +24,6 @@ class RegisterController extends Controller
     public static function middleware(): array
     {
         return [
-
-            InitializeTenancyByDomain::class,
-            ScopeSessions::class,
-            PreventAccessFromCentralDomains::class,
             new Middleware(['auth'], except: ['register', 'showRegister']),
 
         ];
