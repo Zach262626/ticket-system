@@ -39,9 +39,14 @@ class TicketController extends Controller implements HasMiddleware
      */
     public function index()
     {
-        $tickets = Ticket::where('created_by', Auth::user()->id)
-            ->with(['status', 'level', 'type', 'createdBy', 'acceptedBy'])
-            ->paginate(15);
+        if ((Auth::user())->hasPermissionTo('view all tickets')) {
+            $tickets = Ticket::with(['status', 'level', 'type', 'createdBy', 'acceptedBy'])
+                ->paginate(15);
+        } else {
+            $tickets = Ticket::where('created_by', Auth::user()->id)
+                ->with(['status', 'level', 'type', 'createdBy', 'acceptedBy'])
+                ->paginate(15);
+        }
 
         return view('ticket.index')->with([
             'tickets' => $tickets
@@ -97,7 +102,7 @@ class TicketController extends Controller implements HasMiddleware
      */
     public function show(Ticket $ticket)
     {
-        if (!($ticket->createdBy->id == Auth::id())) {
+        if (!($ticket->createdBy->id == Auth::id()) && !(Auth::user())->hasPermissionTo('view all tickets')) {
             return redirect()->route('ticket-index');
         }
         $ticket->load(['status', 'level', 'type', 'createdBy', 'acceptedBy', 'attachments']);

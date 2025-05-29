@@ -15,7 +15,7 @@
                 </div>
                 <div class="px-4 pt-3 pb-2 bg-light">
                     <div class="w-100">
-                        <x-user-profile :subname="false" width="100" :user="$ticket->createdBy" />
+                        <x-user-profile :subname="false" width="75" :user="$ticket->createdBy" />
                     </div>
                     <div class="w-100">
                         <div>
