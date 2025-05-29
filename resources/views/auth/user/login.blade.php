@@ -2,13 +2,20 @@
 @section('content')
 
 
-    <div class="container">
+    <div class="container py-5">
+        <div class="row  justify-content-center ">
+            <div class="col-md-6">
+                <div class=" bg-dark px-3 py-2 rounded-top-2 text-light">
+                    <h1 class="col bg-dark">Login User</h1>
+                </div>
+
+            </div>
+        </div>
         <div class="row justify-content-center">
-            <div class="col-md-6 p-5">
+            <div class="col-md-6">
                 <form action="{{ route('user-login') }}" method="POST">
                     @csrf
                     <div class="mb-3 bg-light p-3 rounded">
-                        <h1 class="text-center">Login User</h1>
                         <div class="mb-3">
                             <label for="exampleInputEmail1" class="form-label">Email address</label>
                             <input name="email" type="email" class="form-control" id="exampleInputEmail1"

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ticket\Ticket;
+use App\Models\Ticket\TicketLevel;
+use App\Models\Ticket\TicketStatus;
+use App\Models\Ticket\TicketType;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -51,7 +54,14 @@ class TicketController extends Controller implements HasMiddleware
      */
     public function create()
     {
-        return view('ticket.create');
+        $levels = TicketLevel::all();
+        $types = TicketType::all();
+        return view('ticket.create')->with(
+            [
+                'levels' => $levels,
+                'types' => $types,
+            ]
+        );
     }
 
     /**
@@ -64,18 +74,17 @@ class TicketController extends Controller implements HasMiddleware
     {
         $data = $request->validate([
             'description'   => 'required|string|max:1000',
-            'status_id'     => 'nullable|exists:ticket_statuses,id',
-            'level_id'      => 'nullable|exists:ticket_levels,id',
-            'type_id'       => 'nullable|exists:ticket_types,id',
-            'accepted_by'   => 'nullable|exists:users,id',
+            'level_id'      => 'exists:ticket_levels,id',
+            'type_id'       => 'exists:ticket_types,id',
         ]);
 
         $data['created_by'] = Auth::id();
+        $data['status_id'] = TicketStatus::where('name', 'Open')->get()->first()->id;
 
         $ticket = Ticket::create($data);
 
         return redirect()
-            ->route('ticket.index', $ticket)
+            ->route('ticket-index', $ticket)
             ->with('success', 'Ticket created successfully.');
     }
 

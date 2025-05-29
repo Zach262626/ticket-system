@@ -1,13 +1,20 @@
 @extends('layouts.app')
 @section('content')
-    <div class="container">
+    <div class="container py-5">
+        <div class="row  justify-content-center ">
+            <div class="col-md-6">
+                <div class=" bg-dark px-3 py-2 rounded-top-2 text-light">
+                    <h1 class="col bg-dark">Register New Tenant</h1>
+                </div>
+
+            </div>
+        </div>
         <div class="row justify-content-center">
-            <div class="col-md-6 p-5">
+            <div class="col-md-6">
                 <form action="{{ route('tenant-register') }}" method="POST">
                     @csrf
                     <div class="mb-3 bg-light p-3 rounded">
                         <a href="{{ route('home') }}" class="btn btn btn-primary">Home</a>
-                        <h1 class="text-center">Register New Tenant</h1>
                         <div class="mb-3">
                             <label for="InputCompanyName" class="form-label">Company Name</label>
                             <input name='company_name' type="text" class="form-control" id="InputCompanyName"

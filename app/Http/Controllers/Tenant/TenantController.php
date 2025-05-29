@@ -31,7 +31,7 @@ class TenantController extends Controller implements HasMiddleware
                 ScopeSessions::class,
                 PreventAccessFromCentralDomains::class,
             ], only: ['logout']),
-            new Middleware('role:admin|developer'),
+            new Middleware('role:admin|developer', except: ['logout']),
         ];
     }
 

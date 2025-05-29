@@ -1,12 +1,19 @@
 @extends('layouts.app')
 @section('content')
-    <div class="container">
+    <div class="container py-5">
+        <div class="row  justify-content-center ">
+            <div class="col-md-6">
+                <div class=" bg-dark px-3 py-2 rounded-top-2 text-light">
+                    <h1 class="col bg-dark">Assign Role To User</h1>
+                </div>
+
+            </div>
+        </div>
         <div class="row justify-content-center">
-            <div class="col-md-6 p-5">
+            <div class="col-md-6">
                 <form action="{{ route('users-asign-roles') }}" method="POST">
                     @csrf
                     <div class="mb-3 bg-light p-3 rounded">
-                        <h1 class="text-center">Assign Role To User</h1>
                         <div class="mb-3">
                             <select class="form-select" aria-label="Select User" name="user_id">
                                 <option selected>Select User</option>

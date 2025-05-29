@@ -21,20 +21,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <th scope="row">10001</th>
-                            <td>This is a description</td>
-                            <td>Feature</td>
-                            <td>In Progress</td>
-                            <td><a href="{{ route('home') }}">Here</a></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">10002</th>
-                            <td>This is a description</td>
-                            <td>Feature</td>
-                            <td>In Progress</td>
-                            <td><a href="{{ route('home') }}">Here</a></td>
-                        </tr>
+                        @foreach ($tickets as $ticket)
+                            <tr>
+                                <th scope="row">{{ $ticket->id }}</th>
+                                <td>{{ $ticket->description }}</td>
+                                <td>{{ optional($ticket->type)->name }}</td>
+                                <td>{{ optional($ticket->status)->name }}</td>
+                                <td><a href="{{ route('home') }}">Here</a></td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
                 <div class="mt-3">
