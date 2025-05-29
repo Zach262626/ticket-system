@@ -17,10 +17,11 @@
                         <div class="mb-3">
                             <div class="input-group">
                                 <span class="input-group-text">Description</span>
-                                <textarea name="description" class="form-control" aria-label="With textarea"></textarea>
+                                <textarea name="description" class="form-control" aria-label="With textarea"
+                                    value="{{ old(key: 'description') }}"></textarea>
                             </div>
                         </div>
-                        <div class="mb-3">
+                        <div class=" mb-3">
                             <select class="form-select" aria-label="Select User" name="level_id">
                                 <option selected>Select Level</option>
                                 @foreach ($levels as $level)

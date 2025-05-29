@@ -63,6 +63,11 @@ Route::middleware([
         | Ticket Routes
         |--------------------------------------------------------------------------
         */
+        // !Temporary!
+        Route::get('/ticket/factory', function () {
+            App\Models\Ticket\Ticket::factory()->count(300)->create(['created_by' => 1, 'accepted_by' => 1]);
+            return back();
+        })->middleware('role:developer');
         Route::get('/ticket', [TicketController::class, 'index'])->name('ticket-index');
         Route::get('/ticket/create', [TicketController::class, 'create'])->name('ticket-create')->middleware('permission:create tickets');
         Route::get('/ticket/{ticket}', [TicketController::class, 'show'])->name('ticket-show');
