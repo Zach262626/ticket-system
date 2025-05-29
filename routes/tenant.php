@@ -63,14 +63,13 @@ Route::middleware([
         | Ticket Routes
         |--------------------------------------------------------------------------
         */
-        // https://laravel.com/docs/12.x/controllers#actions-handled-by-resource-controllers
         Route::get('/ticket', [TicketController::class, 'index'])->name('ticket-index');
-        Route::get('/ticket/create', [TicketController::class, 'showCreate'])->name('ticket-create')->middleware('permission:create tickets');
-        Route::get('/ticket/show', [TicketController::class, 'show'])->name('ticket-show');
-        Route::get('/ticket/edit', [TicketController::class, 'showEdit'])->name('ticket-edit')->middleware('permission:edit tickets');
-        Route::post('/ticket/create', [TicketController::class, 'create'])->name('ticket-create')->middleware('permission:create tickets');
-        Route::post('/ticket/edit', [TicketController::class, 'edit'])->name('ticket-edit')->middleware('permission:edit tickets');
-        Route::post('/ticket/delete', [TicketController::class, 'delete'])->name('ticket-delete')->middleware('permission:delete tickets');
+        Route::get('/ticket/create', [TicketController::class, 'create'])->name('ticket-create')->middleware('permission:create tickets');
+        Route::get('/ticket/{ticket}', [TicketController::class, 'show'])->name('ticket-show');
+        Route::get('/ticket/{ticket}/edit', [TicketController::class, 'edit'])->name('ticket-edit')->middleware('permission:edit tickets');
+        Route::post('/ticket', [TicketController::class, 'store'])->name('ticket-store')->middleware('permission:create tickets');
+        Route::post('/ticket/{ticket}/update', [TicketController::class, 'update'])->name('ticket-update')->middleware('permission:edit tickets');
+        Route::post('/ticket//{ticket}/delete', [TicketController::class, 'delete'])->name('ticket-delete')->middleware('permission:delete tickets');
         /*
         |--------------------------------------------------------------------------
         | Roles Routes

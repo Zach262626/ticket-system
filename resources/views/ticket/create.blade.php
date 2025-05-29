@@ -26,14 +26,14 @@
                             <td>This is a description</td>
                             <td>Feature</td>
                             <td>In Progress</td>
-                            <td><a href="{{ route('ticket-show') }}">Here</a></td>
+                            <td><a href="{{ route('') }}">Here</a></td>
                         </tr>
                         <tr>
                             <th scope="row">10002</th>
                             <td>This is a description</td>
                             <td>Feature</td>
                             <td>In Progress</td>
-                            <td><a href="{{ route('ticket-show') }}">Here</a></td>
+                            <td><a href="{{ route('') }}">Here</a></td>
                         </tr>
                     </tbody>
                 </table>

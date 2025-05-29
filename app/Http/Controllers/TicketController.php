@@ -49,7 +49,7 @@ class TicketController extends Controller implements HasMiddleware
      *
      * @return \Illuminate\Contracts\View\View
      */
-    public function showCreate()
+    public function create()
     {
         return view('ticket.create');
     }
@@ -60,7 +60,7 @@ class TicketController extends Controller implements HasMiddleware
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\redirectResponse
      */
-    public function create(Request $request)
+    public function store(Request $request)
     {
         $data = $request->validate([
             'description'   => 'required|string|max:1000',
@@ -98,7 +98,7 @@ class TicketController extends Controller implements HasMiddleware
      * @param  \App\Models\Ticket\Ticket  $ticket
      * @return \Illuminate\Contracts\View\View
      */
-    public function showEdit(Ticket $ticket)
+    public function edit(Ticket $ticket)
     {
         return view('ticket.edit');
     }
@@ -110,7 +110,7 @@ class TicketController extends Controller implements HasMiddleware
      * @param  \App\Models\Ticket\Ticket  $ticket
      * @return \Illuminate\Http\redirectResponse
      */
-    public function edit(Request $request, Ticket $ticket)
+    public function update(Request $request, Ticket $ticket)
     {
         $data = $request->validate([
             'description'   => 'required|string|max:1000',
