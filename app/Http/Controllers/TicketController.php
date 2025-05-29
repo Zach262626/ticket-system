@@ -47,7 +47,6 @@ class TicketController extends Controller implements HasMiddleware
                 ->with(['status', 'level', 'type', 'createdBy', 'acceptedBy'])
                 ->paginate(15);
         }
-
         return view('ticket.index')->with([
             'tickets' => $tickets
         ]);
@@ -98,12 +97,11 @@ class TicketController extends Controller implements HasMiddleware
      * Display the specified ticket.
      *
      * @param  \App\Models\Ticket\Ticket  $ticket
-     * @return \Illuminate\Contracts\View\View
      */
     public function show(Ticket $ticket)
     {
         if (!($ticket->createdBy->id == Auth::id()) && !(Auth::user())->hasPermissionTo('view all tickets')) {
-            return redirect()->route('ticket-index');
+            return redirect()->route('ticket-index')->with('error', 'You are not authorized to view this ticket.');
         }
         $ticket->load(['status', 'level', 'type', 'createdBy', 'acceptedBy', 'attachments']);
 
