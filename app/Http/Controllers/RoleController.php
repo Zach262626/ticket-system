@@ -19,12 +19,6 @@ class RoleController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware([
-                'web',
-                InitializeTenancyByDomain::class,
-                ScopeSessions::class,
-                PreventAccessFromCentralDomains::class,
-            ]),
             new Middleware('role:admin|developer'),
         ];
     }
