@@ -97,7 +97,7 @@ class TicketController extends Controller implements HasMiddleware
     public function show(Ticket $ticket)
     {
         $ticket->load(['status', 'level', 'type', 'createdBy', 'acceptedBy', 'attachments']);
-
+        
         return view('ticket.show')->with(['ticket' => $ticket]);
     }
 

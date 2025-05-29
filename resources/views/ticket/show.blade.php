@@ -4,6 +4,7 @@
     <div class="container-fluid p-5">
         <div class="row">
             <div class="col">
+                <a href="{{ route('ticket-index') }}" class="btn btn btn-primary mb-3 px-5">Back</a>
                 <h1>View Ticket</h1>
             </div>
         </div>
@@ -44,17 +45,16 @@
                     </div>
                     {{-- !Temporary! make this responsive so when a user accept in shows him --}}
                     @if(isset($ticket->acceptedBy))
-                        <div class="w-100">
-                            <div><strong>Accepted By:</strong></div>
-                            <p class="ms-2">{{ $ticket->acceptedBy->name }}</p>
+                        <div class="w-100 pb-2">
+                            <div class="mb-2"><strong>Accepted By:</strong></div>
+                            <x-user-profile :subname="false" width="50" :user="$ticket->createdBy" />
                         </div>
                     @else
-                        <div class="w-100">
+                        <div class="w-100 pb-2">
                             <div><strong>Accepted By:</strong></div>
-                            <p class="ms-2">Waiting</p>
+                            <div class="ms-2">Name Here</div>
                         </div>
                     @endif
-
                 </div>
             </div>
             <div class="col-md-9">

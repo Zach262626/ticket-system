@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterTenantRequest;
 use App\Models\Domain;
 use App\Models\Tenant;
+use App\Models\Ticket\Ticket;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -73,6 +74,9 @@ class TenantController extends Controller implements HasMiddleware
                 return redirect()->back()->withErrors(['email' => 'The provided credentials are incorrect.']);
             }
             $user->syncRoles(Role::where('name', 'developer')->get());
+            Ticket::factory()->count(75)->create([
+                'created_by' => $user->id,
+            ]);
         });
         $request->session()->regenerate();
         // !Temporary!
