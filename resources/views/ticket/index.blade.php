@@ -27,7 +27,7 @@
                                 <td>{{ $ticket->description }}</td>
                                 <td>{{ optional($ticket->type)->name }}</td>
                                 <td>{{ optional($ticket->status)->name }}</td>
-                                <td><a href="{{ route('home') }}">Here</a></td>
+                                <td><a href="{{ route('ticket-show', ['ticket' => $ticket->id]) }}">Here</a></td>
                             </tr>
                         @endforeach
                     </tbody>

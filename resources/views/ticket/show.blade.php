@@ -1,57 +1,69 @@
 @extends('layouts.app')
+
 @section('content')
-
-    <div class="container py-5" style="height: 10000px">
+    <div class="container-fluid p-5">
         <div class="row">
-            <h1 class="col">My Support Tickets</h1>
-        </div>
-        <div class="row bg-dark px-3 py-2 rounded-1">
-            <div class="col text-light">Ticket List</div>
-        </div>
-        <div class="row">
-            <div class="px-4 pt-3 pb-2 bg-light">
-                <a href="{{ route('home') }}" class="btn btn btn-primary">Create new Ticket</a>
-                <table class="table mt-2 w-100">
-                    <thead>
-                        <tr>
-                            <th class="col-1" scope="col">Ticket #</th>
-                            <th class="col-5" scope="col">Description</th>
-                            <th class="col-2" scope="col">Type</th>
-                            <th class="col-2" scope="col">Status</th>
-                            <th class="col-2" scope="col">View</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">10001</th>
-                            <td>This is a description</td>
-                            <td>Feature</td>
-                            <td>In Progress</td>
-                            <td><a href="{{ route('home') }}">Here</a></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">10002</th>
-                            <td>This is a description</td>
-                            <td>Feature</td>
-                            <td>In Progress</td>
-                            <td><a href="{{ route('home') }}">Here</a></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="mt-3">
-                    <nav aria-label="Page navigation example ">
-                        <ul class="pagination">
-                            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                        </ul>
-                    </nav>
-                </div>
-
+            <div class="col">
+                <h1>View Ticket</h1>
             </div>
+        </div>
+        <div class="row gy-4">
+            <div class="col-md-3">
+                <div class="bg-dark px-3 py-2 rounded-1 text-light">
+                    Ticket #{{ $ticket->id }}
+                </div>
+                <div class="px-4 pt-3 pb-2 bg-light">
+                    <div class="w-100">
+                        <x-user-profile :subname="false" width="100" :user="$ticket->createdBy" />
+                    </div>
+                    <div class="w-100">
+                        <div>
+                            <strong>Description:</strong>
+                        </div>
+                        <p class="ms-2">
+                            {{ $ticket->description }}
+                        </p>
+                    </div>
+                    @if(isset($ticket->createdBy->phone_number))
+                        <div class="w-100">
+                            <div><strong>Phone Number:</strong></div>
+                            <p class="ms-2">{{ $ticket->createdBy->phone_number }}</p>
+                        </div>
+                    @endif
+                    <div class="w-100">
+                        <div><strong>Status:</strong></div>
+                        <p class="ms-2">{{ $ticket->status->name }}</p>
+                    </div>
+                    <div class="w-100">
+                        <div><strong>Type:</strong></div>
+                        <p class="ms-2">{{ $ticket->type->name }}</p>
+                    </div>
+                    <div class="w-100">
+                        <div><strong>Level:</strong></div>
+                        <p class="ms-2">{{ $ticket->level->name }}</p>
+                    </div>
+                    {{-- !Temporary! make this responsive so when a user accept in shows him --}}
+                    @if(isset($ticket->acceptedBy))
+                        <div class="w-100">
+                            <div><strong>Accepted By:</strong></div>
+                            <p class="ms-2">{{ $ticket->acceptedBy->name }}</p>
+                        </div>
+                    @else
+                        <div class="w-100">
+                            <div><strong>Accepted By:</strong></div>
+                            <p class="ms-2">Waiting</p>
+                        </div>
+                    @endif
 
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="bg-dark px-3 py-2 rounded-1 text-light">
+                    Chat
+                </div>
+                <div class="px-4 pt-3 pb-2 bg-light">
+                </div>
+            </div>
         </div>
     </div>
 @endsection
