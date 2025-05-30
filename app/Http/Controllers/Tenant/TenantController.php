@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterTenantRequest;
 use App\Models\Domain;
 use App\Models\Tenant;
+use App\Models\Ticket\Ticket;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -31,7 +32,7 @@ class TenantController extends Controller implements HasMiddleware
                 ScopeSessions::class,
                 PreventAccessFromCentralDomains::class,
             ], only: ['logout']),
-            new Middleware('role:admin|developer'),
+            new Middleware('role:admin|developer', except: ['logout']),
         ];
     }
 

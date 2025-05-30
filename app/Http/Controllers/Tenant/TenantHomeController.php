@@ -36,13 +36,4 @@ class TenantHomeController extends Controller implements HasMiddleware
             'domains' => Domain::get('domain')->toArray()
         ]);
     }
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function unauthorized()
-    {
-        return view('tenant.unauthorized');
-    }
 }

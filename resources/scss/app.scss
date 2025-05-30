@@ -3,6 +3,7 @@
 
 $font: 'Poppins', sans-serif;
 $primary: #009bdf;
+$min-contrast-ratio: 3;
 $secondary: #ffffff;
 $info: #777;
 $light: #ffffff;
@@ -27,7 +28,3 @@ $input-bg :hsl(0, 0%, 98%);
 
 /* Use variables here and import style sheets */
 @import '../css/app.css';
-
-.alpha {
-  color: $purple;
-}

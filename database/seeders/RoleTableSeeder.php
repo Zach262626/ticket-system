@@ -28,11 +28,11 @@ class RoleTableSeeder extends Seeder
         $permissions[5] = Permission::create(['name' => 'delete tickets']);
         $permissions[6] = Permission::create(['name' => 're-assign tickets']);
         // Developer has all permissions
-        $role1->givePermissionTo($permissions);
-        $role2->givePermissionTo([$permissions[3], $permissions[1]]); // Only create/comment tickets
-        $role3->givePermissionTo(array_slice($permissions, 0, 5)); // All except delete and re-assign
+        $role1->givePermissionTo($permissions);//dev
+        $role2->givePermissionTo([$permissions[3], $permissions[1]]); //member: Only create/comment tickets
+        $role4->givePermissionTo(array_slice($permissions, 0, 6)); //support: All except re-assign
         // Admin has all permissions
-        $role4->givePermissionTo($permissions);
+        $role3->givePermissionTo($permissions);//admin: All Permission
 
         $permissions = [];
         $permissions[] = Permission::create(['name' => 'view roles']);
@@ -40,7 +40,8 @@ class RoleTableSeeder extends Seeder
         $permissions[] = Permission::create(['name' => 'delete roles']);
         $permissions[] = Permission::create(['name' => 'create roles']);
         $permissions[] = Permission::create(['name' => 'assign roles']);
-        $role1->givePermissionTo($permissions); // Developer can view/edit/create users
-        $role3->givePermissionTo([$permissions[0], $permissions[4]]); // Admin can view/ass
+        // Developer and Admin has all permissions
+        $role1->givePermissionTo($permissions); // Developer
+        $role3->givePermissionTo([$permissions]); // Admin 
     }
 }
