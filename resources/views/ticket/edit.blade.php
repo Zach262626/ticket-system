@@ -63,7 +63,7 @@
                         <select id="user_id" class="form-select" aria-label="Select User Role" name="user_id">
                             @foreach($users as $user)
                             @if($ticket->accepted_by == null) {
-                                <option selected>None</option>
+                            <option selected>None</option>
                             }
                             @endif
                             @if($user == $ticket->accepted_by)
@@ -77,13 +77,15 @@
                     @endcan
                     <div class="d-flex gap-2">
                         <button type="submit" class="btn btn-primary">Submit</button>
-                        <a href="{{ route('ticket-index') }}" class="btn btn-light">Back</a>
+                        <a href="{{ route('ticket-index') }}" class="btn btn-light">Home</a>
                 </form>
-                <form action="{{ route('ticket-delete', ['ticket' => $ticket->id]) }}" method="POST"
-                    onsubmit="return confirm('Are you sure you want to delete this ticket?');">
-                    @csrf
-                    <button class="btn btn-danger" type="submit">Delete</button>
-                </form>
+                <div>
+                    <button type="button" class="btn btn-danger w-100" data-bs-toggle="modal"
+                        data-bs-target="#confirmDeleteModal">
+                        Delete
+                    </button>
+                    <x-ticket.modal.delete :ticket=$ticket />
+                </div>
             </div>
         </div>
         @if ($errors->any())

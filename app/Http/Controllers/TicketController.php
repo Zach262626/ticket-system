@@ -1,7 +1,6 @@
 <?php
 namespace App\Http\Controllers;
 
-use \Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Models\Ticket\Ticket;
 use App\Models\Ticket\TicketLevel;
 use App\Models\Ticket\TicketStatus;
@@ -14,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use Stancl\Tenancy\Middleware\ScopeSessions;
+use \Symfony\Component\HttpKernel\Exception\HttpException;
 
 class TicketController extends Controller implements HasMiddleware
 {
@@ -150,17 +150,17 @@ class TicketController extends Controller implements HasMiddleware
             'type_id'     => 'exists:ticket_types,id',
             'accepted_by' => 'nullable|exists:users,id',
         ]);
-        if (isset($data['accepted_by']) && !(Auth::user())->hasPermissionTo('re-assign tickets')) {
+        if (isset($data['accepted_by']) && ! (Auth::user())->hasPermissionTo('re-assign tickets')) {
             return redirect()->route('ticket-index')->with('error', 'You are not authorized to re-assign ticket.');
-        } elseif (!Auth::user()->hasPermissionTo('edit tickets')) {
+        } elseif (! Auth::user()->hasPermissionTo('edit tickets')) {
             throw new HttpException(403, 'You are not authorized to edit ticket.');
         }
 
         $ticket->update($data);
 
         return redirect()
-            ->route('ticket-index', $ticket)
-            ->with('success', 'Ticket updated successfully.');
+            ->back()
+            ->with('success', 'Ticket uhref="{{ url()->previous() }}pdated successfully.');
     }
 
     /**
@@ -171,8 +171,11 @@ class TicketController extends Controller implements HasMiddleware
      */
     public function delete(Ticket $ticket)
     {
-        if (!Auth::user()->hasPermissionTo('delete tickets')) {
+        if (! Auth::user()->hasPermissionTo('delete tickets')) {
             throw new HttpException(403, 'You are not authorized to delete ticket.');
+        }
+        if ($ticket->status->name != "closed") {
+            return redirect()->back()->with('error', 'Close ticket before deleting.');
         }
         $ticket->delete();
 
@@ -180,4 +183,35 @@ class TicketController extends Controller implements HasMiddleware
             ->route('ticket-index')
             ->with('success', 'Ticket deleted successfully.');
     }
+    public function search(Request $request)
+    {
+        $search = $request->input('search');
+
+        $tickets = Ticket::query()
+            ->when($search, function ($query, $search) {
+                return $query->where('description', 'like', "%{$search}%")
+                    ->orWhereHas('status', function ($q) use ($search) {
+                             $q->where('name', 'like', "%{$search}%");
+                         })
+                    ->orWhereHas('level', function ($q) use ($search) {
+                             $q->where('name', 'like', "%{$search}%");
+                         })
+                    ->orWhereHas('type', function ($q) use ($search) {
+                             $q->where('name', 'like', "%{$search}%");
+                         })
+                    ->orWhereHas('acceptedBy', function ($q) use ($search) {
+                             $q->where('name', 'like', "%{$search}%");
+                         })
+                    ->orWhereHas('createdBy', function ($q) use ($search) {
+                             $q->where('name', 'like', "%{$search}%");
+                         });
+            })
+            ->paginate(15)
+            ->withQueryString(); // Keeps all query parameters (including search) on pagination links
+
+        return view('ticket.index')->with([
+            'tickets' => $tickets,
+        ]);
+    }
+
 }

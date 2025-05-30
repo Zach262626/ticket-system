@@ -39,7 +39,7 @@
                             </select>
                         </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
-                        <a href="{{ route('ticket-index') }}" class="btn btn btn-light">Back</a>
+                        <a href="{{ route('ticket-index') }}" class="btn btn btn-light">Home</a>
 
                     </div>
                     @if ($errors->any())

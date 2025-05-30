@@ -69,6 +69,7 @@ Route::middleware([
             return back();
         })->middleware('role:developer');
         Route::get('/ticket', [TicketController::class, 'index'])->name('ticket-index');
+        Route::get('/ticket/search', [TicketController::class, 'search'])->name('ticket-search');
         Route::get('/ticket/create', [TicketController::class, 'create'])->name('ticket-create')->middleware('permission:create tickets');
         Route::get('/ticket/{ticket}', [TicketController::class, 'show'])->name('ticket-show');
         Route::get('/ticket/{ticket}/edit', [TicketController::class, 'edit'])->name('ticket-edit')->middleware('permission:edit tickets');
