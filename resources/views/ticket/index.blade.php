@@ -8,13 +8,13 @@
         <div class="col text-light">Ticket List</div>
     </div>
     <div class="row">
-        <div class="px-4 pt-3 bg-light">
+        <div class="px-4 pt-3 bg-light d-flex justify-content-between align-items-center flex-wrap">
             <div>
                 <a href="{{ route('ticket-create') }}" class="btn btn-primary">Create new Ticket</a>
             </div>
-            <div class="mt-3">
+            <div class="">
                 <form method="GET" action="{{ route('ticket-search') }}" class="d-flex gap-2 align-items-center">
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search tickets..."
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search tickets"
                         class="form-control w-auto" style="min-width: 250px;" />
                     <button type="submit" class="btn btn-primary">Search</button>
                 </form>
