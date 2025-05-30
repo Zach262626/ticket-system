@@ -31,7 +31,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('messages', function (Blueprint $table) {
+        Schema::create('ticket_messages', function (Blueprint $table) {
             $table->id();
             $table->longText('content');
             $table->foreignId('ticket_id')->constrained('tickets', 'id')->onDelete('cascade')->onUpdate('cascade');
@@ -48,6 +48,6 @@ return new class extends Migration
     {
         Schema::dropIfExists('tickets');
         Schema::dropIfExists('ticket_attachments');
-        Schema::dropIfExists('messages');
+        Schema::dropIfExists('ticket_messages');
     }
 };
