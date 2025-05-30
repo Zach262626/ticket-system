@@ -7,15 +7,15 @@
                 <th class="col-2" scope="col">Type</th>
                 @can('delete tickets')
                     <th class="col-1" scope="col">Status</th>
-                    <th class="col-1" scope="col">Delete</th>
+                    <th class="col-1 text-center" scope="col">Delete</th>
                 @else
                     <th class="col-2" scope="col">Status</th>
                 @endcan
                 @can('edit tickets')
-                    <th class="col-1" scope="col">View</th>
-                    <th class="col-1" scope="col">Edit</th>
+                    <th class="col-1 text-center" scope="col">Edit</th>
+                    <th class="col-1 text-center" scope="col">View</th>
                 @else
-                    <th class="col-2" scope="col">View</th>
+                    <th class="col-2 text-center" scope="col">View</th>
                 @endcan
             </tr>
         </thead>
@@ -26,20 +26,21 @@
                     <td>{{ $ticket->description }}</td>
                     <td>{{ optional($ticket->type)->name }}</td>
                     @can('delete tickets')
+                        <td>{{ optional($ticket->status)->name }}</td>
                         <td>
                             <form action="{{ route('ticket-delete', ['ticket' => $ticket->id]) }}" method="POST">
-                                <button type="submit">Delete</button>
+                                @csrf
+                                <button class="btn btn-danger w-100" type="submit">Delete</button>
                             </form>
                         </td>
-                        <td>{{ optional($ticket->status)->name }}</td>
                     @else
                         <td>{{ optional($ticket->status)->name }}</td>
                     @endcan
                     @can('edit tickets')
-                        <td><a href="{{ route('ticket-show', ['ticket' => $ticket->id]) }}">Here</a></td>
-                        <td><a href="{{ route('ticket-edit', ['ticket' => $ticket->id]) }}">Edit</a></td>
+                        <td><a class="btn btn-primary w-100" href="{{ route('ticket-edit', ['ticket' => $ticket->id]) }}">Edit</a></td>
+                        <td><a class="btn btn-secondary w-100" href="{{ route('ticket-show', ['ticket' => $ticket->id]) }}">Here</a></td>
                     @else
-                        <td><a href="{{ route('ticket-show', ['ticket' => $ticket->id]) }}">Here</a></td>
+                        <td><a  class="btn btn-secondary w-100" href="{{ route('ticket-show', ['ticket' => $ticket->id]) }}">Here</a></td>
                     @endcan
                 </tr>
             @endforeach

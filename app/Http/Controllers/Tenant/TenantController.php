@@ -74,9 +74,6 @@ class TenantController extends Controller implements HasMiddleware
                 return redirect()->back()->withErrors(['email' => 'The provided credentials are incorrect.']);
             }
             $user->syncRoles(Role::where('name', 'developer')->get());
-            Ticket::factory()->count(75)->create([
-                'created_by' => $user->id,
-            ]);
         });
         $request->session()->regenerate();
         // !Temporary!

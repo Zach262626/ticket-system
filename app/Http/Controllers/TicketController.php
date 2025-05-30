@@ -1,11 +1,12 @@
 <?php
-
 namespace App\Http\Controllers;
 
+use \Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Models\Ticket\Ticket;
 use App\Models\Ticket\TicketLevel;
 use App\Models\Ticket\TicketStatus;
 use App\Models\Ticket\TicketType;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -48,7 +49,7 @@ class TicketController extends Controller implements HasMiddleware
                 ->paginate(15);
         }
         return view('ticket.index')->with([
-            'tickets' => $tickets
+            'tickets' => $tickets,
         ]);
     }
 
@@ -60,11 +61,11 @@ class TicketController extends Controller implements HasMiddleware
     public function create()
     {
         $levels = TicketLevel::all();
-        $types = TicketType::all();
+        $types  = TicketType::all();
         return view('ticket.create')->with(
             [
                 'levels' => $levels,
-                'types' => $types,
+                'types'  => $types,
             ]
         );
     }
@@ -78,13 +79,13 @@ class TicketController extends Controller implements HasMiddleware
     public function store(Request $request)
     {
         $data = $request->validate([
-            'description'   => 'required|string|max:1000',
-            'level_id'      => 'exists:ticket_levels,id',
-            'type_id'       => 'exists:ticket_types,id',
+            'description' => 'required|string|max:1000',
+            'level_id'    => 'exists:ticket_levels,id',
+            'type_id'     => 'exists:ticket_types,id',
         ]);
 
         $data['created_by'] = Auth::id();
-        $data['status_id'] = TicketStatus::where('name', 'Open')->get()->first()->id;
+        $data['status_id']  = TicketStatus::where('name', 'Open')->get()->first()->id;
 
         $ticket = Ticket::create($data);
 
@@ -100,7 +101,7 @@ class TicketController extends Controller implements HasMiddleware
      */
     public function show(Ticket $ticket)
     {
-        if (!($ticket->createdBy->id == Auth::id()) && !(Auth::user())->hasPermissionTo('view all tickets')) {
+        if (! ($ticket->createdBy->id == Auth::id()) && ! (Auth::user())->hasPermissionTo('view all tickets')) {
             return redirect()->route('ticket-index')->with('error', 'You are not authorized to view this ticket.');
         }
         $ticket->load(['status', 'level', 'type', 'createdBy', 'acceptedBy', 'attachments']);
@@ -116,7 +117,21 @@ class TicketController extends Controller implements HasMiddleware
      */
     public function edit(Ticket $ticket)
     {
-        return view('ticket.edit');
+        if (! ($ticket->createdBy->id == Auth::id()) && ! (Auth::user())->hasPermissionTo('edit tickets')) {
+            return redirect()->route('ticket-index')->with('error', 'You are not authorized to edit this ticket.');
+        }
+        $levels   = TicketLevel::all();
+        $types    = TicketType::all();
+        $statuses = TicketStatus::all();
+        $users    = User::withoutRole('member')->get();
+        $ticket->load(['status', 'level', 'type', 'createdBy', 'acceptedBy', 'attachments']);
+        return view('ticket.edit')->with([
+            'levels'   => $levels,
+            'types'    => $types,
+            'statuses' => $statuses,
+            'ticket'   => $ticket,
+            'users'    => $users,
+        ]);
     }
 
     /**
@@ -129,17 +144,22 @@ class TicketController extends Controller implements HasMiddleware
     public function update(Request $request, Ticket $ticket)
     {
         $data = $request->validate([
-            'description'   => 'required|string|max:1000',
-            'status_id'     => 'nullable|exists:ticket_status,id',
-            'level_id'      => 'nullable|exists:ticket_levels,id',
-            'type_id'       => 'nullable|exists:ticket_types,id',
-            'accepted_by'   => 'nullable|exists:users,id',
+            'description' => 'required|string|max:1000',
+            'status_id'   => 'exists:ticket_status,id',
+            'level_id'    => 'exists:ticket_levels,id',
+            'type_id'     => 'exists:ticket_types,id',
+            'accepted_by' => 'nullable|exists:users,id',
         ]);
+        if (isset($data['accepted_by']) && !(Auth::user())->hasPermissionTo('re-assign tickets')) {
+            return redirect()->route('ticket-index')->with('error', 'You are not authorized to re-assign ticket.');
+        } elseif (!Auth::user()->hasPermissionTo('edit tickets')) {
+            throw new HttpException(403, 'You are not authorized to edit ticket.');
+        }
 
         $ticket->update($data);
 
         return redirect()
-            ->route('ticket.show', $ticket)
+            ->route('ticket-index', $ticket)
             ->with('success', 'Ticket updated successfully.');
     }
 
@@ -151,10 +171,13 @@ class TicketController extends Controller implements HasMiddleware
      */
     public function delete(Ticket $ticket)
     {
+        if (!Auth::user()->hasPermissionTo('delete tickets')) {
+            throw new HttpException(403, 'You are not authorized to delete ticket.');
+        }
         $ticket->delete();
 
         return redirect()
-            ->route('ticket.index')
+            ->route('ticket-index')
             ->with('success', 'Ticket deleted successfully.');
     }
 }
