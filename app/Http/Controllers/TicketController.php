@@ -160,7 +160,7 @@ class TicketController extends Controller implements HasMiddleware
 
         return redirect()
             ->back()
-            ->with('success', 'Ticket uhref="{{ url()->previous() }}pdated successfully.');
+            ->with('success', 'Ticket updated successfully.');
     }
 
     /**
@@ -183,6 +183,9 @@ class TicketController extends Controller implements HasMiddleware
             ->route('ticket-index')
             ->with('success', 'Ticket deleted successfully.');
     }
+    /**
+     * Search for a specific ticket
+     */
     public function search(Request $request)
     {
         $search = $request->input('search');

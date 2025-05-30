@@ -66,7 +66,7 @@
                             <option selected>None</option>
                             }
                             @endif
-                            @if($user == $ticket->accepted_by)
+                            @if($user->id == $ticket->accepted_by)
                             <option selected value="{{ $user->id }}">{{ $user->name }}</option>
                             @else
                             <option value="{{ $user->id }}">{{ $user->name }}</option>
