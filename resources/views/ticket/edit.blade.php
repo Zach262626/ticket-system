@@ -77,7 +77,8 @@
                     @endcan
                     <div class="d-flex gap-2">
                         <button type="submit" class="btn btn-primary">Submit</button>
-                        <a href="{{ route('ticket-index') }}" class="btn btn-light">Home</a>
+                        <a href="{{ route('ticket-index') }}" class="btn btn-secondary">Home</a>
+                        <a href="{{ route('ticket-show', ['ticket' => $ticket->id]) }}"" class="btn btn-light">View</a>
                 </form>
                 <div>
                     <button type="button" class="btn btn-danger w-100" data-bs-toggle="modal"
