@@ -36,7 +36,6 @@ return new class extends Migration
             $table->longText('content');
             $table->foreignId('ticket_id')->constrained('tickets', 'id')->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('sender_id')->constrained('users')->onUpdate('cascade');
-            $table->foreignId('receiver_id')->constrained('users')->onUpdate('cascade');
             $table->timestamps();
         });
     }

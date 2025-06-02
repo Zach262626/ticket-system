@@ -15,7 +15,7 @@ class TicketMessage extends Model
      *
      * @var string
      */
-    protected $table = 'messages';
+    protected $table = 'ticket_messages';
 
     /**
      * The attributes that are mass assignable.

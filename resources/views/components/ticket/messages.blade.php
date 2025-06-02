@@ -57,8 +57,20 @@
 <div>
     <form action="">
         <div class="input-group mb-3 mt-2">
+            <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
+            <input type="hidden" name="sender_id" value="{{ $user->id }}">
+            <input type="hidden" name="receiver_id" value="{{ $user->id }}">
             <input type="text" class="form-control mx-2" aria-label="Sizing example input"
                 aria-describedby="inputGroup-sizing-default" placeholder="Message here">
+            @if ($canSendMessage)
+                <input type="text" class="form-control mx-2" aria-label="Sizing example input"
+                    aria-describedby="inputGroup-sizing-default" placeholder="Message here">
+                <span><button class="px-5 btn btn-primary">Send</button></span>
+            @else
+                <input type="text" class="form-control mx-2" aria-label="Sizing example input"
+                    aria-describedby="inputGroup-sizing-default" placeholder="Wait for the support agent.">
+                <span><button type="button" class="px-5 btn btn-hidden">Send</button></span>
+            @endif
             <span><button class="px-5 btn btn-primary">Send</button></span>
         </div>
     </form>

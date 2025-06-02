@@ -80,7 +80,7 @@
                     @if(isset($ticket->acceptedBy))
                         <div class="w-100 pb-2">
                             <div class="mb-2"><strong>Accepted By:</strong></div>
-                            <x-user-profile :subname="false" width="50" :user="$ticket->createdBy" />
+                            <x-user-profile :subname="false" width="50" :user="$ticket->acceptedBy" />
                         </div>
                     @else
                         <div class="w-100 pb-2">
@@ -95,9 +95,8 @@
                     Chat
                 </div>
                 <div class="px-4 pt-3 pb-2 bg-light">
-                    <x-ticket.messages />
+                    <x-ticket.messages :ticketid="$ticket->id" :senderid="Auth::id()" </div>
                 </div>
             </div>
         </div>
-    </div>
 @endsection
