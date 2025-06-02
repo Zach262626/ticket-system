@@ -4,16 +4,28 @@
     <div class="container-fluid p-5">
         <div class="row">
             <div class="col">
-                <a href="{{ route('ticket-index') }}" class="btn btn btn-primary mb-3 px-5">Home</a>
-                <a class="btn btn btn-secondary mb-3 px-5"
-                    href="{{ route('ticket-edit', ['ticket' => $ticket->id]) }}">Edit</a>
-                @can('delete tickets')
-                    <button type="button" class="btn btn btn-danger mb-3 px-5" data-bs-toggle="modal"
-                        data-bs-target="#confirmDeleteModal">
-                        Delete
-                    </button>
-                    <x-ticket.modal.delete :ticket=$ticket />
-                @endcan
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="{{ route('ticket-index') }}" class="btn btn btn-primary mb-3 px-5">Home</a>
+                    @can('edit tickets')
+                        <a class="btn btn btn-secondary mb-3 px-5"
+                            href="{{ route('ticket-edit', ['ticket' => $ticket->id]) }}">Edit</a>
+                        @if($ticket->acceptedBy == null)
+                            <span>
+                                <form action="{{ route('ticket-assign', ['ticket' => $ticket->id]) }}" method="POST">
+                                    @csrf
+                                    <button class="btn btn btn-secondary mb-3 px-5" type="submit">Assign-Me</button>
+                                </form>
+                            </span>
+                        @endif
+                        @can('delete tickets')
+                            <button type="button" class="btn btn btn-danger mb-3 px-5" data-bs-toggle="modal"
+                                data-bs-target="#confirmDeleteModal">
+                                Delete
+                            </button>
+                            <x-ticket.modal.delete :ticket=$ticket />
+                        @endcan
+                    @endcan
+                </div>
                 @if (session('error'))
                     <div class="alert alert-danger alert-dismissible fade show my-2" role="alert">
                         {{ session('error') }}

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Ticket\Ticket;
@@ -117,7 +118,7 @@ class TicketController extends Controller implements HasMiddleware
      */
     public function edit(Ticket $ticket)
     {
-        if (! ($ticket->createdBy->id == Auth::id()) && ! (Auth::user())->hasPermissionTo('edit tickets')) {
+        if (!(Auth::user())->hasPermissionTo('edit tickets')) {
             return redirect()->route('ticket-index')->with('error', 'You are not authorized to edit this ticket.');
         }
         $levels   = TicketLevel::all();
@@ -192,29 +193,47 @@ class TicketController extends Controller implements HasMiddleware
 
         $tickets = Ticket::query()
             ->when($search, function ($query, $search) {
-                return $query->where('description', 'like', "%{$search}%")
-                    ->orWhereHas('status', function ($q) use ($search) {
-                             $q->where('name', 'like', "%{$search}%");
-                         })
-                    ->orWhereHas('level', function ($q) use ($search) {
-                             $q->where('name', 'like', "%{$search}%");
-                         })
-                    ->orWhereHas('type', function ($q) use ($search) {
-                             $q->where('name', 'like', "%{$search}%");
-                         })
-                    ->orWhereHas('acceptedBy', function ($q) use ($search) {
-                             $q->where('name', 'like', "%{$search}%");
-                         })
-                    ->orWhereHas('createdBy', function ($q) use ($search) {
-                             $q->where('name', 'like', "%{$search}%");
-                         });
-            })
-            ->paginate(15)
-            ->withQueryString(); // Keeps all query parameters (including search) on pagination links
+                $query->where(function ($q) use ($search) {
+                    $q->where('description', 'like', "%{$search}%")
+                        ->orWhereHas('status', function ($q) use ($search) {
+                            $q->where('name', 'like', "%{$search}%");
+                        })
+                        ->orWhereHas('level', function ($q) use ($search) {
+                            $q->where('name', 'like', "%{$search}%");
+                        })
+                        ->orWhereHas('type', function ($q) use ($search) {
+                            $q->where('name', 'like', "%{$search}%");
+                        })
+                        ->orWhereHas('acceptedBy', function ($q) use ($search) {
+                            $q->where('name', 'like', "%{$search}%");
+                        })
+                        ->orWhereHas('createdBy', function ($q) use ($search) {
+                            $q->where('name', 'like', "%{$search}%");
+                        });
+                });
+            });
+
+        if (!Auth::user()->hasPermissionTo('view all tickets')) {
+            $tickets->where('created_by', Auth::id());
+        }
+
+        $tickets = $tickets->paginate(15)->withQueryString();
 
         return view('ticket.index')->with([
             'tickets' => $tickets,
         ]);
     }
 
+    /**
+     * Search for a specific ticket
+     */
+    public function assign(Ticket $ticket)
+    {
+        if (!(Auth::user())->hasPermissionTo('edit tickets')) {
+            return redirect()->route('ticket-index')->with('error', 'You are not authorized to edit this ticket.');
+        }
+        $ticket->accepted_by = Auth::id();
+        $ticket->save();
+        return redirect()->back()->with('success', 'Ticket #' . $ticket->id . " has been accepted by " . Auth::user()->name . "");
+    }
 }
