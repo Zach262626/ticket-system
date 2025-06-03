@@ -1,5 +1,7 @@
 <div class="p-1 d-flex overflow-auto flex-column-reverse" style="height: 400px;" id="messages-container">
+    foreaa
     @foreach ($ticketMessages as $message)
+        <ticket-messages :message="{{ $message }}"></ticket-messages>
         @if ($message['sender_id'] == $senderid)
             <div class="d-flex flex-row justify-content-start w-100">
                 <div class="d-flex flex-column align-items-end w-100 pe-2">
