@@ -31,12 +31,11 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('messages', function (Blueprint $table) {
+        Schema::create('ticket_messages', function (Blueprint $table) {
             $table->id();
             $table->longText('content');
             $table->foreignId('ticket_id')->constrained('tickets', 'id')->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('sender_id')->constrained('users')->onUpdate('cascade');
-            $table->foreignId('receiver_id')->constrained('users')->onUpdate('cascade');
             $table->timestamps();
         });
     }
@@ -48,6 +47,6 @@ return new class extends Migration
     {
         Schema::dropIfExists('tickets');
         Schema::dropIfExists('ticket_attachments');
-        Schema::dropIfExists('messages');
+        Schema::dropIfExists('ticket_messages');
     }
 };

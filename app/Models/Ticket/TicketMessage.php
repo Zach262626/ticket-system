@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Ticket;
 
 use App\Models\Ticket\Ticket;
 use App\Models\User;
@@ -8,14 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class Message extends Model
+class TicketMessage extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'messages';
+    protected $table = 'ticket_messages';
 
     /**
      * The attributes that are mass assignable.

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Ticket\Ticket;
@@ -29,8 +30,10 @@ class TicketController extends Controller implements HasMiddleware
                 ScopeSessions::class,
                 PreventAccessFromCentralDomains::class,
             ]),
-            new Middleware('role:admin|developer|support', only: ['edit', 'showEdit']),
-            new Middleware('role:admin|developer', only: ['delete']),
+            new Middleware('permission:edit tickets', only: ['edit', 'showEdit', 'close']),
+            new Middleware('permission:delete tickets', only: ['delete']),
+            new Middleware('permission:create tickets', only: ['create', 'store']),
+            new Middleware('permission:assign tickets', only: ['assign']),
         ];
     }
     /**
@@ -117,7 +120,7 @@ class TicketController extends Controller implements HasMiddleware
      */
     public function edit(Ticket $ticket)
     {
-        if (! ($ticket->createdBy->id == Auth::id()) && ! (Auth::user())->hasPermissionTo('edit tickets')) {
+        if (!(Auth::user())->hasPermissionTo('edit tickets')) {
             return redirect()->route('ticket-index')->with('error', 'You are not authorized to edit this ticket.');
         }
         $levels   = TicketLevel::all();
@@ -150,8 +153,8 @@ class TicketController extends Controller implements HasMiddleware
             'type_id'     => 'exists:ticket_types,id',
             'accepted_by' => 'nullable|exists:users,id',
         ]);
-        if (isset($data['accepted_by']) && ! (Auth::user())->hasPermissionTo('re-assign tickets')) {
-            return redirect()->route('ticket-index')->with('error', 'You are not authorized to re-assign ticket.');
+        if (isset($data['accepted_by']) && ! (Auth::user())->hasPermissionTo('assign tickets')) {
+            return redirect()->route('ticket-index')->with('error', 'You are not authorized to assign ticket.');
         } elseif (! Auth::user()->hasPermissionTo('edit tickets')) {
             throw new HttpException(403, 'You are not authorized to edit ticket.');
         }
@@ -171,9 +174,6 @@ class TicketController extends Controller implements HasMiddleware
      */
     public function delete(Ticket $ticket)
     {
-        if (! Auth::user()->hasPermissionTo('delete tickets')) {
-            throw new HttpException(403, 'You are not authorized to delete ticket.');
-        }
         if ($ticket->status->name != "closed") {
             return redirect()->back()->with('error', 'Close ticket before deleting.');
         }
@@ -192,29 +192,54 @@ class TicketController extends Controller implements HasMiddleware
 
         $tickets = Ticket::query()
             ->when($search, function ($query, $search) {
-                return $query->where('description', 'like', "%{$search}%")
-                    ->orWhereHas('status', function ($q) use ($search) {
-                             $q->where('name', 'like', "%{$search}%");
-                         })
-                    ->orWhereHas('level', function ($q) use ($search) {
-                             $q->where('name', 'like', "%{$search}%");
-                         })
-                    ->orWhereHas('type', function ($q) use ($search) {
-                             $q->where('name', 'like', "%{$search}%");
-                         })
-                    ->orWhereHas('acceptedBy', function ($q) use ($search) {
-                             $q->where('name', 'like', "%{$search}%");
-                         })
-                    ->orWhereHas('createdBy', function ($q) use ($search) {
-                             $q->where('name', 'like', "%{$search}%");
-                         });
-            })
-            ->paginate(15)
-            ->withQueryString(); // Keeps all query parameters (including search) on pagination links
+                $query->where(function ($q) use ($search) {
+                    $q->where('description', 'like', "%{$search}%")
+                        ->orWhereHas('status', function ($q) use ($search) {
+                            $q->where('name', 'like', "%{$search}%");
+                        })
+                        ->orWhereHas('level', function ($q) use ($search) {
+                            $q->where('name', 'like', "%{$search}%");
+                        })
+                        ->orWhereHas('type', function ($q) use ($search) {
+                            $q->where('name', 'like', "%{$search}%");
+                        })
+                        ->orWhereHas('acceptedBy', function ($q) use ($search) {
+                            $q->where('name', 'like', "%{$search}%");
+                        })
+                        ->orWhereHas('createdBy', function ($q) use ($search) {
+                            $q->where('name', 'like', "%{$search}%");
+                        });
+                });
+            });
+
+        if (!Auth::user()->hasPermissionTo('view all tickets')) {
+            $tickets->where('created_by', Auth::id());
+        }
+
+        $tickets = $tickets->paginate(15)->withQueryString();
 
         return view('ticket.index')->with([
             'tickets' => $tickets,
         ]);
     }
 
+    /**
+     * assign user to a specific ticket
+     */
+    public function assign(Ticket $ticket)
+    {
+        $ticket->accepted_by = Auth::id();
+        $ticket->status_id = TicketStatus::where('name', 'in_progress')->first()->id;
+        $ticket->save();
+        return redirect()->back()->with('success', 'Ticket #' . $ticket->id . " has been accepted by " . Auth::user()->name . "");
+    }
+    /**
+     * Close a specific ticket
+     */
+    public function close(Ticket $ticket)
+    {
+        $ticket->status_id = TicketStatus::where('name', 'closed')->first()->id;
+        $ticket->save();
+        return redirect()->back()->with('success', 'Ticket #' . $ticket->id . " has been closed by " . Auth::user()->name . "");
+    }
 }

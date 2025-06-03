@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use Stancl\Tenancy\Middleware\ScopeSessions;
+use App\Http\Controllers\MessageController;
+
 
 
 
@@ -73,17 +75,23 @@ Route::middleware([
         Route::get('/ticket/create', [TicketController::class, 'create'])->name('ticket-create')->middleware('permission:create tickets');
         Route::get('/ticket/{ticket}', [TicketController::class, 'show'])->name('ticket-show');
         Route::get('/ticket/{ticket}/edit', [TicketController::class, 'edit'])->name('ticket-edit')->middleware('permission:edit tickets');
+        Route::post('/ticket/{ticket}/assign', [TicketController::class, 'assign'])->name('ticket-assign')->middleware('permission:assign tickets');
+        Route::post('/ticket/{ticket}/close', [TicketController::class, 'close'])->name('ticket-close')->middleware('permission:edit tickets');
         Route::post('/ticket', [TicketController::class, 'store'])->name('ticket-store')->middleware('permission:create tickets');
         Route::post('/ticket/{ticket}/update', [TicketController::class, 'update'])->name('ticket-update')->middleware('permission:edit tickets');
         Route::post('/ticket//{ticket}/delete', [TicketController::class, 'delete'])->name('ticket-delete')->middleware('permission:delete tickets');
+        // Ticket Messages
+        Route::post('/ticket/message', [MessageController::class, 'store'])->name('ticket-message-store');
         /*
         |--------------------------------------------------------------------------
         | Roles Routes
         |--------------------------------------------------------------------------
         */
         Route::group(['middleware' => ['role_or_permission:assign roles']], function () {
-            Route::get('admin/users/roles', [RoleController::class, 'create'])->name('users-roles');
-            Route::post('admin/users/roles', [RoleController::class, 'store'])->name('users-asign-roles');
+            Route::get('admin/users/roles', [RoleController::class, 'index'])->name('users-roles');
+            Route::post('admin/users/roles', [RoleController::class, 'assign'])->name('users-asign-roles');
         });
+        Route::get('admin/roles', [RoleController::class, 'edit'])->name('edit-roles')->middleware('permission:edit roles');
+        Route::post('admin/roles', [RoleController::class, 'update'])->name('update-roles')->middleware('permission:edit roles');
     });
 });

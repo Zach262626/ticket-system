@@ -2,13 +2,12 @@
 
 namespace App\Models\Ticket;
 
-use App\Models\Message;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Ticket extends Model
 {
@@ -86,6 +85,6 @@ class Ticket extends Model
      */
     public function messages(): HasMany
     {
-        return $this->hasMany(Message::class, 'ticket_id');
+        return $this->hasMany(TicketMessage::class, 'ticket_id');
     }
 }
