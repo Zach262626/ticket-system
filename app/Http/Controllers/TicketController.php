@@ -30,8 +30,8 @@ class TicketController extends Controller implements HasMiddleware
                 ScopeSessions::class,
                 PreventAccessFromCentralDomains::class,
             ]),
-            new Middleware('role:admin|developer|support', only: ['edit', 'showEdit']),
-            new Middleware('role:admin|developer', only: ['delete']),
+            new Middleware('permission:edit tickets', only: ['edit', 'showEdit']),
+            new Middleware('permission:delete tickets', only: ['delete']),
         ];
     }
     /**
@@ -151,8 +151,8 @@ class TicketController extends Controller implements HasMiddleware
             'type_id'     => 'exists:ticket_types,id',
             'accepted_by' => 'nullable|exists:users,id',
         ]);
-        if (isset($data['accepted_by']) && ! (Auth::user())->hasPermissionTo('re-assign tickets')) {
-            return redirect()->route('ticket-index')->with('error', 'You are not authorized to re-assign ticket.');
+        if (isset($data['accepted_by']) && ! (Auth::user())->hasPermissionTo('assign tickets')) {
+            return redirect()->route('ticket-index')->with('error', 'You are not authorized to assign ticket.');
         } elseif (! Auth::user()->hasPermissionTo('edit tickets')) {
             throw new HttpException(403, 'You are not authorized to edit ticket.');
         }
@@ -229,7 +229,7 @@ class TicketController extends Controller implements HasMiddleware
      */
     public function assign(Ticket $ticket)
     {
-        if (!(Auth::user())->hasPermissionTo('edit tickets')) {
+        if (!(Auth::user())->hasPermissionTo('assign tickets')) {
             return redirect()->route('ticket-index')->with('error', 'You are not authorized to edit this ticket.');
         }
         $ticket->accepted_by = Auth::id();

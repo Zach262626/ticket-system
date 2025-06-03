@@ -33,6 +33,9 @@
                         </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
                         <a href="{{ route('home') }}" class="btn btn btn-light">Home</a>
+                        @can('edit roles')
+                            <a href="{{ route(name: 'edit-roles') }}" class="btn btn btn-light">Edit Roles</a>
+                        @endcan
 
                     </div>
                     @if ($errors->any())

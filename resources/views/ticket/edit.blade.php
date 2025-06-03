@@ -57,7 +57,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        @can('re-assign tickets')
+                        @can('assign tickets')
                             <div class="mb-3">
                                 <label for="user_id" class="form-label">Accepted By</label>
                                 <select id="user_id" class="form-select" aria-label="Select User Role" name="accepted_by">

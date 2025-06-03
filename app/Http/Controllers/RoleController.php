@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
@@ -48,5 +50,33 @@ class RoleController extends Controller implements HasMiddleware
 
         return redirect()->back()
             ->with('success', 'Roles updated for ' . $user->name);
+    }
+    /**
+     * Show all roles with their permission, allow to change role permission
+     */
+    public function show(Request $request)
+    {
+        if (!Auth::user()->HasPermissionTo('edit roles') && !Auth::user()->hasRole('developer')) {
+            return redirect()->back()->with('error', 'User is not alowed to edit roles');
+        }
+        return view('roles.show-all', [
+            'roles' => Role::all(),
+            'permissions' => Permission::all(),
+        ]);
+    }
+    /**
+     * update all roles with their permission, allow to change role permission
+     */
+    public function update(Request $request)
+    {
+        $inputPermissions = $request->input('permissions', []);
+
+        foreach (Role::all() as $role) {
+            $permissionIds = isset($inputPermissions[$role->id]) ? $inputPermissions[$role->id] : [];
+            $permissions = Permission::whereIn('id', $permissionIds)->get();
+            $role->syncPermissions($permissions);
+        }
+
+        return redirect()->back()->with('success', 'Permissions updated successfully.');
     }
 }

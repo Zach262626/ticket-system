@@ -90,5 +90,7 @@ Route::middleware([
             Route::get('admin/users/roles', [RoleController::class, 'create'])->name('users-roles');
             Route::post('admin/users/roles', [RoleController::class, 'store'])->name('users-asign-roles');
         });
+        Route::get('admin/roles', [RoleController::class, 'show'])->name('edit-roles')->middleware('permission:edit roles');
+        Route::post('admin/roles', [RoleController::class, 'update'])->name('update-roles')->middleware('permission:edit roles');
     });
 });
