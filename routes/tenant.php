@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use Stancl\Tenancy\Middleware\ScopeSessions;
+use App\Http\Controllers\MessageController;
+
 
 
 
@@ -77,6 +79,8 @@ Route::middleware([
         Route::post('/ticket', [TicketController::class, 'store'])->name('ticket-store')->middleware('permission:create tickets');
         Route::post('/ticket/{ticket}/update', [TicketController::class, 'update'])->name('ticket-update')->middleware('permission:edit tickets');
         Route::post('/ticket//{ticket}/delete', [TicketController::class, 'delete'])->name('ticket-delete')->middleware('permission:delete tickets');
+        // Ticket Messages
+        Route::post('/ticket/message', [MessageController::class, 'store'])->name('ticket-message-store');
         /*
         |--------------------------------------------------------------------------
         | Roles Routes

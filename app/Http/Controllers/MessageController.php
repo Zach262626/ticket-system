@@ -22,10 +22,10 @@ class MessageController extends Controller
         ]);
 
         $ticket = TicketMessage::create($data);
+        $ticket->save();
 
         return redirect()
-            ->back()
-            ->with('success', 'message sent');
+            ->back();
     }
 
     /**
@@ -73,7 +73,7 @@ class MessageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function delete($id)
     {
         if (!Auth::user()->HasPermissionTo('edit tickets')) {
             return redirect()->back()->with('error', 'Cannot delete this message');

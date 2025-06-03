@@ -95,7 +95,7 @@
                     Chat
                 </div>
                 <div class="px-4 pt-3 pb-2 bg-light">
-                    <x-ticket.messages :ticketid="$ticket->id" :senderid="Auth::id()" </div>
+                    <x-ticket.messages :ticketid="$ticket->id" :senderid="Auth::id()" />
                 </div>
             </div>
         </div>

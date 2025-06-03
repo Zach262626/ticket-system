@@ -11,7 +11,8 @@ use Illuminate\View\Component;
 
 class Messages extends Component
 {
-    public TicketMessage $ticketMessages;
+    public array $ticketMessages;
+    public Ticket $ticket;
     /**
      * Create a new component instance.
      */
@@ -19,7 +20,8 @@ class Messages extends Component
         public int $ticketid,
         public int $senderid,
     ) {
-        $this->ticketMessages = TicketMessage::find($ticketid);
+        $this->ticket = Ticket::where("id", $ticketid)->first();
+        $this->ticketMessages = $this->ticket->messages()->orderBy('created_at')->get()->toArray() ?? [];
     }
 
     /**
