@@ -27,7 +27,6 @@ class TicketMessage extends Model
         'content',
         'ticket_id',
         'sender_id',
-        'receiver_id',
     ];
     /**
      * A message belongs to one ticket.
@@ -39,15 +38,8 @@ class TicketMessage extends Model
     /**
      * A message has one sender.
      */
-    public function sender(): HasOne
+    public function sender(): belongsTo
     {
-        return $this->hasOne(User::class, 'sender_id');
-    }
-    /**
-     * A message has one receiver.
-     */
-    public function receiver(): HasOne
-    {
-        return $this->hasOne(User::class, 'receiver_id');
+        return $this->belongsTo(User::class, 'sender_id', 'id');
     }
 }

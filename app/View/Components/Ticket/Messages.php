@@ -4,6 +4,7 @@ namespace App\View\Components\Ticket;
 
 use App\Models\Ticket\Ticket;
 use App\Models\Ticket\TicketMessage;
+use App\Models\User;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -21,7 +22,11 @@ class Messages extends Component
         public int $senderid,
     ) {
         $this->ticket = Ticket::where("id", $ticketid)->first();
-        $this->ticketMessages = $this->ticket->messages()->orderBy('created_at')->get()->toArray() ?? [];
+        $messages = $this->ticket->messages()->orderBy('created_at')->get();
+        foreach ($messages as $message) {
+            $message->load(['sender']);
+            $this->ticketMessages[$message->id] = $message;
+        }
     }
 
     /**

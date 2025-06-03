@@ -1,6 +1,10 @@
 /* Change variables here */
 @import url("https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Dela+Gothic+One&display=swap");
 
+html {
+    scroll-behavior: smooth;
+}
+
 $font: 'Poppins', sans-serif;
 $primary: #009bdf;
 $min-contrast-ratio: 3;
