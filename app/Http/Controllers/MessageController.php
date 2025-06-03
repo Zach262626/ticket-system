@@ -6,9 +6,29 @@ use App\Models\Ticket\Ticket;
 use App\Models\Ticket\TicketMessage;
 use App\Models\Ticket\TicketStatus;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
+use Stancl\Tenancy\Middleware\ScopeSessions;
 
-class MessageController extends Controller
+class MessageController extends Controller implements HasMiddleware
 {
+    /**
+     * Get the middleware that should be assigned to the controller.
+     */
+    public static function middleware(): array
+    {
+        return [
+            new Middleware([
+                'web',
+                InitializeTenancyByDomain::class,
+                ScopeSessions::class,
+                PreventAccessFromCentralDomains::class,
+            ]),
+            new Middleware('permission:edit tickets', only: ['show', 'edit', 'update', 'delete']),
+        ];
+    }
     /**mig
      * Store a newly created message in storage.
      *
@@ -40,10 +60,6 @@ class MessageController extends Controller
      */
     public function show($id)
     {
-        if (!Auth::user()->HasPermissionTo('view all tickets')) {
-            return redirect()->back()->with('error', 'Cannot access this message');
-        }
-
         $message = TicketMessage::find($id);
         return $message;
     }
@@ -55,10 +71,6 @@ class MessageController extends Controller
      */
     public function edit($id)
     {
-        if (!Auth::user()->HasPermissionTo('edit tickets')) {
-            return redirect()->back()->with('error', 'Cannot edit this message');
-        }
-
         $message = TicketMessage::find($id);
         return $message;
     }
@@ -76,13 +88,9 @@ class MessageController extends Controller
      * Remove the specified message from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function delete($id)
     {
-        if (!Auth::user()->HasPermissionTo('edit tickets')) {
-            return redirect()->back()->with('error', 'Cannot delete this message');
-        }
         $ticketMessage = TicketMessage::find($id);
         $ticketMessage->delete();
         return redirect()->back()->with('success', 'Message deleted');

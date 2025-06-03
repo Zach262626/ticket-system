@@ -30,8 +30,10 @@ class TicketController extends Controller implements HasMiddleware
                 ScopeSessions::class,
                 PreventAccessFromCentralDomains::class,
             ]),
-            new Middleware('permission:edit tickets', only: ['edit', 'showEdit']),
+            new Middleware('permission:edit tickets', only: ['edit', 'showEdit', 'close']),
             new Middleware('permission:delete tickets', only: ['delete']),
+            new Middleware('permission:create tickets', only: ['create', 'store']),
+            new Middleware('permission:assign tickets', only: ['assign']),
         ];
     }
     /**
@@ -172,9 +174,6 @@ class TicketController extends Controller implements HasMiddleware
      */
     public function delete(Ticket $ticket)
     {
-        if (! Auth::user()->hasPermissionTo('delete tickets')) {
-            throw new HttpException(403, 'You are not authorized to delete ticket.');
-        }
         if ($ticket->status->name != "closed") {
             return redirect()->back()->with('error', 'Close ticket before deleting.');
         }
@@ -229,9 +228,6 @@ class TicketController extends Controller implements HasMiddleware
      */
     public function assign(Ticket $ticket)
     {
-        if (!(Auth::user())->hasPermissionTo('assign tickets')) {
-            return redirect()->route('ticket-index')->with('error', 'You are not authorized to edit this ticket.');
-        }
         $ticket->accepted_by = Auth::id();
         $ticket->status_id = TicketStatus::where('name', 'in_progress')->first()->id;
         $ticket->save();
@@ -242,9 +238,6 @@ class TicketController extends Controller implements HasMiddleware
      */
     public function close(Ticket $ticket)
     {
-        if (!(Auth::user())->hasPermissionTo('edit tickets')) {
-            return redirect()->route('ticket-index')->with('error', 'You are not authorized to edit this ticket.');
-        }
         $ticket->status_id = TicketStatus::where('name', 'closed')->first()->id;
         $ticket->save();
         return redirect()->back()->with('success', 'Ticket #' . $ticket->id . " has been closed by " . Auth::user()->name . "");

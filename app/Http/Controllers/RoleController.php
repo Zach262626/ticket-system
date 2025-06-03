@@ -16,12 +16,21 @@ use Stancl\Tenancy\Middleware\ScopeSessions;
 class RoleController extends Controller implements HasMiddleware
 {
     /**
-     * Restrict access to users with the 'admin' or 'developer' role.
+     * Get the middleware that should be assigned to the controller.
      */
     public static function middleware(): array
     {
         return [
-            new Middleware('role:admin|developer'),
+            new Middleware([
+                'web',
+                InitializeTenancyByDomain::class,
+                ScopeSessions::class,
+                PreventAccessFromCentralDomains::class,
+            ]),
+            new Middleware('permission:edit roles', only: ['edit', 'update']),
+            new Middleware('permission:delete roles', only: ['delete']),
+            new Middleware('permission:create roles', only: ['create', 'store']),
+            new Middleware('permission:assign roles', only: ['assign']),
         ];
     }
     /**
@@ -54,11 +63,8 @@ class RoleController extends Controller implements HasMiddleware
     /**
      * Show all roles with their permission, allow to change role permission
      */
-    public function show(Request $request)
+    public function edit(Request $request)
     {
-        if (!Auth::user()->HasPermissionTo('edit roles') && !Auth::user()->hasRole('developer')) {
-            return redirect()->back()->with('error', 'User is not alowed to edit roles');
-        }
         return view('roles.show-all', [
             'roles' => Role::all(),
             'permissions' => Permission::all(),
