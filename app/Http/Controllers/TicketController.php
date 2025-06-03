@@ -225,7 +225,7 @@ class TicketController extends Controller implements HasMiddleware
     }
 
     /**
-     * Search for a specific ticket
+     * assign user to a specific ticket
      */
     public function assign(Ticket $ticket)
     {
@@ -233,7 +233,20 @@ class TicketController extends Controller implements HasMiddleware
             return redirect()->route('ticket-index')->with('error', 'You are not authorized to edit this ticket.');
         }
         $ticket->accepted_by = Auth::id();
+        $ticket->status_id = TicketStatus::where('name', 'in_progress')->first()->id;
         $ticket->save();
         return redirect()->back()->with('success', 'Ticket #' . $ticket->id . " has been accepted by " . Auth::user()->name . "");
+    }
+    /**
+     * Close a specific ticket
+     */
+    public function close(Ticket $ticket)
+    {
+        if (!(Auth::user())->hasPermissionTo('edit tickets')) {
+            return redirect()->route('ticket-index')->with('error', 'You are not authorized to edit this ticket.');
+        }
+        $ticket->status_id = TicketStatus::where('name', 'closed')->first()->id;
+        $ticket->save();
+        return redirect()->back()->with('success', 'Ticket #' . $ticket->id . " has been closed by " . Auth::user()->name . "");
     }
 }

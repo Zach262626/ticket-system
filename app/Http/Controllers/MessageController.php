@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ticket\Ticket;
 use App\Models\Ticket\TicketMessage;
+use App\Models\Ticket\TicketStatus;
 use Illuminate\Http\Request;
 
 class MessageController extends Controller
@@ -20,7 +22,10 @@ class MessageController extends Controller
             'ticket_id'    => 'required|exists:tickets,id',
             'sender_id'     => 'required|exists:users,id',
         ]);
-
+        $ticket = Ticket::where('id', $data['ticket_id'])->first();
+        if (($ticket->status)->name != 'in_progress') {
+            return redirect()->back()->with('error', 'Ticket is not in progress');
+        }
         $ticket = TicketMessage::create($data);
         $ticket->save();
 

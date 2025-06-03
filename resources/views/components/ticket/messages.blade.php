@@ -36,7 +36,7 @@
         <div class="input-group mb-3 mt-2">
             <input type="hidden" name="ticket_id" value="{{ $ticketid }}">
             <input type="hidden" name="sender_id" value="{{ $senderid }}">
-            @if ($ticket->acceptedBy != null)
+            @if (($ticket->status)->name == 'in_progress')
                 <input name='content' type="text" class="form-control mx-2 rounded" aria-label="Sizing example input"
                     aria-describedby="inputGroup-sizing-default" placeholder="Message here">
                 <span><button class="px-5 btn btn-primary">Send</button></span>

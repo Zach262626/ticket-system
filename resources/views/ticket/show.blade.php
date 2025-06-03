@@ -24,6 +24,12 @@
                             </button>
                             <x-ticket.modal.delete :ticket=$ticket />
                         @endcan
+                        <span>
+                            <form action="{{ route('ticket-close', ['ticket' => $ticket->id]) }}" method="POST">
+                                @csrf
+                                <button class="btn btn btn-warning mb-3 px-5" type="submit">Close Ticket</button>
+                            </form>
+                        </span>
                     @endcan
                 </div>
                 @if (session('error'))
