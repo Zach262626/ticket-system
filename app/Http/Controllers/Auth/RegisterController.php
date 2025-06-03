@@ -10,6 +10,7 @@ use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Laravolt\Avatar\Avatar;
 use Spatie\Permission\Models\Role;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
@@ -50,6 +51,12 @@ class RegisterController extends Controller implements HasMiddleware
             'email'    => $validated['email'],
             'password' => Hash::make($validated['password']),
         ]);
+        if (!is_dir(storage_path('app/public/avatars'))) {
+            mkdir(storage_path('app/public/avatars'), 0755, true);
+        }
+        $avatarPath = storage_path("app/public/avatars/{$user->id}.png");
+        $validated['profile_picture'] = "avatars/{$user->id}.png";
+        $avatar = (new Avatar())->create($validated['name'])->save($avatarPath);
         if (! Auth::attempt($validated)) {
             return redirect('/login')->withErrors(['email' => 'Could not log you in.']);
         }

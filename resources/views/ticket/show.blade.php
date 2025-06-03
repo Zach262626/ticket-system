@@ -27,7 +27,7 @@
                         <span>
                             <form action="{{ route('ticket-close', ['ticket' => $ticket->id]) }}" method="POST">
                                 @csrf
-                                <button class="btn btn btn-warning mb-3 px-5" type="submit">Close Ticket</button>
+                                <button class="btn btn btn-warning mb-3 px-5" type="submit">Close</button>
                             </form>
                         </span>
                     @endcan
