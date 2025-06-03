@@ -30,13 +30,13 @@ class RoleController extends Controller implements HasMiddleware
             new Middleware('permission:edit roles', only: ['edit', 'update']),
             new Middleware('permission:delete roles', only: ['delete']),
             new Middleware('permission:create roles', only: ['create', 'store']),
-            new Middleware('permission:assign roles', only: ['assign']),
+            new Middleware('permission:assign roles', only: ['assign', 'index']),
         ];
     }
     /**
      * Display the role assignment form with all users and roles.
      */
-    public function create()
+    public function index()
     {
         return view('roles.assign-user', [
             'users' => User::orderBy('name')->get(),
@@ -46,7 +46,7 @@ class RoleController extends Controller implements HasMiddleware
     /**
      * Validate input and synchronize the selected role onto the user.
      */
-    public function store(Request $request)
+    public function assign(Request $request)
     {
         $request->validate([
             'user_id' => 'required|exists:users,id',
@@ -57,7 +57,7 @@ class RoleController extends Controller implements HasMiddleware
         $roles = Role::findOrFail($request->role_id);
         $user->syncRoles($roles);
 
-        return redirect()->back()
+        return redirect()->route('home')
             ->with('success', 'Roles updated for ' . $user->name);
     }
     /**
