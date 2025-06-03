@@ -63,7 +63,7 @@
                                 <select id="user_id" class="form-select" aria-label="Select User Role" name="accepted_by">
                                     @foreach($users as $user)
                                         @if($ticket->accepted_by == null) {
-                                            <option selected>None</option>
+                                            <option value="{{ null }}" selected>None</option>
                                             }
                                         @endif
                                         @if($user->id == $ticket->accepted_by)

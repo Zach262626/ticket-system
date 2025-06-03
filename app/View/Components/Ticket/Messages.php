@@ -12,7 +12,7 @@ use Illuminate\View\Component;
 
 class Messages extends Component
 {
-    public array $ticketMessages;
+    public array $ticketMessages = [];
     public Ticket $ticket;
     /**
      * Create a new component instance.

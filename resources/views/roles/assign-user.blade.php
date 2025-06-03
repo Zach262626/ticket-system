@@ -16,7 +16,7 @@
                     <div class="mb-3 bg-light p-3 rounded">
                         <div class="mb-3">
                             <select class="form-select" aria-label="Select User" name="user_id">
-                                <option selected>Select User</option>
+                                <option value={{ null }} selected>Select User</option>
                                 @foreach ($users as $user)
                                     <option value="{{ $user->id }}">{{ $user->name }}</option>
 
@@ -25,7 +25,7 @@
                         </div>
                         <div class="mb-3">
                             <select class="form-select" aria-label="Select User Role" name="role_id">
-                                <option selected>Select Role</option>
+                                <option value={{ null }} selected>Select Role</option>
                                 @foreach($roles as $role)
                                     <option value="{{ $role->id }}">{{ $role->name }}</option>
                                 @endforeach
