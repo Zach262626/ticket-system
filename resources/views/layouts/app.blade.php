@@ -10,6 +10,9 @@
 </head>
 
 <body>
+    <div id="app">
+        <example-component></example-component>
+    </div>
     @if(tenant('id') != null)
         <nav class="navbar navbar-expand-lg bg-body-tertiary px-3 py-2">
             <div class="container-fluid">
