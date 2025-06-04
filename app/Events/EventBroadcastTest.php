@@ -11,14 +11,14 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class EventBroadcastTest implements ShouldBroadcast 
+class EventBroadcastTest implements ShouldBroadcast
 {
     use Batchable, Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct()
+    public function __construct(public int $tenantId, public int $ticketId)
     {
         //
     }
@@ -26,13 +26,11 @@ class EventBroadcastTest implements ShouldBroadcast
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return array<int, \Illuminate\Broadcasting\Channel>
+     * @return Channel
      */
-    public function broadcastOn(): array
+    public function broadcastOn(): Channel
     {
-        return [
-            new PrivateChannel('broadcast-test'),
-        ];
+        return new PrivateChannel("tenant-{$this->tenantId}.ticket.{$this->ticketId}");
     }
     /**
      * The name of the queue on which to place the broadcasting job.

@@ -61,5 +61,11 @@
     </form>
 </div>
 @push('scripts')
-
+    <script>
+        const ticketid = @json($ticketid);
+        Echo.private(`tenant-{{ tenant('id') }}.chat.${ticketid}`)
+            .listen('MessageSent', (e) => {
+            console.log(e.message);
+            });
+        </script>
 @endpush
