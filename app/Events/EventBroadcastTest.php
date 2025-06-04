@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -30,8 +31,9 @@ class EventBroadcastTest implements ShouldBroadcast
      */
     public function broadcastOn(): Channel
     {
-        return new PrivateChannel("tenant-{$this->tenantId}.ticket.{$this->ticketId}");
+        return new PrivateChannel("tenant-{$this->tenantId}.ticket-{$this->ticketId}");
     }
+
     public function broadcastAs(): string
     {
         return 'broadcast-test';

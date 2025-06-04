@@ -1,5 +1,5 @@
 <script setup>
-// import { onMounted } from 'vue'
+import { onMounted } from 'vue'
 import { computed } from 'vue'
 import dayjs from 'dayjs' // You can also use Carbon-like libraries
 
@@ -20,15 +20,13 @@ const avatarUrl = computed(() => {
     ? props.message.sender.profile_picture
     : `https://ui-avatars.com/api/?name=${encodeURIComponent(props.message.sender.name)}&background=random&color=fff`
 })
-import { useEcho } from "@laravel/echo-vue";
+onMounted(() => {
+  Echo.private(`tenant-${props.tenantId}.ticket-${props.ticketId}`)
+    .listen('broadcast-test', () => {
+      console.log('here');
+    });
+});
 
-useEcho(
-  "tenant-" + props.tenantId + "ticket." + props.ticketId,
-  "broadcast-test",
-  (e) => {
-    console.log(e.order);
-  },
-);
 </script>
 
 <template>
