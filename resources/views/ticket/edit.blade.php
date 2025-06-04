@@ -10,7 +10,6 @@
                 <div class="bg-light p-3 rounded-bottom-2">
                     <form action="{{ route('ticket-update', ['ticket' => $ticket->id]) }}" method="POST">
                         @csrf
-                        @method('PUT')
 
                         <div class="mb-3">
                             <label for="description" class="form-label">Description</label>
@@ -77,7 +76,6 @@
                     </form>
                 </div>
 
-                <!-- Alerts -->
                 @if (session('error'))
                     <div class="alert alert-danger alert-dismissible fade show my-2" role="alert">
                         {{ session('error') }}
