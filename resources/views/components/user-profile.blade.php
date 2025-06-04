@@ -7,7 +7,8 @@
         <div class="d-flex align-items-center flex-wrap">
             <div class="image me-3">
                 @if($user->profile_picture == null)
-                    <img src="{{ Avatar::create($user->name) }}" alt="Avatar" class="avatar" width="{{ $width }}"
+                    <img src="https://ui-avatars.com/api/?name={{ $user->name }}&background=random&color=fff" alt="Avatar"
+                        class="avatar" width="{{ $width }}"
                         style="vertical-align: middle; border-radius:50%; max-width: 100%;" />
                 @else
                     <img src="{{ $user->profile_picture }}" alt="Avatar" class="avatar" width="{{ $width }}"

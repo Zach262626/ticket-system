@@ -25,8 +25,9 @@ class Messages extends Component
         $messages = $this->ticket->messages()->orderBy('created_at')->get();
         foreach ($messages as $message) {
             $message->load(['sender']);
-            $this->ticketMessages[$message->id] = $message;
+            $this->ticketMessages[] = $message;
         }
+        $this->ticketMessages= array_reverse($this->ticketMessages);
     }
 
     /**
