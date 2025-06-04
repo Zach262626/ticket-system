@@ -9,6 +9,7 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\Tenant\TenantController;
 use App\Http\Controllers\TicketController;
+use App\Models\Ticket\Ticket;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
@@ -76,9 +77,9 @@ Route::middleware([
         Route::get('/ticket/search', [TicketController::class, 'search'])->name('ticket-search');
         Route::get('/ticket/create', [TicketController::class, 'create'])->name('ticket-create')->middleware('permission:create tickets');
 
-        Route::get('/ticket/{ticket}/test', function () {
-            App\Events\EventBroadcastTest::dispatch(Auth::user());
-            return back();
+        Route::get('/ticket/{ticket}/test', function (Ticket $ticket) {
+            App\Events\EventBroadcastTest::dispatch(tenant()->id, $ticket->id);
+            return redirect()->route('ticket-show', ['ticket' => $ticket->id])->with('success', '');
         })->name('ticket-show-ex');
 
 

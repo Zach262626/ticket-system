@@ -1,3 +1,5 @@
+import { createApp } from 'vue';
+import TicketMessages from './components/ticket/TicketMessages.vue';
 import './bootstrap';
 
 import "bootstrap";             // Bootstrap's JS (requires Popper internally)
@@ -12,11 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Vue 3
-import { createApp } from 'vue';
-import ExampleComponent from './components/ExampleComponent.vue';
-import TicketMessages from './components/ticket/TicketMessages.vue';
 
 const app = createApp({});
-app.component('example-component', ExampleComponent);
 app.component('ticket-messages', TicketMessages);
 app.mount('#app');

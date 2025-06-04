@@ -1,7 +1,8 @@
 <div class="p-1 d-flex overflow-auto flex-column-reverse" style="height: 400px;" id="messages-container">
     @foreach ($ticketMessages as $message)
-        <ticket-messages :message='@json($message)' :current-user-id="{{ auth()->id() }}"
-            :sender-id="{{ $message['sender_id'] }}"></ticket-messages>
+        <ticket-messages :message='@json($message)' :current-user-id='@json(auth()->id())'
+            :sender-id='@json($message["sender_id"])' :tenant-id='@json($tenant_id)' :ticket-id='@json($ticket->id)'>
+        </ticket-messages>
         {{-- @if ($message['sender_id'] == $senderid)
         <div class="d-flex flex-row justify-content-start w-100">
             <div class="d-flex flex-column align-items-end w-100 pe-2">
@@ -60,12 +61,3 @@
         </div>
     </form>
 </div>
-@push('scripts')
-    <script>
-        const ticketid = @json($ticketid);
-        Echo.private(`tenant-{{ tenant('id') }}.chat.${ticketid}`)
-            .listen('MessageSent', (e) => {
-            console.log(e.message);
-            });
-        </script>
-@endpush

@@ -32,6 +32,10 @@ class EventBroadcastTest implements ShouldBroadcast
     {
         return new PrivateChannel("tenant-{$this->tenantId}.ticket.{$this->ticketId}");
     }
+    public function broadcastAs(): string
+    {
+        return 'broadcast-test';
+    }
     /**
      * The name of the queue on which to place the broadcasting job.
      */
