@@ -78,6 +78,7 @@ Route::middleware([
         Route::get('/ticket/create', [TicketController::class, 'create'])->name('ticket-create')->middleware('permission:create tickets');
 
         Route::get('/ticket/{ticket}/test', function (Ticket $ticket) {
+            App\Events\BroadcastTestAlways::dispatch();
             App\Events\EventBroadcastTest::dispatch(tenant()->id, $ticket->id);
             return redirect()->route('ticket-show', ['ticket' => $ticket->id])->with('success', '');
         })->name('ticket-show-ex');

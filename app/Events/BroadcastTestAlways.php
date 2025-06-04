@@ -9,17 +9,18 @@ use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Bus\Batchable;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class EventBroadcastTest implements ShouldBroadcast
+class BroadcastTestAlways implements ShouldBroadcastNow
 {
     use Batchable, Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(public int $tenantId, public int $ticketId)
+    public function __construct()
     {
         //
     }
@@ -31,9 +32,13 @@ class EventBroadcastTest implements ShouldBroadcast
      */
     public function broadcastOn(): Channel
     {
-        return new PrivateChannel("tenant-{$this->tenantId}.ticket-{$this->ticketId}");
+        return new PrivateChannel("channel-name");
     }
 
+    public function broadcastAs(): string
+    {
+        return 'broadcast-test-true';
+    }
     /**
      * The name of the queue on which to place the broadcasting job.
      */

@@ -11,3 +11,6 @@ Broadcast::channel('tenant-{tenantId}.ticket-{ticketId}', function ($user, $tena
     // return $user->tenant_id === (int) $tenantId && $user->canAccessTicket($ticketId);
     return true;
 });
+Broadcast::channel('channel-name', function ($user) {
+    return true;
+});

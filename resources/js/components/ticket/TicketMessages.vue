@@ -21,8 +21,8 @@ const avatarUrl = computed(() => {
     : `https://ui-avatars.com/api/?name=${encodeURIComponent(props.message.sender.name)}&background=random&color=fff`
 })
 onMounted(() => {
-  Echo.private(`tenant-${props.tenantId}.ticket-${props.ticketId}`)
-    .listen('broadcast-test', () => {
+  Echo.private('channel-name')
+    .listen('.broadcast-test-true', (e) => {
       console.log('here');
     });
 });
