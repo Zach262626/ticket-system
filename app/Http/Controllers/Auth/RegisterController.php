@@ -51,16 +51,16 @@ class RegisterController extends Controller implements HasMiddleware
             'email'    => $validated['email'],
             'password' => Hash::make($validated['password']),
         ]);
-        if (!is_dir(storage_path('app/public/avatars'))) {
-            mkdir(storage_path('app/public/avatars'), 0755, true);
-        }
-        $avatarPath = storage_path("app/public/avatars/{$user->id}.png");
-        $validated['profile_picture'] = "avatars/{$user->id}.png";
-        $avatar = (new Avatar())->create($validated['name'])->save($avatarPath);
+        // if (!is_dir(public_path('/avatars'))) {
+        //     mkdir(public_path('/avatars'), 0755, true);
+        // }
+        // $avatarPath = "app/public/avatars/{$user->id}.png";
+        // $validated['profile_picture'] = "avatars/{$user->id}.png";
+        // $avatar = (new Avatar())->create($validated['name'])->save($avatarPath);
+        $user->syncRoles(Role::where('name', 'member')->get());
         if (! Auth::attempt($validated)) {
             return redirect('/login')->withErrors(['email' => 'Could not log you in.']);
         }
-        $user->syncRoles(Role::where('name', 'member')->get());
         // !Temporary! add a remember me functionality
         Auth::login($user);
         $request->session()->regenerate();

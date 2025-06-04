@@ -10,3 +10,13 @@ document.addEventListener('DOMContentLoaded', () => {
   );
   tooltipTriggerList.forEach(el => new bootstrap.Tooltip(el));
 });
+
+// Vue 3
+import { createApp } from 'vue';
+import ExampleComponent from './components/ExampleComponent.vue';
+import TicketMessages from './components/ticket/TicketMessages.vue';
+
+const app = createApp({});
+app.component('example-component', ExampleComponent);
+app.component('ticket-messages', TicketMessages);
+app.mount('#app');

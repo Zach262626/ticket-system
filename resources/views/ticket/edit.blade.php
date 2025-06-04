@@ -1,107 +1,95 @@
 @extends('layouts.app')
-@section('content')
-    <div class="container  py-5">
-        <div class="row  justify-content-center ">
-            <div class="col-md-6">
-                <div class=" bg-dark px-3 py-2 rounded-top-2 text-light">
-                    <h1 class="col bg-dark">Edit Ticket #{{ $ticket->id }}</h1>
-                </div>
 
-            </div>
-        </div>
+@section('content')
+    <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <div class="mb-3 bg-light p-3 rounded-bottom-2 ">
-                    <form action="{{ route('ticket-update', ['ticket' => $ticket]) }}" method="POST">
+                <div class="bg-dark px-3 py-2 rounded-top-2 text-light">
+                    <h1>Edit Ticket #{{ $ticket->id }}</h1>
+                </div>
+                <div class="bg-light p-3 rounded-bottom-2">
+                    <form action="{{ route('ticket-update', ['ticket' => $ticket->id]) }}" method="POST">
                         @csrf
+
                         <div class="mb-3">
-                            <div class="input-group">
-                                <span class="input-group-text">Description</span>
-                                <textarea id="description" name="description" class="form-control"
-                                    aria-label="With textarea">{{ $ticket->description }}</textarea>
-                            </div>
+                            <label for="description" class="form-label">Description</label>
+                            <textarea id="description" name="description" class="form-control" rows="3"
+                                required>{{ old('description', $ticket->description) }}</textarea>
                         </div>
+
                         <div class="mb-3">
                             <label for="level_id" class="form-label">Level</label>
-                            <select id="level_id" class="form-select" aria-label="Select User" name="level_id">
+                            <select id="level_id" name="level_id" class="form-select" required>
                                 @foreach($levels as $level)
-                                    @if($level == $ticket->level)
-                                        <option selected value="{{ $level->id }}">{{ $level->name }}</option>
-                                    @else
-                                        <option value="{{ $level->id }}">{{ $level->name }}</option>
-                                    @endif
+                                    <option value="{{ $level->id }}" {{ $level->id == $ticket->level_id ? 'selected' : '' }}>
+                                        {{ $level->name }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
+
                         <div class="mb-3">
                             <label for="type_id" class="form-label">Type</label>
-                            <select id="type_id" class="form-select" aria-label="Select User Role" name="type_id">
+                            <select id="type_id" name="type_id" class="form-select" required>
                                 @foreach($types as $type)
-                                    @if($type == $ticket->type)
-                                        <option selected value="{{ $type->id }}">{{ $type->name }}</option>
-                                    @else
-                                        <option value="{{ $type->id }}">{{ $type->name }}</option>
-                                    @endif
+                                    <option value="{{ $type->id }}" {{ $type->id == $ticket->type_id ? 'selected' : '' }}>
+                                        {{ $type->name }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
+
                         <div class="mb-3">
                             <label for="status_id" class="form-label">Status</label>
-                            <select id="status_id" class="form-select" aria-label="Select User Role" name="status_id">
+                            <select id="status_id" name="status_id" class="form-select" required>
                                 @foreach($statuses as $status)
-                                    @if($status == $ticket->status)
-                                        <option selected value="{{ $status->id }}">{{ $status->name }}</option>
-                                    @else
-                                        <option value="{{ $status->id }}">{{ $status->name }}</option>
-                                    @endif
+                                    <option value="{{ $status->id }}" {{ $status->id == $ticket->status_id ? 'selected' : '' }}>
+                                        {{ $status->name }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
+
                         @can('assign tickets')
                             <div class="mb-3">
-                                <label for="user_id" class="form-label">Accepted By</label>
-                                <select id="user_id" class="form-select" aria-label="Select User Role" name="accepted_by">
+                                <label for="accepted_by" class="form-label">Accepted By</label>
+                                <select id="accepted_by" name="accepted_by" class="form-select">
+                                    <option value="">None</option>
                                     @foreach($users as $user)
-                                        @if($ticket->accepted_by == null) {
-                                            <option value="{{ null }}" selected>None</option>
-                                            }
-                                        @endif
-                                        @if($user->id == $ticket->accepted_by)
-                                            <option selected value="{{ $user->id }}">{{ $user->name }}</option>
-                                        @else
-                                            <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                        @endif
+                                        <option value="{{ $user->id }}" {{ $user->id == $ticket->accepted_by ? 'selected' : '' }}>
+                                            {{ $user->name }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
                         @endcan
-                        <div class="d-flex gap-2">
+
+                        <div class="d-flex gap-2 mb-3">
                             <button type="submit" class="btn btn-primary">Submit</button>
                             <a href="{{ route('ticket-index') }}" class="btn btn-secondary">Home</a>
-                            <a href="{{ route('ticket-show', ['ticket' => $ticket->id]) }}"" class=" btn btn-light">View</a>
+                            <a href="{{ route('ticket-show', ['ticket' => $ticket->id]) }}" class="btn btn-light">View</a>
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                data-bs-target="#confirmDeleteModal">
+                                Delete
+                            </button>
+                        </div>
                     </form>
-                    <div>
-                        <button type="button" class="btn btn-danger w-100" data-bs-toggle="modal"
-                            data-bs-target="#confirmDeleteModal">
-                            Delete
-                        </button>
-                        <x-ticket.modal.delete :ticket=$ticket />
+                </div>
+
+                @if (session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show my-2" role="alert">
+                        {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
-                </div>
+                @endif
+
+                @if (session('success'))
+                    <div class="alert alert-success alert-dismissible fade show my-2" role="alert">
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
             </div>
-            @if (session('error'))
-                <div class="alert alert-danger alert-dismissible fade show my-2" role="alert">
-                    {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-            @if (session('success'))
-                <div class="alert alert-success alert-dismissible fade show my-2" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
         </div>
-    </div>
     </div>
 @endsection
