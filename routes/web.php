@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\BroadcastTestAlways;
 use App\Events\EventBroadcastTest;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\Tenant\TenantController;
 use App\Http\Controllers\Tenant\TenantHomeController;
 use App\Models\Tenant;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -32,6 +34,10 @@ foreach (config('tenancy.central_domains') as $domain) {
     */
         Route::middleware('auth')->group(function () {
             Route::get('logout', [LoginController::class, 'logout'])->name('user-logout');
+            Route::get('/test', function () {
+                broadcast(new BroadcastTestAlways());
+            return redirect()->route('home')->with('success', '');
+        })->name('ticket-ex');
             /*
         |--------------------------------------------------------------------------
         | Tenant Routes

@@ -2,17 +2,24 @@
 
 declare(strict_types=1);
 
+use App\Events\BroadcastTestAlways;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\Tenant\TenantController;
 use App\Http\Controllers\TicketController;
+use App\Models\Ticket\Ticket;
+use Illuminate\Broadcasting\BroadcastController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use Stancl\Tenancy\Middleware\ScopeSessions;
-use App\Http\Controllers\MessageController;
+
+
+
 
 
 
@@ -73,6 +80,13 @@ Route::middleware([
         Route::get('/ticket', [TicketController::class, 'index'])->name('ticket-index');
         Route::get('/ticket/search', [TicketController::class, 'search'])->name('ticket-search');
         Route::get('/ticket/create', [TicketController::class, 'create'])->name('ticket-create')->middleware('permission:create tickets');
+
+        Route::get('/ticket/{ticket}/test', function (Ticket $ticket) {
+            App\Events\EventBroadcastTest::dispatch(tenant()->id, $ticket->id);
+            return redirect()->route('ticket-show', ['ticket' => $ticket->id])->with('success', '');
+        })->name('ticket-show-ex');
+
+
         Route::get('/ticket/{ticket}', [TicketController::class, 'show'])->name('ticket-show');
         Route::get('/ticket/{ticket}/edit', [TicketController::class, 'edit'])->name('ticket-edit')->middleware('permission:edit tickets');
         Route::post('/ticket/{ticket}/assign', [TicketController::class, 'assign'])->name('ticket-assign')->middleware('permission:assign tickets');

@@ -6,6 +6,10 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
+
+
 
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -22,6 +26,10 @@ return Application::configure(basePath: dirname(__DIR__))
                 ->group(base_path('routes/tenant.php'));
         }
     )
+    ->withBroadcasting(
+        __DIR__.'/../routes/channels.php',
+        ['middleware' => ['web', InitializeTenancyByDomain::class, PreventAccessFromCentralDomains::class]],
+    )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
@@ -31,6 +39,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectGuestsTo('/login');
         $middleware->redirectUsersTo('/');
     })
+    
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();

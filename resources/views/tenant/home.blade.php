@@ -24,3 +24,18 @@
         </div>
     </div>
 @endsection
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        if (typeof Echo !== 'undefined') {
+            console.log('Here');
+            Echo.private('channel-name')
+                .listen('.broadcast-test-true', (e) => {
+                    console.log('here2', e);
+                });
+        } else {
+            console.error('Echo is not defined');
+        }
+    });
+</script>
+@endpush

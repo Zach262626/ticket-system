@@ -6,6 +6,7 @@
         "dev": "vite"
     },
     "devDependencies": {
+        "@laravel/echo-vue": "^2.1.5",
         "@vitejs/plugin-vue": "^5.2.4",
         "axios": "^1.8.2",
         "concurrently": "^9.0.1",
