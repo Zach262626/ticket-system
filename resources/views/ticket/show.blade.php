@@ -111,7 +111,13 @@
                     :ticket-status="'{{ $ticket->status->name }}'"
                     :initial-messages='@json($ticketMessages)'
                     ></ticket-messages> --}}
-                    <x-ticket.messages :ticketid="$ticket->id" :senderid="Auth::id()" />
+                    <ticket-messages-panel
+                        :ticket-messages='@json($messages)'
+                        :ticket='@json($ticket)'
+                        :sender-id='@json(Auth::id())'
+                        :tenant-id='@json(tenant()->id)'
+                        :csrfToken='@csrf'
+                    ></ticket-messages-panel>
                 </div>
             </div>
         </div>

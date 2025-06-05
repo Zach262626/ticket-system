@@ -1,5 +1,6 @@
 import { createApp } from 'vue';
-import TicketMessages from './components/ticket/TicketMessages.vue';
+import TicketMessage from './components/ticket/TicketMessage.vue';
+import TicketMessagesPanel from './components/ticket/TicketMessagesPanel.vue';
 import './bootstrap';
 
 import "bootstrap";             // Bootstrap's JS (requires Popper internally)
@@ -15,7 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Vue 3
 const app = createApp({});
-app.component('ticket-messages', TicketMessages);
+app.component('ticket-message', TicketMessage);
+app.component('ticket-messages-panel', TicketMessagesPanel);
 app.mount('#app');
 
 // // Alpine.js
