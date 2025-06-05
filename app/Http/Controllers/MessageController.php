@@ -46,11 +46,10 @@ class MessageController extends Controller implements HasMiddleware
         if (($ticket->status)->name != 'in_progress') {
             return redirect()->back()->with('error', 'Ticket is not in progress');
         }
-        $ticket = TicketMessage::create($data);
-        $ticket->save();
+        $message = TicketMessage::create($data);
+        $message->save();
 
-        return redirect()
-            ->back();
+        return response()->json($message->load('sender'));
     }
 
     /**

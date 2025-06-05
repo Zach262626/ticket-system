@@ -33,6 +33,7 @@ class EventBroadcastTest implements ShouldBroadcast
     {
         return new PrivateChannel("tenant-{$this->tenantId}.ticket-{$this->ticketId}");
     }
+    
 
     /**
      * The name of the queue on which to place the broadcasting job.
