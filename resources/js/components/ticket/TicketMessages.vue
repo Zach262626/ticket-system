@@ -20,12 +20,12 @@ const avatarUrl = computed(() => {
     ? props.message.sender.profile_picture
     : `https://ui-avatars.com/api/?name=${encodeURIComponent(props.message.sender.name)}&background=random&color=fff`
 })
-onMounted(() => {
-  Echo.private('channel-name')
-    .listen('.broadcast-test-true', (e) => {
-      console.log('here');
-    });
-});
+// onMounted(() => {
+//   Echo.private('channel-name')
+//     .listen('.broadcast-test-true', (e) => {
+//       console.log('here');
+//     });
+// });
 
 </script>
 

@@ -1,9 +1,9 @@
 <div class="p-1 d-flex overflow-auto flex-column-reverse" style="height: 400px;" id="messages-container">
     @foreach ($ticketMessages as $message)
-        <ticket-messages :message='@json($message)' :current-user-id='@json(auth()->id())'
+        {{-- <ticket-messages :message='@json($message)' :current-user-id='@json(auth()->id())'
             :sender-id='@json($message["sender_id"])' :tenant-id='@json($tenant_id)' :ticket-id='@json($ticket->id)'>
-        </ticket-messages>
-        {{-- @if ($message['sender_id'] == $senderid)
+        </ticket-messages> --}}
+        @if ($message['sender_id'] == $senderid)
         <div class="d-flex flex-row justify-content-start w-100">
             <div class="d-flex flex-column align-items-end w-100 pe-2">
                 <div class="bg-primary text-white rounded-3 p-2 mb-1 text-end"
@@ -40,7 +40,7 @@
                 </p>
             </div>
         </div>
-        @endif --}}
+        @endif
     @endforeach
 </div>
 <div>
@@ -61,23 +61,25 @@
         </div>
     </form>
 </div>
-{{-- @push('scripts')
-
+@push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         if (typeof Echo !== 'undefined') {
-            console.log('Here');
-            window.Echo.private("tenant-{{ $tenant_id }}.ticket-{{ $ticket->id }}")
-                .listen('broadcast-test', () => {
-                    console.log('here');
-                })
-            window.Echo.private("channel-name")
-                .listen('EventBroadcastTest', (e) => {
-                    console.log('here2');
-                })
+            console.log('Echo is connected');
+            Echo.private('channel-name')
+                .listen('.broadcast-test-true', (e) => {
+                    console.log('here2', e);
+                });
+            // Echo.private('channel-name-{{ $ticketid }}')
+            //     .listen('.broadcast-test-true', (e) => {
+            //         console.log('here2', e);
+            //         // Example of using a Blade variable in JS:
+            //         let ticketId = @json($ticketid);
+            //         console.log('Ticket ID:', ticketId);
+            //     });
         } else {
             console.error('Echo is not defined');
         }
     });
 </script>
-@endpush --}}
+@endpush
