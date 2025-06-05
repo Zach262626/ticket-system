@@ -14,7 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // // Vue 3
-
 // const app = createApp({});
 // app.component('ticket-messages', TicketMessages);
 // app.mount('#app');
+
+// Alpine.js
+import Alpine from 'alpinejs'
+
+window.Alpine = Alpine
+Alpine.start()
