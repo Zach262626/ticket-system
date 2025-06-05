@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Broadcast;
 
-Broadcast::routes(['middleware' => ['auth']]);
+// Broadcast::routes(['middleware' => ['auth']]);
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
@@ -12,5 +12,5 @@ Broadcast::channel('tenant-{tenantId}.ticket-{ticketId}', function ($user, $tena
     return true;
 });
 Broadcast::channel('channel-name', function ($user) {
-    return true;
+    return true; // or your own logic
 });

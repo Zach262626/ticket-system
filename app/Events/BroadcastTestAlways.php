@@ -13,7 +13,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class BroadcastTestAlways implements ShouldBroadcastNow
+class BroadcastTestAlways implements ShouldBroadcast
 {
     use Batchable, Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -38,12 +38,5 @@ class BroadcastTestAlways implements ShouldBroadcastNow
     public function broadcastAs(): string
     {
         return 'broadcast-test-true';
-    }
-    /**
-     * The name of the queue on which to place the broadcasting job.
-     */
-    public function broadcastQueue(): string
-    {
-        return 'broadcast';
     }
 }
