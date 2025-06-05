@@ -108,8 +108,17 @@ class TicketController extends Controller implements HasMiddleware
             return redirect()->route('ticket-index')->with('error', 'You are not authorized to view this ticket.');
         }
         $ticket->load(['status', 'level', 'type', 'createdBy', 'acceptedBy', 'attachments']);
-
-        return view('ticket.show')->with(['ticket' => $ticket]);
+        $messages = $ticket->messages()->orderBy('created_at')->get();
+        $ticketMessages = [];
+        foreach ($messages as $message) {
+            $message->load(['sender']);
+            $ticketMessages[] = $message;
+        }
+        $ticketMessages = array_reverse($ticketMessages);
+        return view('ticket.show')->with([
+            'ticket' => $ticket,
+            'messages' => $ticketMessages
+        ]);
     }
 
     /**

@@ -1,5 +1,5 @@
-// import { createApp } from 'vue';
-// import TicketMessages from './components/ticket/TicketMessages.vue';
+import { createApp } from 'vue';
+import TicketMessages from './components/ticket/TicketMessages.vue';
 import './bootstrap';
 
 import "bootstrap";             // Bootstrap's JS (requires Popper internally)
@@ -13,13 +13,13 @@ document.addEventListener('DOMContentLoaded', () => {
   tooltipTriggerList.forEach(el => new bootstrap.Tooltip(el));
 });
 
-// // Vue 3
-// const app = createApp({});
-// app.component('ticket-messages', TicketMessages);
-// app.mount('#app');
+// Vue 3
+const app = createApp({});
+app.component('ticket-messages', TicketMessages);
+app.mount('#app');
 
-// Alpine.js
-import Alpine from 'alpinejs'
+// // Alpine.js
+// import Alpine from 'alpinejs'
 
-window.Alpine = Alpine
-Alpine.start()
+// window.Alpine = Alpine
+// Alpine.start()
