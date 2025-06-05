@@ -66,9 +66,13 @@
     document.addEventListener('DOMContentLoaded', function () {
         if (typeof Echo !== 'undefined') {
             console.log('Echo is connected');
-            Echo.private('channel-name')
-                .listen('.broadcast-test-true', (e) => {
-                    console.log('here2', e);
+            // Echo.private('channel-name')
+            //     .listen('.broadcast-test-true', (e) => {
+            //         console.log('here2', e);
+            //     });
+            Echo.private('tenant-{{ tenant()->id }}.ticket-{{ $ticketid }}')
+                .listen('.broadcast-test', (e) => {
+                    console.log('here', e);
                 });
             // Echo.private('channel-name-{{ $ticketid }}')
             //     .listen('.broadcast-test-true', (e) => {

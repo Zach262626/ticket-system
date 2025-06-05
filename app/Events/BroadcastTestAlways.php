@@ -39,4 +39,5 @@ class BroadcastTestAlways implements ShouldBroadcast
     {
         return 'broadcast-test-true';
     }
+    
 }

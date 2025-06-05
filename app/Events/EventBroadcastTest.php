@@ -41,4 +41,8 @@ class EventBroadcastTest implements ShouldBroadcast
     {
         return 'broadcast';
     }
+    public function broadcastAs(): string
+    {
+        return 'broadcast-test';
+    }
 }

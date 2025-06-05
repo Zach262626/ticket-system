@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Ticket\Ticket;
 use Illuminate\Broadcasting\BroadcastController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Broadcast;
@@ -12,11 +13,21 @@ use Stancl\Tenancy\Middleware\ScopeSessions;
 
 
 
-
 Broadcast::channel('tenant-{tenantId}.ticket-{ticketId}', function ($user, $tenantId, $ticketId) {
-    // return $user->tenant_id === (int) $tenantId && $user->canAccessTicket($ticketId);
-    return true;
+    logger([
+        'user_tenant_id' => tenant()->id,
+        'expected_tenant_id' => $tenantId,
+        'ticket_id' => $ticketId,
+    ]);
+
+    // Check if user belongs to the tenant and is related to the ticket via the pivot table
+    return ($tenantId == tenant()->id) && Ticket::where('id', $ticketId)
+        ->where(function ($query) use ($user) {
+            $query->where('created_by', $user->id)
+                  ->orWhere('accepted_by', $user->id);
+        })->exists();
 });
+
 Broadcast::channel('channel-name', function ($user) {
     // Print the authenticated user
     logger($user); // Logs to storage/logs/laravel.log
