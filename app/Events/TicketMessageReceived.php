@@ -13,7 +13,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class TicketMessageSent implements ShouldBroadcast
+class TicketMessageReceived implements ShouldBroadcast
 {
     use Batchable, Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -23,7 +23,7 @@ class TicketMessageSent implements ShouldBroadcast
     public function __construct(
         public TicketMessage $message,
         public int $tenantId,
-        public int $ticketId,
+        public int $userId,
     ) {}
     public function broadcastWith()
     {
@@ -40,7 +40,7 @@ class TicketMessageSent implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel(name: "tenant-{$this->tenantId}.ticket-{$this->ticketId}"),
+            new PrivateChannel(name: "tenant-{$this->tenantId}.user-{$this->userId}"),
         ];
     }
     /**
@@ -52,6 +52,6 @@ class TicketMessageSent implements ShouldBroadcast
     }
     public function broadcastAs(): string
     {
-        return 'broadcast-message-sent';
+        return 'broadcast-message-received';
     }
 }

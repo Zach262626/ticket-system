@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\TicketMessageReceived;
 use App\Events\TicketMessageSent;
 use App\Models\Ticket\Ticket;
 use App\Models\Ticket\TicketMessage;
@@ -40,18 +41,22 @@ class MessageController extends Controller implements HasMiddleware
     {
         $data = $request->validate([
             'content' => 'required|string|max:1000',
-            'ticket_id'    => 'required|exists:tickets,id',
-            'sender_id'     => 'required|exists:users,id',
+            'ticket_id' => 'required|exists:tickets,id',
+            'sender_id' => 'required|exists:users,id',
         ]);
         $ticket = Ticket::where('id', $data['ticket_id'])->first();
-        if (($ticket->status)->name != 'in_progress') {
-            return redirect()->back()->with('error', 'Ticket is not in progress');
+        if (!$ticket || ($ticket->status)->name != 'in_progress') {
+            return response()->json(['error' => 'Ticket is not in progress'], 400);
         }
         $message = TicketMessage::create($data);
-        $message->save();
+        $message->load('sender');
         TicketMessageSent::dispatch($message, tenant()->id, $ticket->id);
+        $receiverId = $ticket->created_by == $message->sender_id
+            ? $ticket->assigned_to
+            : $ticket->created_by;
+        TicketMessageReceived::dispatch($message, tenant()->id, $receiverId);
 
-        return response()->json($message->load('sender'));
+        return response()->json(['message' => $message->load('sender')], 201);
     }
 
     /**

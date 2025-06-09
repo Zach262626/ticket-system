@@ -1,5 +1,6 @@
 <script setup>
-import { onMounted, watchEffect, ref } from 'vue'
+import { onMounted, ref } from 'vue'
+
 const props = defineProps({
   ticketMessages: Object,
   ticket: Object,
@@ -7,21 +8,25 @@ const props = defineProps({
   tenantId: Number,
   csrfToken: String,
 })
+
 const messages = ref([])
+
+const addMessage = (newMessage) => {
+  const exists = messages.value.some((m) => m.id === newMessage.id)
+  if (!exists) {
+    messages.value.unshift(newMessage)
+  }
+}
 
 onMounted(() => {
   messages.value = [...props.ticketMessages]
-  Echo.private('tenant-' + props.tenantId + '.ticket-' + props.ticket.id)
-    .listen('.broadcast-message', (e) => {
-      const messageReceived = e.message
-      const exists = messages.value.some(m => m.id === messageReceived.id)
-      console.log('here')
-      if (!exists) {
-        messages.value.unshift(messageReceived)
-      }
-    });
-})
 
+  Echo.private('tenant-' + props.tenantId + '.ticket-' + props.ticket.id)
+    .listen('.broadcast-message-sent', (e) => {
+      const messageReceived = e.message
+      addMessage(messageReceived)
+    })
+})
 </script>
 
 <template>
@@ -32,6 +37,6 @@ onMounted(() => {
 
   <div>
     <ticket-message-input :sender-id="senderId" :ticket-id="ticket.id" :csrf-token="csrfToken"
-      :status="ticket.status.name" />
+      :status="ticket.status.name" @message-sent="addMessage" />
   </div>
 </template>

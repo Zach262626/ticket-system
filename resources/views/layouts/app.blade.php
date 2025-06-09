@@ -100,7 +100,8 @@
                 </div>
             </nav>
         @endif
-
+        {{-- Alerts --}}
+        {{-- <alert-stack :tenant-id="{{ tenant()->id }}" :user-id="{{ Auth::id() }}"></alert-stack> --}}
         @yield('content')
 
     </div>

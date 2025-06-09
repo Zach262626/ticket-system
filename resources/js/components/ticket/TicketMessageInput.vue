@@ -8,6 +8,7 @@ const props = defineProps({
     ticketId: Number,
     csrfToken: String,
 })
+const emit = defineEmits(['message-sent'])
 const message = ref('')
 const sendMessage = async () => {
     try {
@@ -15,10 +16,12 @@ const sendMessage = async () => {
             ticket_id: props.ticketId,
             sender_id: props.senderId,
             content: message.value,
-            _token: props.csrfToken
+            _token: props.csrfToken,
         })
+        if (response.data.message) {
+            emit('message-sent', response.data.message)
+        }
 
-        console.log('Message sent')
         message.value = ''
     } catch (error) {
         console.error('Error sending message:', error)
