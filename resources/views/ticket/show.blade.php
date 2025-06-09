@@ -102,22 +102,15 @@
                 </div>
                 <div class="px-4 pt-3 pb-2 bg-light">
                     {{-- <ticket-messages :message='@json($message)' :current-user-id='@json(auth()->id())'
-                        :sender-id='@json($message["sender_id"])' :tenant-id='@json($tenant_id)' :ticket-id='@json($ticket->id)'>
+                        :sender-id='@json($message["sender_id"])' :tenant-id='@json($tenant_id)'
+                        :ticket-id='@json($ticket->id)'>
                     </ticket-messages> --}}
-                    {{-- <ticket-messages
-                    :ticket-id="{{ $ticket->id }}"
-                    :tenant-id="{{ tenant()->id }}"
-                    :current-user-id="{{ auth()->id() }}"
-                    :ticket-status="'{{ $ticket->status->name }}'"
-                    :initial-messages='@json($ticketMessages)'
-                    ></ticket-messages> --}}
-                    <ticket-messages-panel
-                        :ticket-messages='@json($messages)'
-                        :ticket='@json($ticket)'
-                        :sender-id='@json(Auth::id())'
-                        :tenant-id='@json(tenant()->id)'
-                        :csrfToken='@csrf'
-                    ></ticket-messages-panel>
+                    {{-- <ticket-messages :ticket-id="{{ $ticket->id }}" :tenant-id="{{ tenant()->id }}"
+                        :current-user-id="{{ auth()->id() }}" :ticket-status="'{{ $ticket->status->name }}'"
+                        :initial-messages='@json($ticketMessages)'></ticket-messages> --}}
+                    <ticket-messages-panel :ticket-messages='@json($messages)' :ticket='@json($ticket)'
+                        :sender-id='{{ Auth::id() }}' :tenant-id='{{ tenant()->id }}' csrf-token='{{ csrf_token() }}'>
+                    </ticket-messages-panel>
                 </div>
             </div>
         </div>

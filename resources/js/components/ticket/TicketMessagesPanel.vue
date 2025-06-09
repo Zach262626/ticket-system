@@ -18,49 +18,13 @@ const props = defineProps({
 
 <template>
   <div class="p-1 d-flex overflow-auto flex-column-reverse" style="height: 400px;" id="ticketMessages-container">
-    <TicketMessage
-      v-for="message in ticketMessages"
-      :key="message.id"
-      :message="message"
-      :sender-id="senderId"
-      :tenant-id="tenantId"
-      :ticket-id="ticket.id"
-    />
+    <ticket-message v-for="message in ticketMessages" :key="message.id" :message="message" :sender-id="senderId"
+      :tenant-id="tenantId" :ticket-id="ticket.id" />
   </div>
 
   <div>
-    <form action="/ticket/message" method="POST">
-      <!-- Add @csrf manually via a hidden input if not using Blade to render -->
-      <input type="hidden" name="_token" :value="csrfToken" />
-
-      <div class="input-group mb-3 mt-2">
-        <input type="hidden" name="ticket_id" :value="ticketId" />
-        <input type="hidden" name="sender_id" :value="senderId" />
-
-        <div v-if="ticket.status.name === 'in_progress'">
-          <input
-            name="content"
-            type="text"
-            class="form-control mx-2 rounded"
-            aria-label="Sizing example input"
-            aria-describedby="inputGroup-sizing-default"
-            placeholder="Message here"
-          />
-          <span><button class="px-5 btn btn-primary">Send</button></span>
-        </div>
-        <div v-else>
-          <input
-            type="text"
-            class="form-control mx-2 rounded"
-            aria-label="Sizing example input"
-            aria-describedby="inputGroup-sizing-default"
-            placeholder="Wait for the support agent."
-            disabled
-          />
-          <span><button type="button" class="px-5 btn btn-hidden">Send</button></span>
-        </div>
-      </div>
-    </form>
+    <ticket-message-input :sender-id="senderId" :ticket-id="ticket.id" :csrf-token="csrfToken"
+      :status="ticket.status.name" />
   </div>
 
   <!-- <div v-if="senderId === currentUserId" class="d-flex flex-row justify-content-start w-100">
