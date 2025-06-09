@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, watchEffect, ref } from 'vue'
 const props = defineProps({
   ticketMessages: Object,
   ticket: Object,
@@ -7,17 +7,17 @@ const props = defineProps({
   tenantId: Number,
   csrfToken: String,
 })
-const messages = ref([...props.ticketMessages])
+const messages = ref([])
 
 onMounted(() => {
+  messages.value = [...props.ticketMessages]
   Echo.private('tenant-' + props.tenantId + '.ticket-' + props.ticket.id)
     .listen('.broadcast-message', (e) => {
       const messageReceived = e.message
       const exists = messages.value.some(m => m.id === messageReceived.id)
       console.log('here')
       if (!exists) {
-        console.log(messageReceived)
-        messages.value.push(messageReceived)
+        messages.value.unshift(messageReceived)
       }
     });
 })
