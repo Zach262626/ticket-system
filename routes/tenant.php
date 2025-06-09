@@ -88,7 +88,7 @@ Route::middleware([
         Route::post('/ticket/{ticket}/close', [TicketController::class, 'close'])->name('ticket-close')->middleware('permission:edit tickets');
         Route::post('/ticket', [TicketController::class, 'store'])->name('ticket-store')->middleware('permission:create tickets');
         Route::post('/ticket/{ticket}/update', [TicketController::class, 'update'])->name('ticket-update')->middleware('permission:edit tickets');
-        Route::post('/ticket//{ticket}/delete', [TicketController::class, 'delete'])->name('ticket-delete')->middleware('permission:delete tickets');
+        Route::post('/ticket/{ticket}/delete', [TicketController::class, 'delete'])->name('ticket-delete')->middleware('permission:delete tickets');
         // Ticket Messages
         Route::post('/ticket/message', [MessageController::class, 'store'])->name('ticket-message-store');
         /*
