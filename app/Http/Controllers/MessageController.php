@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\TicketMessageSent;
 use App\Models\Ticket\Ticket;
 use App\Models\Ticket\TicketMessage;
 use App\Models\Ticket\TicketStatus;
@@ -48,6 +49,7 @@ class MessageController extends Controller implements HasMiddleware
         }
         $message = TicketMessage::create($data);
         $message->save();
+        TicketMessageSent::dispatch($message, tenant()->id, $ticket->id);
 
         return response()->json($message->load('sender'));
     }

@@ -18,7 +18,7 @@ const sendMessage = async () => {
             _token: props.csrfToken
         })
 
-        console.log('Message sent:', response.data)
+        console.log('Message sent')
         message.value = ''
     } catch (error) {
         console.error('Error sending message:', error)

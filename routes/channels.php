@@ -14,12 +14,6 @@ use Stancl\Tenancy\Middleware\ScopeSessions;
 
 
 Broadcast::channel('tenant-{tenantId}.ticket-{ticketId}', function ($user, $tenantId, $ticketId) {
-    logger([
-        'user_tenant_id' => tenant()->id,
-        'expected_tenant_id' => $tenantId,
-        'ticket_id' => $ticketId,
-    ]);
-
     // Check if user belongs to the tenant and is related to the ticket via the pivot table
     return ($tenantId == tenant()->id) && Ticket::where('id', $ticketId)
         ->where(function ($query) use ($user) {

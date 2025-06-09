@@ -81,11 +81,6 @@ Route::middleware([
         Route::get('/ticket/search', [TicketController::class, 'search'])->name('ticket-search');
         Route::get('/ticket/create', [TicketController::class, 'create'])->name('ticket-create')->middleware('permission:create tickets');
 
-        Route::get('/ticket/{ticket}/test', function (Ticket $ticket) {
-            App\Events\EventBroadcastTest::dispatch(tenant()->id, $ticket->id);
-            return redirect()->route('ticket-show', ['ticket' => $ticket->id])->with('success', '');
-        })->name('ticket-show-ex');
-
 
         Route::get('/ticket/{ticket}', [TicketController::class, 'show'])->name('ticket-show');
         Route::get('/ticket/{ticket}/edit', [TicketController::class, 'edit'])->name('ticket-edit')->middleware('permission:edit tickets');
