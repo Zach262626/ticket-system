@@ -6,7 +6,7 @@
                 <img src="https://picsum.photos/200/300" class="rounded me-2" alt="..."
                     style="width: 32px; height: 32px; object-fit: cover;">
                 <strong v-if="typeof alert.message === 'string'" class="me-auto">{{ alert.message }}</strong>
-                <small>11 mins ago</small>
+                <!-- <small>11 mins ago</small> -->
                 <button type="button" class="btn-close" @click="store.removeAlert(alert.id)"></button>
             </div>
             <div class="toast-body">

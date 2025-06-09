@@ -1,8 +1,8 @@
 import { createApp } from 'vue';
 import { createPinia } from 'pinia'
-import TicketMessage from './components/ticket/TicketMessage.vue';
-import TicketMessagesPanel from './components/ticket/TicketMessagesPanel.vue';
-import TicketMessageInput from './components/ticket/TicketMessageInput.vue';
+import TicketMessage from './components/ticket/message/TicketMessage.vue';
+import TicketMessagesPanel from './components/ticket/message/TicketMessagesPanel.vue';
+import TicketMessageInput from './components/ticket/message/TicketMessageInput.vue';
 // ALerts
 import AlertStack from './components/alerts/AlertStack.vue';
 import TicketMessageAlert from './components/alerts/TicketMessageAlert.vue';

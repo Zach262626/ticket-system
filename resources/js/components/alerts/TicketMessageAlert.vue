@@ -15,9 +15,9 @@ onMounted(() => {
     .listen('.broadcast-message-received', (e) => {
       if (!window.location.pathname.startsWith(`/ticket/${e.ticket.id}`)) {
         store.addAlert({
-          message: 'You have a new message!',
-            body: `<a class="btn btn-light w-100" href="/ticket/${e.ticket.id}">View Message</a>`,
-          type: 'info'
+          message: `Ticket #${e.ticket.id}: New Message`,
+          body: `<a class="btn btn-light w-100" href="/ticket/${e.ticket.id}">View Message</a>`,
+          type: 'info',
         })
       }
     })
