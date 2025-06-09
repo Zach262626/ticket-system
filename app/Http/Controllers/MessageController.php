@@ -50,12 +50,21 @@ class MessageController extends Controller implements HasMiddleware
         }
         $message = TicketMessage::create($data);
         $message->load('sender');
-        TicketMessageSent::dispatch($message, tenant()->id, $ticket->id);
-        $receiverId = $ticket->created_by == $message->sender_id
-            ? $ticket->assigned_to
-            : $ticket->created_by;
-        TicketMessageReceived::dispatch($message, tenant()->id, $receiverId);
+        try {
+            TicketMessageSent::dispatch($message, tenant()->id, $ticket->id);
+        } catch (\Throwable $e) {
+            logger('TicketMessageSent error: ' . $e->getMessage());
+        }
 
+        $receiverId = $ticket->created_by == $message->sender_id
+            ? $ticket->accepted_by
+            : $ticket->created_by;
+
+        try {
+            TicketMessageReceived::dispatch($message, tenant()->id, $receiverId);
+        } catch (\Throwable $e) {
+            logger('TicketMessageReceived error: ' . $e->getMessage());
+        }
         return response()->json(['message' => $message->load('sender')], 201);
     }
 

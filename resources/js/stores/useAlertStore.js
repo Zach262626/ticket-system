@@ -1,18 +1,28 @@
-// resources/js/stores/useAlertStore.js
 import { defineStore } from 'pinia'
+
+let idCounter = 0
 
 export const useAlertStore = defineStore('alert', {
     state: () => ({
         alerts: []
     }),
     actions: {
-        addAlert(message, type = 'info') {
-            const id = Date.now()
-            this.alerts.push({ id, message, type })
-            setTimeout(() => this.removeAlert(id), 5000)
+        addAlert(alert, type = 'info') {
+            if (typeof alert === 'string') {
+                this.alerts.push({
+                    id: ++idCounter,
+                    message: alert,
+                    type,
+                })
+            } else {
+                this.alerts.push({
+                    id: ++idCounter,
+                    ...alert
+                })
+            }
         },
         removeAlert(id) {
-            this.alerts = this.alerts.filter(a => a.id !== id)
+            this.alerts = this.alerts.filter(alert => alert.id !== id)
         }
     }
 })

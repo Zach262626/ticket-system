@@ -23,12 +23,13 @@ class TicketMessageReceived implements ShouldBroadcast
     public function __construct(
         public TicketMessage $message,
         public int $tenantId,
-        public int $userId,
+        public int $userId, //receiver
     ) {}
     public function broadcastWith()
     {
         return [
-            'message' => $this->message->toArray()
+            'message' => $this->message->toArray(),
+            'ticket' => $this->message->ticket->toArray(),
         ];
     }
 

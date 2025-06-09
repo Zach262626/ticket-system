@@ -5,6 +5,8 @@ import TicketMessagesPanel from './components/ticket/TicketMessagesPanel.vue';
 import TicketMessageInput from './components/ticket/TicketMessageInput.vue';
 // ALerts
 import AlertStack from './components/alerts/AlertStack.vue';
+import TicketMessageAlert from './components/alerts/TicketMessageAlert.vue';
+
 
 
 
@@ -29,7 +31,10 @@ app.use(pinia)
 app.component('ticket-message', TicketMessage);
 app.component('ticket-messages-panel', TicketMessagesPanel);
 app.component('ticket-message-input', TicketMessageInput);
+// Alerts
 app.component('alert-stack', AlertStack);
+app.component('ticket-message-alert', TicketMessageAlert);
+
 
 
 

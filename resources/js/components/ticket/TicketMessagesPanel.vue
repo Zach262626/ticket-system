@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, onUnmounted } from 'vue'
 
 const props = defineProps({
   ticketMessages: Object,
@@ -10,6 +10,7 @@ const props = defineProps({
 })
 
 const messages = ref([])
+let channel
 
 const addMessage = (newMessage) => {
   const exists = messages.value.some((m) => m.id === newMessage.id)
@@ -21,11 +22,17 @@ const addMessage = (newMessage) => {
 onMounted(() => {
   messages.value = [...props.ticketMessages]
 
-  Echo.private('tenant-' + props.tenantId + '.ticket-' + props.ticket.id)
+  channel = Echo.private('tenant-' + props.tenantId + '.ticket-' + props.ticket.id)
     .listen('.broadcast-message-sent', (e) => {
       const messageReceived = e.message
       addMessage(messageReceived)
     })
+})
+
+onUnmounted(() => {
+  if (channel) {
+    Echo.leave('tenant-' + props.tenantId + '.ticket-' + props.ticket.id)
+  }
 })
 </script>
 
