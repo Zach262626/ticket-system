@@ -1,3 +1,39 @@
+<script setup>
+import { onMounted, ref, onUnmounted } from 'vue'
+
+const props = defineProps({
+  tickets: Array,
+  can: Object,
+  csrfToken: String,
+  userId: Number,
+  tenantId: Number,
+})
+
+const tickets = ref([])
+let channel
+
+const addTicket = (newTicket) => {
+  const exists = tickets.value.some((m) => m.id === newTicket.id)
+  if (!exists) {
+    tickets.value.push(newTicket)
+  }
+}
+
+onMounted(() => {
+  tickets.value = [...props.tickets]
+  channel = Echo.private('tenant-' + props.tenantId)
+    .listen('.ticket.created', (e) => {
+      const ticketReceived = e.ticket
+      addTicket(ticketReceived)
+    })
+})
+
+onUnmounted(() => {
+  if (channel) {
+    Echo.leave('tenant-' + props.tenantId + '.user-' + props.userId)
+  }
+})
+</script>
 <template>
   <div>
     <table class="table mt-2 w-100 table-fixed align-middle text-break">
@@ -33,8 +69,8 @@
           <template v-if="can.edit">
             <template v-if="can.delete">
               <td class="text-center">
-                <template v-if="ticket.acceptedBy">
-                  {{ ticket.acceptedBy.name }}
+                <template v-if="ticket.accepted_by">
+                  {{ ticket.accepted_by.name }}
                 </template>
                 <template v-else>
                   <form :action="`/ticket/${ticket.id}/assign`" method="POST">
@@ -57,7 +93,7 @@
 
             <template v-else>
               <td class="text-center">
-                {{ ticket.acceptedBy?.name || '—' }}
+                {{ ticket.accepted_by?.name || '—' }}
               </td>
             </template>
 
@@ -86,20 +122,3 @@
     </div>
   </div>
 </template>
-
-<script setup>
-defineProps({
-  tickets: {
-    type: Array,
-    required: true,
-  },
-  can: {
-    type: Object,
-    default: () => ({ edit: false, delete: false }),
-  },
-  csrfToken: {
-    type: String,
-    default: '',
-  },
-})
-</script>

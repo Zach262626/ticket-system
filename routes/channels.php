@@ -25,6 +25,12 @@ Broadcast::channel('tenant-{tenantId}.ticket-{ticketId}', function ($user, $tena
 Broadcast::channel('tenant-{tenantId}.user-{userId}', function ($user, $tenantId, $userId) {
     return tenant()->id == (int) $tenantId && $user->id == (int) $userId;
 });
+Broadcast::channel('tenant-{tenantId}', function ($user, $tenantId) {
+    if (tenant()->id !== (int) $tenantId) {
+        return false;
+    }
+    return $user->can('view all tickets');
+});
 
 Broadcast::channel('channel-name', function ($user) {
     // Print the authenticated user

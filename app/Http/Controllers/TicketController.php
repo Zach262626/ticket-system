@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use \Symfony\Component\HttpKernel\Exception\HttpException;
+use App\Events\TicketCreated;
 use App\Models\Ticket\Ticket;
 use App\Models\Ticket\TicketLevel;
 use App\Models\Ticket\TicketStatus;
@@ -14,7 +16,6 @@ use Illuminate\Support\Facades\Auth;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use Stancl\Tenancy\Middleware\ScopeSessions;
-use \Symfony\Component\HttpKernel\Exception\HttpException;
 
 class TicketController extends Controller implements HasMiddleware
 {
@@ -91,6 +92,7 @@ class TicketController extends Controller implements HasMiddleware
         $data['status_id']  = TicketStatus::where('name', 'Open')->get()->first()->id;
 
         $ticket = Ticket::create($data);
+        broadcast(new TicketCreated($ticket, tenant()->id));
 
         return redirect()
             ->route('ticket-index', $ticket)
@@ -197,7 +199,7 @@ class TicketController extends Controller implements HasMiddleware
             'message' => 'Ticket deleted successfully.'
         ]);
     }
-    
+
     /**
      * Search for a specific ticket
      */
