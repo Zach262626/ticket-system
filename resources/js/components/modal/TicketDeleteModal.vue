@@ -47,9 +47,9 @@ const loading = ref(false)
 const deleteTicket = async () => {
     loading.value = true
     try {
-        await axios.post(`/ticket/${ticket.id}/delete`, null, {
+        const { data } = await axios.post(`/ticket/${props.ticket.id}/delete`, null, {
             headers: {
-                'X-CSRF-TOKEN': csrfToken,
+                'X-CSRF-TOKEN': props.csrfToken,
             },
         })
 
@@ -57,7 +57,11 @@ const deleteTicket = async () => {
             document.getElementById(`confirmDeleteModal-${props.ticket.id}`)
         )?.hide()
 
-        window.location.reload()
+        if (data.redirect) {
+            window.location.href = data.redirect
+        } else {
+            window.location.reload()
+        }
 
     } catch (error) {
         loading.value = false

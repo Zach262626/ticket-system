@@ -178,7 +178,6 @@ class TicketController extends Controller implements HasMiddleware
     /**
      * Delete the specified ticket.
      *
-     * @param  \App\Models\Ticket\Ticket  $ticket
      * @return \Illuminate\Http\redirectResponse
      */
     public function delete(Ticket $ticket)
@@ -194,9 +193,11 @@ class TicketController extends Controller implements HasMiddleware
 
         return response()->json([
             'success' => true,
+            'redirect' => route('ticket-index'),
             'message' => 'Ticket deleted successfully.'
         ]);
     }
+    
     /**
      * Search for a specific ticket
      */

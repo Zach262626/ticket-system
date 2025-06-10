@@ -69,9 +69,10 @@
                             <a href="{{ route('ticket-index') }}" class="btn btn-secondary">Home</a>
                             <a href="{{ route('ticket-show', ['ticket' => $ticket->id]) }}" class="btn btn-light">View</a>
                             <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                data-bs-target="#confirmDeleteModal">
+                                 data-bs-target="#confirmDeleteModal-{{ $ticket->id }}">
                                 Delete
                             </button>
+                            <ticket-delete-modal :ticket="{{ $ticket }}" csrf-token="{{ csrf_token() }}" />
                         </div>
                     </form>
                 </div>

@@ -18,11 +18,13 @@
                             </span>
                         @endif
                         @can('delete tickets')
+                        <span>
                             <button type="button" class="btn btn btn-danger mb-3 px-5" data-bs-toggle="modal"
-                                data-bs-target="#confirmDeleteModal">
+                                data-bs-target="#confirmDeleteModal-{{ $ticket->id }}">
                                 Delete
                             </button>
-                            <x-ticket.modal.delete :ticket=$ticket />
+                            <ticket-delete-modal :ticket="{{ $ticket }}" csrf-token="{{ csrf_token() }}" />
+                        </span>
                         @endcan
                         <span>
                             <form action="{{ route('ticket-close', ['ticket' => $ticket->id]) }}" method="POST">

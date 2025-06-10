@@ -101,7 +101,7 @@
             </nav>
         @endif
         {{-- Alerts --}}
-        <ticket-message-alert :tenant-id="{{ tenant()->id }}" :user-id="{{ auth()->id() }}"></ticket-message-alert>
+        <ticket-message-alert :tenant-id="{{ tenant()?->id }}" :user-id="{{ Auth::id() }}"></ticket-message-alert>
         <alert-stack></alert-stack>
         @yield('content')
 
