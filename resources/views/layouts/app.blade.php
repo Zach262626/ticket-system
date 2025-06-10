@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Support Ticket System</title>
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 </head>
@@ -100,7 +100,9 @@
                 </div>
             </nav>
         @endif
-
+        {{-- Alerts --}}
+        <ticket-message-alert :tenant-id="{{ tenant()?->id }}" :user-id="{{ Auth::id() }}"></ticket-message-alert>
+        <alert-stack></alert-stack>
         @yield('content')
 
     </div>

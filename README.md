@@ -71,3 +71,6 @@
         sail artisan migrate
         sail artisan storage:link
 
+-   bootstrap/app.php
+
+        change middleware domain and port

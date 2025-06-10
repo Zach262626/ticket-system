@@ -108,8 +108,17 @@ class TicketController extends Controller implements HasMiddleware
             return redirect()->route('ticket-index')->with('error', 'You are not authorized to view this ticket.');
         }
         $ticket->load(['status', 'level', 'type', 'createdBy', 'acceptedBy', 'attachments']);
-
-        return view('ticket.show')->with(['ticket' => $ticket]);
+        $messages = $ticket->messages()->orderBy('created_at')->get();
+        $ticketMessages = [];
+        foreach ($messages as $message) {
+            $message->load(['sender']);
+            $ticketMessages[] = $message;
+        }
+        $ticketMessages = array_reverse($ticketMessages);
+        return view('ticket.show')->with([
+            'ticket' => $ticket,
+            'messages' => $ticketMessages
+        ]);
     }
 
     /**
@@ -169,20 +178,26 @@ class TicketController extends Controller implements HasMiddleware
     /**
      * Delete the specified ticket.
      *
-     * @param  \App\Models\Ticket\Ticket  $ticket
      * @return \Illuminate\Http\redirectResponse
      */
     public function delete(Ticket $ticket)
     {
         if ($ticket->status->name != "closed") {
-            return redirect()->back()->with('error', 'Close ticket before deleting.');
+            return response()->json([
+                'success' => false,
+                'message' => 'Close ticket before deleting.'
+            ], 400);
         }
+
         $ticket->delete();
 
-        return redirect()
-            ->route('ticket-index')
-            ->with('success', 'Ticket deleted successfully.');
+        return response()->json([
+            'success' => true,
+            'redirect' => route('ticket-index'),
+            'message' => 'Ticket deleted successfully.'
+        ]);
     }
+    
     /**
      * Search for a specific ticket
      */
@@ -193,7 +208,8 @@ class TicketController extends Controller implements HasMiddleware
         $tickets = Ticket::query()
             ->when($search, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
-                    $q->where('description', 'like', "%{$search}%")
+                    $q->where('id', $search)
+                        ->orWhere('description', 'like', "%{$search}%")
                         ->orWhereHas('status', function ($q) use ($search) {
                             $q->where('name', 'like', "%{$search}%");
                         })
@@ -216,7 +232,10 @@ class TicketController extends Controller implements HasMiddleware
             $tickets->where('created_by', Auth::id());
         }
 
-        $tickets = $tickets->paginate(15)->withQueryString();
+        $tickets = $tickets
+            ->with(['status', 'level', 'type', 'createdBy', 'acceptedBy'])
+            ->paginate(15)
+            ->withQueryString();
 
         return view('ticket.index')->with([
             'tickets' => $tickets,

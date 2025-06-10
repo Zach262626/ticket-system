@@ -34,10 +34,6 @@ foreach (config('tenancy.central_domains') as $domain) {
     */
         Route::middleware('auth')->group(function () {
             Route::get('logout', [LoginController::class, 'logout'])->name('user-logout');
-            Route::get('/test', function () {
-                broadcast(new BroadcastTestAlways());
-            return redirect()->route('home')->with('success', '');
-        })->name('ticket-ex');
             /*
         |--------------------------------------------------------------------------
         | Tenant Routes

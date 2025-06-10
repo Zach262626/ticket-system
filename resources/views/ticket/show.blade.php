@@ -18,11 +18,13 @@
                             </span>
                         @endif
                         @can('delete tickets')
+                        <span>
                             <button type="button" class="btn btn btn-danger mb-3 px-5" data-bs-toggle="modal"
-                                data-bs-target="#confirmDeleteModal">
+                                data-bs-target="#confirmDeleteModal-{{ $ticket->id }}">
                                 Delete
                             </button>
-                            <x-ticket.modal.delete :ticket=$ticket />
+                            <ticket-delete-modal :ticket="{{ $ticket }}" csrf-token="{{ csrf_token() }}" />
+                        </span>
                         @endcan
                         <span>
                             <form action="{{ route('ticket-close', ['ticket' => $ticket->id]) }}" method="POST">
@@ -101,7 +103,16 @@
                     Chat
                 </div>
                 <div class="px-4 pt-3 pb-2 bg-light">
-                    <x-ticket.messages :ticketid="$ticket->id" :senderid="Auth::id()" />
+                    {{-- <ticket-messages :message='@json($message)' :current-user-id='@json(auth()->id())'
+                        :sender-id='@json($message["sender_id"])' :tenant-id='@json($tenant_id)'
+                        :ticket-id='@json($ticket->id)'>
+                    </ticket-messages> --}}
+                    {{-- <ticket-messages :ticket-id="{{ $ticket->id }}" :tenant-id="{{ tenant()->id }}"
+                        :current-user-id="{{ auth()->id() }}" :ticket-status="'{{ $ticket->status->name }}'"
+                        :initial-messages='@json($ticketMessages)'></ticket-messages> --}}
+                    <ticket-messages-panel :ticket-messages='@json($messages)' :ticket='@json($ticket)'
+                        :sender-id='{{ Auth::id() }}' :tenant-id='{{ tenant()->id }}' csrf-token='{{ csrf_token() }}'>
+                    </ticket-messages-panel>
                 </div>
             </div>
         </div>

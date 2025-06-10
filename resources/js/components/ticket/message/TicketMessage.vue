@@ -5,7 +5,6 @@ import dayjs from 'dayjs' // You can also use Carbon-like libraries
 
 const props = defineProps({
   message: Object,
-  currentUserId: Number,
   senderId: Number,
   tenantId: Number,
   ticketId: Number,
@@ -20,17 +19,11 @@ const avatarUrl = computed(() => {
     ? props.message.sender.profile_picture
     : `https://ui-avatars.com/api/?name=${encodeURIComponent(props.message.sender.name)}&background=random&color=fff`
 })
-// onMounted(() => {
-//   Echo.private('channel-name')
-//     .listen('.broadcast-test-true', (e) => {
-//       console.log('here');
-//     });
-// });
 
 </script>
 
 <template>
-  <div v-if="senderId === currentUserId" class="d-flex flex-row justify-content-start w-100">
+  <div v-if="senderId === message.sender_id" class="d-flex flex-row justify-content-start w-100">
     <div class="d-flex flex-column align-items-end w-100 pe-2">
       <div class="bg-primary text-white rounded-3 p-2 mb-1 text-end" style="max-width: 75%; word-wrap: break-word;">
         {{ message.content }}

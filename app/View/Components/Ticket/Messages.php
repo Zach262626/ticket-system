@@ -14,7 +14,7 @@ class Messages extends Component
 {
     public array $ticketMessages = [];
     public Ticket $ticket;
-    public int $tenant_id;
+    public int $tenantId;
     /**
      * Create a new component instance.
      */
@@ -29,7 +29,7 @@ class Messages extends Component
             $this->ticketMessages[] = $message;
         }
         $this->ticketMessages = array_reverse($this->ticketMessages);
-        $this->tenant_id = tenant()->id;
+        $this->tenantId = tenant()->id;
     }
 
     /**

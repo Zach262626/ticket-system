@@ -21,7 +21,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
         then: function () {
             // Define tenant-specific routes
-            Route::middleware('web')
+            Route::middleware('api')
+                ->domain('{tenant}.localhost:2000')
+                ->prefix('api')
+                ->group(base_path('routes/api.php'));
+             Route::middleware('web')
                 ->domain('{tenant}.localhost:2000')
                 ->group(base_path('routes/tenant.php'));
         }
