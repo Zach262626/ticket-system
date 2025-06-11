@@ -28,7 +28,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   if (channel) {
-    window.Echo.leave(`tenant-${props.tenantId}`)
+    window.Echo.leave(`viewall.tenant-${props.tenantId}`)
   }
 })
 </script>

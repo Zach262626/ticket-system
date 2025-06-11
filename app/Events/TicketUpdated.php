@@ -3,7 +3,6 @@
 namespace App\Events;
 
 use App\Models\Ticket\Ticket;
-use GuzzleHttp\Psr7\Message;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -23,10 +22,14 @@ class TicketUpdated implements ShouldBroadcast
     public function __construct(
         public Ticket $ticket,
         public int $tenantId,
+        public string $changes
     ) {}
     public function broadcastWith(): array
     {
-        return ['ticket' => $this->ticket->toArray()];
+        return [
+            'ticket' => $this->ticket->toArray(),
+            'changes' => $this->changes,
+        ];
     }
 
 
@@ -48,6 +51,6 @@ class TicketUpdated implements ShouldBroadcast
     }
     public function broadcastAs(): string
     {
-        return 'ticket.created';
+        return 'ticket.updated';
     }
 }

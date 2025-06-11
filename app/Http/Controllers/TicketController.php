@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use \Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Events\TicketCreated;
+use App\Events\TicketUpdated;
 use App\Models\Ticket\Ticket;
 use App\Models\Ticket\TicketLevel;
 use App\Models\Ticket\TicketStatus;
@@ -171,6 +172,7 @@ class TicketController extends Controller implements HasMiddleware
         }
 
         $ticket->update($data);
+        broadcast(new TicketUpdated($ticket, tenant()->id, 'Ticket #' . $ticket->id . " has been updated"));
 
         return redirect()
             ->back()
@@ -190,8 +192,9 @@ class TicketController extends Controller implements HasMiddleware
                 'message' => 'Close ticket before deleting.'
             ], 400);
         }
-
+        $ticketId = $ticket->id;
         $ticket->delete();
+        broadcast(new TicketUpdated($ticket, tenant()->id, 'Ticket #' . $ticketId . " has been deleted"));
 
         return response()->json([
             'success' => true,
@@ -252,6 +255,7 @@ class TicketController extends Controller implements HasMiddleware
         $ticket->accepted_by = Auth::id();
         $ticket->status_id = TicketStatus::where('name', 'in_progress')->first()->id;
         $ticket->save();
+        broadcast(new TicketUpdated($ticket, tenant()->id, 'Ticket #' . $ticket->id . " has been accepted by " . Auth::user()->name . ""));
         return redirect()->back()->with('success', 'Ticket #' . $ticket->id . " has been accepted by " . Auth::user()->name . "");
     }
     /**
@@ -261,6 +265,7 @@ class TicketController extends Controller implements HasMiddleware
     {
         $ticket->status_id = TicketStatus::where('name', 'closed')->first()->id;
         $ticket->save();
+        broadcast(new TicketUpdated($ticket, tenant()->id, 'Ticket #' . $ticket->id . " has been closed by " . Auth::user()->name . ""));
         return redirect()->back()->with('success', 'Ticket #' . $ticket->id . " has been closed by " . Auth::user()->name . "");
     }
 }

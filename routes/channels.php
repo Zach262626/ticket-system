@@ -36,7 +36,7 @@ Broadcast::channel('tenant-{tenantId}', function ($user, $tenantId) {
     if (!Auth::check()) {
         return false;
     }
-    return tenant()->id !== (int) $tenantId;
+    return tenant()->id == (int) $tenantId;
 });
 
 Broadcast::channel('viewall.tenant-{tenantId}', function ($user, $tenantId) {
