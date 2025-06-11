@@ -32,12 +32,3 @@ Broadcast::channel('tenant-{tenantId}', function ($user, $tenantId) {
     return $user->can('view all tickets');
 });
 
-Broadcast::channel('channel-name', function ($user) {
-    // Print the authenticated user
-    logger($user); // Logs to storage/logs/laravel.log
-
-    // Or use dd($user); to dump and die (for debugging only)
-    // dd($user);
-
-    return true; // or your own logic
-});

@@ -21,16 +21,17 @@ const addTicket = (newTicket) => {
 
 onMounted(() => {
   tickets.value = [...props.tickets]
-  channel = Echo.private('tenant-' + props.tenantId)
-    .listen('.ticket.created', (e) => {
-      const ticketReceived = e.ticket
-      addTicket(ticketReceived)
-    })
+  if (props.can.viewAll) {
+    Echo.private('tenant-' + props.tenantId)
+      .listen('.ticket.created', (e) => {
+        console.log('ticket received')
+        addTicket(e.ticket)
+      })
+  }
 })
-
 onUnmounted(() => {
   if (channel) {
-    Echo.leave('tenant-' + props.tenantId + '.user-' + props.userId)
+    Echo.leave('tenant-' + props.tenantId)
   }
 })
 </script>

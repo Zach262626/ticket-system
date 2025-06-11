@@ -38,7 +38,8 @@
         <div class="row">
             <div class="px-4 pb-2 bg-light">
                 <ticket-table :tenant-id='{{ tenant()->id }}' :user-id='{{ Auth::id() }}'
-                    :tickets='@json($tickets->items())' :can='@json(["edit" => auth()->user()->can("edit tickets"), "delete" => auth()->user()->can("delete tickets")])' csrf-token="{{ csrf_token() }}">
+                    :tickets='@json($tickets->items())' :can='@json(["viewAll" => auth()->user()->can("view all tickets"), "edit" => auth()->user()->can("edit tickets"), "delete" => auth()->user()->can("delete tickets")])'
+                    csrf-token="{{ csrf_token() }}">
                     <template #pagination>
                         {!! $tickets->links() !!}
                     </template>

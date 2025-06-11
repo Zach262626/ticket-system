@@ -14,21 +14,21 @@ const store = useAlertStore()
 let channel
 
 onMounted(() => {
-  channel = window.Echo.private(`tenant-${props.tenantId}.user-${props.userId}`)
-    .listen('.broadcast-message-received', (e) => {
-      if (!window.location.pathname.startsWith(`/ticket/${e.ticket.id}`)) {
+  channel = window.Echo.private(`tenant-${props.tenantId}`)
+    .listen('.ticket.created', () => {
+      console.log('here', window.location.pathname)
+      if (!(window.location.pathname === '/ticket')) {
         store.addAlert({
-          message: `<a class="btn btn-link w-100" href="/ticket/${e.ticket.id}">Ticket #${e.ticket.id}: New message</a>`,
+          message: `<div>New Ticket Created</div>`,
           type: 'light',
         })
       }
     })
-
 })
 
 onUnmounted(() => {
   if (channel) {
-    window.Echo.leave(`tenant-${props.tenantId}.user-${props.userId}`)
+    window.Echo.leave(`tenant-${props.tenantId}`)
   }
 })
 </script>

@@ -9,6 +9,8 @@ import TicketMessageInput from './components/ticket/message/TicketMessageInput.v
 // ALerts
 import AlertStack from './components/alerts/AlertStack.vue';
 import TicketMessageAlert from './components/alerts/TicketMessageAlert.vue';
+import TicketCreatedAlert from './components/alerts/TicketCreatedAlert.vue';
+
 // Modal
 import TicketDeleteModal from './components/modal/TicketDeleteModal.vue';
 
@@ -44,6 +46,7 @@ app.component('ticket-message-input', TicketMessageInput);
 // Alerts
 app.component('alert-stack', AlertStack);
 app.component('ticket-message-alert', TicketMessageAlert);
+app.component('ticket-created-alert', TicketCreatedAlert);
 //Modals
 app.component('ticket-delete-modal', TicketDeleteModal)
 

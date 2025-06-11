@@ -37,9 +37,7 @@ class TicketCreated implements ShouldBroadcast
      */
     public function broadcastOn(): array
     {
-        return [
-            new PrivateChannel(name: "tenant-{$this->tenantId}"),
-        ];
+        return [new PrivateChannel("tenant-{$this->tenantId}")];
     }
     /**
      * The name of the queue on which to place the broadcasting job.
