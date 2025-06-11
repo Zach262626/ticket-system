@@ -170,9 +170,30 @@ class TicketController extends Controller implements HasMiddleware
         } elseif (! Auth::user()->hasPermissionTo('edit tickets')) {
             throw new HttpException(403, 'You are not authorized to edit ticket.');
         }
-
         $ticket->update($data);
-        broadcast(new TicketUpdated($ticket, tenant()->id, 'Ticket #' . $ticket->id . " has been updated"));
+        $ticket->refresh();
+
+        $alias = [
+            'status_id'   => 'status',
+            'level_id'    => 'level',
+            'type_id'     => 'type',
+            'accepted_by' => 'accepted by',
+        ];
+        $dirty   = $ticket->getChanges();
+        $changes = collect($dirty)->mapWithKeys(function ($value, $column) use ($ticket, $alias) {
+            $display = match ($column) {
+                'status_id'   => $ticket->status?->name,
+                'level_id'    => $ticket->level?->name,
+                'type_id'     => $ticket->type?->name,
+                'accepted_by' => $ticket->acceptedBy?->name,
+                default       => $value,
+            };
+
+            $key = $alias[$column] ?? $column;
+
+            return [$key => $display];
+        })->all();
+        broadcast(new TicketUpdated($ticket, tenant()->id, $changes));
 
         return redirect()
             ->back()
@@ -194,7 +215,9 @@ class TicketController extends Controller implements HasMiddleware
         }
         $ticketId = $ticket->id;
         $ticket->delete();
-        broadcast(new TicketUpdated($ticket, tenant()->id, 'Ticket #' . $ticketId . " has been deleted"));
+        broadcast(new TicketUpdated($ticket, tenant()->id, [
+            'ticket' => "deleted"
+        ]));
 
         return response()->json([
             'success' => true,
@@ -255,7 +278,9 @@ class TicketController extends Controller implements HasMiddleware
         $ticket->accepted_by = Auth::id();
         $ticket->status_id = TicketStatus::where('name', 'in_progress')->first()->id;
         $ticket->save();
-        broadcast(new TicketUpdated($ticket, tenant()->id, 'Ticket #' . $ticket->id . " has been accepted by " . Auth::user()->name . ""));
+        broadcast(new TicketUpdated($ticket, tenant()->id, [
+            'accepted by' => Auth::user()->name,
+        ]));
         return redirect()->back()->with('success', 'Ticket #' . $ticket->id . " has been accepted by " . Auth::user()->name . "");
     }
     /**
@@ -265,7 +290,9 @@ class TicketController extends Controller implements HasMiddleware
     {
         $ticket->status_id = TicketStatus::where('name', 'closed')->first()->id;
         $ticket->save();
-        broadcast(new TicketUpdated($ticket, tenant()->id, 'Ticket #' . $ticket->id . " has been closed by " . Auth::user()->name . ""));
+        broadcast(new TicketUpdated($ticket, tenant()->id, [
+            'status' => 'closed',
+        ]));
         return redirect()->back()->with('success', 'Ticket #' . $ticket->id . " has been closed by " . Auth::user()->name . "");
     }
 }

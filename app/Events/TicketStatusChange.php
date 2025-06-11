@@ -22,7 +22,7 @@ class TicketUpdated implements ShouldBroadcast
     public function __construct(
         public Ticket $ticket,
         public int $tenantId,
-        public array $changes
+        public string $changes
     ) {}
     public function broadcastWith(): array
     {
@@ -51,6 +51,6 @@ class TicketUpdated implements ShouldBroadcast
     }
     public function broadcastAs(): string
     {
-        return 'ticket.updated';
+        return 'ticket.status';
     }
 }

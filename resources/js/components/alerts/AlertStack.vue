@@ -10,8 +10,7 @@
                 <strong v-if="alert.message" v-html="alert.message" class="me-auto"></strong>
                 <button type="button" class="btn-close" @click="store.removeAlert(alert.id)"></button>
             </div>
-            <div v-if="alert.body" class="toast-body">
-                <div v-html="alert.body"></div>
+            <div v-if="alert.body" class="toast-body" v-html="alert.body">
             </div>
         </div>
     </div>
