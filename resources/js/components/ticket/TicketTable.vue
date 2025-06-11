@@ -22,7 +22,7 @@ const addTicket = (newTicket) => {
 onMounted(() => {
   tickets.value = [...props.tickets]
   if (props.can.viewAll) {
-    Echo.private('tenant-' + props.tenantId)
+    Echo.private('viewall.tenant-' + props.tenantId)
       .listen('.ticket.created', (e) => {
         console.log('ticket received')
         addTicket(e.ticket)

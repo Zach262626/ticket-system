@@ -14,7 +14,7 @@ const store = useAlertStore()
 let channel
 
 onMounted(() => {
-  channel = window.Echo.private(`tenant-${props.tenantId}`)
+  channel = window.Echo.private(`viewall.tenant-${props.tenantId}`)
     .listen('.ticket.created', () => {
       console.log('here', window.location.pathname)
       if (!(window.location.pathname === '/ticket')) {
