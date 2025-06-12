@@ -12,6 +12,7 @@ import TicketMessageAlert from './components/alerts/TicketMessageAlert.vue';
 import TicketCreatedAlert from './components/alerts/TicketCreatedAlert.vue';
 import TicketDeletedAlert from './components/alerts/TicketDeletedAlert.vue';
 import TicketUpdatedAlert from './components/alerts/TicketUpdatedAlert.vue';
+import TicketStatusAlert from './components/alerts/TicketStatusAlert.vue';
 // Modal
 import TicketDeleteModal from './components/modal/TicketDeleteModal.vue';
 
@@ -50,6 +51,7 @@ app.component('ticket-message-alert', TicketMessageAlert);
 app.component('ticket-created-alert', TicketCreatedAlert);
 app.component('ticket-deleted-alert', TicketDeletedAlert);
 app.component('ticket-updated-alert', TicketUpdatedAlert);
+app.component('ticket-status-alert', TicketStatusAlert);
 //Modals
 app.component('ticket-delete-modal', TicketDeleteModal)
 

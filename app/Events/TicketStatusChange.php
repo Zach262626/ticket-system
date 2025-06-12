@@ -3,6 +3,7 @@
 namespace App\Events;
 
 use App\Models\Ticket\Ticket;
+use GuzzleHttp\Psr7\Message;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -12,7 +13,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class TicketUpdated implements ShouldBroadcast
+class TicketStatusChange implements ShouldBroadcast
 {
     use Batchable, Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -21,14 +22,15 @@ class TicketUpdated implements ShouldBroadcast
      */
     public function __construct(
         public Ticket $ticket,
-        public int $tenantId,
-        public string $changes
+        public int    $tenantId,
+        public array  $change
     ) {}
     public function broadcastWith(): array
     {
         return [
-            'ticket' => $this->ticket->toArray(),
-            'changes' => $this->changes,
+            'ticket' => $this->ticket->only('id', 'status_id'),
+            'status_name' => $this->ticket->status?->name,
+            'change' => $this->change,
         ];
     }
 
@@ -51,6 +53,6 @@ class TicketUpdated implements ShouldBroadcast
     }
     public function broadcastAs(): string
     {
-        return 'ticket.status';
+        return 'ticket.status.change';
     }
 }

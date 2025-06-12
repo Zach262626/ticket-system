@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use \Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Events\TicketCreated;
 use App\Events\TicketDeleted;
+use App\Events\TicketStatusChange;
 use App\Events\TicketUpdated;
 use App\Models\Ticket\Ticket;
 use App\Models\Ticket\TicketLevel;
@@ -196,6 +197,15 @@ class TicketController extends Controller implements HasMiddleware
 
         $newValues   = $ticket->getChanges();
         unset($newValues['updated_at'], $newValues['created_at']);
+        $statusChange = null;
+        if (array_key_exists('status_id', $newValues)) {
+            $statusChange = [
+                'old' => $oldValues['status'] ?? null,
+                'new' => $ticket->status?->name,
+            ];
+            unset($newValues['status_id']);
+        }
+
         $changes = collect($newValues)->mapWithKeys(function ($value, $column) use ($ticket, $alias, $oldValues) {
             $display = match ($column) {
                 'status_id'   => $ticket->status?->name,
@@ -212,7 +222,12 @@ class TicketController extends Controller implements HasMiddleware
                 'new' => $display,
             ]];
         })->all();
-        broadcast(new TicketUpdated($ticket, tenant()->id, $changes));
+        if ($statusChange !== null) {
+            broadcast(new TicketStatusChange($ticket, tenant()->id, $statusChange));
+        }
+        if (!empty($changes)) {
+            broadcast(new TicketUpdated($ticket, tenant()->id, $changes));
+        }
 
         return redirect()
             ->back()

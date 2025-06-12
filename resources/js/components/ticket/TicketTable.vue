@@ -18,6 +18,18 @@ const addTicket = (newTicket) => {
     tickets.value.push(newTicket)
   }
 }
+const updateTicketStatus = (id, newStatus, newStatusId = null) => {
+  const idx = tickets.value.findIndex(t => t.id === id)
+  if (idx === -1) return
+
+  const old = tickets.value[idx]
+  const statusObj = {
+    ...(old.status ?? {}),
+    id: newStatusId ?? old.status?.id,
+    name: newStatus,
+  }
+  tickets.value[idx] = { ...old, status: statusObj }
+}
 
 onMounted(() => {
   tickets.value = [...props.tickets]
@@ -28,6 +40,14 @@ onMounted(() => {
         addTicket(e.ticket)
       })
   }
+  Echo.private('tenant-' + props.tenantId)
+    .listen('.ticket.status.change', (e) => {
+      updateTicketStatus(
+        e.ticket.id,
+        e.status_name ?? e.change?.new ?? 'Unknown',
+        e.ticket.status_id ?? null
+      )
+    })
 })
 onUnmounted(() => {
   if (channel) {
