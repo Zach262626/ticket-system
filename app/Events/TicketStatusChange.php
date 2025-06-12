@@ -23,14 +23,23 @@ class TicketStatusChange implements ShouldBroadcast
     public function __construct(
         public Ticket $ticket,
         public int    $tenantId,
-        public array  $change
-    ) {}
+        public array  $changes = []
+    ) {
+        // Make sure every relation the card relies on is present
+        $this->ticket->load([
+            'createdBy',   
+            'status',     
+            'type',     
+            'level',       
+            'acceptedBy'
+        ]);
+    }
+
     public function broadcastWith(): array
     {
         return [
-            'ticket' => $this->ticket->only('id', 'status_id'),
-            'status_name' => $this->ticket->status?->name,
-            'change' => $this->change,
+            'ticket'  => $this->ticket->toArray(),
+            'changes' => $this->changes,
         ];
     }
 

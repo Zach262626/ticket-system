@@ -1,5 +1,6 @@
 import { createApp } from 'vue';
 import { createPinia } from 'pinia'
+import UserProfile from './components/UserProfile.vue';
 // Tickets
 import TicketTable from './components/ticket/TicketTable.vue';
 import TicketCard from './components/ticket/TicketCard.vue';
@@ -39,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
 const app = createApp({});
 const pinia = createPinia()
 app.use(pinia)
+app.component('user-profile', UserProfile);
 // Tickets
 app.component('ticket-table', TicketTable);
 app.component('ticket-card', TicketCard);
