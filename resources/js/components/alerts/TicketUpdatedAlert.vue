@@ -17,16 +17,19 @@ onMounted(() => {
     channel = window.Echo
         .private(`tenant-${props.tenantId}`)
         .listen('.ticket.updated', (e) => {
-            const listHtml = Object.entries(e.changes)     
-                .map(([field, value]) =>
-                    `<li><strong>${field}</strong>: ${value}</li>`
-                )
-                .join('')                             
+            const listHtml = Object.entries(e.changes)
+                .map(([field, value]) => {
+                    const oldValue = value.old ?? '';
+                    const newValue = value.new;
+                    const arrow = oldValue ? ' → ' : '';
+                    return `<li><strong>${field}</strong>: ${oldValue}${arrow}${newValue}</li>`;
+                })
+                .join('')
             store.addAlert({
-                message: `<div>Ticket Updated</div>`,
+                message: `<div>Ticket ${e.ticket.id} Updated</div>`,
                 body: `<ul class="text-dark m-0 ps-3">${listHtml}</ul>`,
                 type: 'light',
-                isHtml: true 
+                isHtml: true
             })
         })
 })

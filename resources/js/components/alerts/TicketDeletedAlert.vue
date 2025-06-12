@@ -15,16 +15,10 @@ let channel
 
 onMounted(() => {
   channel = window.Echo.private(`viewall.tenant-${props.tenantId}`)
-    .listen('.ticket.created', (e) => {
-      // console.log('here', window.location.pathname)
+    .listen('.ticket.deleted', (e) => {
       store.addAlert({
-        message: `<div>New Ticket Created: 
-                    <a href="/ticket/${e.ticket.id}" 
-                      class="btn btn-link p-0 align-baseline">
-                      Ticket #${e.ticket.id}
-                    </a>
-                  </div>`,
-        type: 'success',
+        message: `<div>Ticket ${e.ticketId} Deleted</div>`,
+        type: 'danger',
       })
     })
 })

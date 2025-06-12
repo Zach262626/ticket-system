@@ -105,6 +105,7 @@
                 {{-- Alerts --}}
                 @can('view all tickets')
                     <ticket-created-alert :tenant-id="{{ tenant()->id }}" :user-id="{{ Auth::id() }}"></ticket-created-alert>
+                    <ticket-deleted-alert :tenant-id="{{ tenant()->id }}" :user-id="{{ Auth::id() }}"></ticket-deleted-alert>
                 @endcan
                 <ticket-updated-alert :tenant-id="{{ tenant()->id }}" :user-id="{{ Auth::id() }}"></ticket-updated-alert>
                 <ticket-message-alert :tenant-id="{{ tenant()->id }}" :user-id="{{ Auth::id() }}"></ticket-message-alert>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use \Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Events\TicketCreated;
+use App\Events\TicketDeleted;
 use App\Events\TicketUpdated;
 use App\Models\Ticket\Ticket;
 use App\Models\Ticket\TicketLevel;
@@ -170,17 +171,32 @@ class TicketController extends Controller implements HasMiddleware
         } elseif (! Auth::user()->hasPermissionTo('edit tickets')) {
             throw new HttpException(403, 'You are not authorized to edit ticket.');
         }
-        $ticket->update($data);
-        $ticket->refresh();
 
+        $oldValues = [];
         $alias = [
             'status_id'   => 'status',
             'level_id'    => 'level',
             'type_id'     => 'type',
             'accepted_by' => 'accepted by',
         ];
-        $dirty   = $ticket->getChanges();
-        $changes = collect($dirty)->mapWithKeys(function ($value, $column) use ($ticket, $alias) {
+        foreach ($alias as $column => $key) {
+            if (array_key_exists($column, $data)) {
+                $oldValues[$key] = match ($column) {
+                    'status_id'   => $ticket->status?->name,
+                    'level_id'    => $ticket->level?->name,
+                    'type_id'     => $ticket->type?->name,
+                    'accepted_by' => $ticket->acceptedBy?->name,
+                    default       => $ticket->$column,
+                };
+            }
+        }
+
+        $ticket->update($data);
+        $ticket->refresh();
+
+        $newValues   = $ticket->getChanges();
+        unset($newValues['updated_at'], $newValues['created_at']);
+        $changes = collect($newValues)->mapWithKeys(function ($value, $column) use ($ticket, $alias, $oldValues) {
             $display = match ($column) {
                 'status_id'   => $ticket->status?->name,
                 'level_id'    => $ticket->level?->name,
@@ -191,7 +207,10 @@ class TicketController extends Controller implements HasMiddleware
 
             $key = $alias[$column] ?? $column;
 
-            return [$key => $display];
+            return [$key => [
+                'old' => $oldValues[$key] ?? null,
+                'new' => $display,
+            ]];
         })->all();
         broadcast(new TicketUpdated($ticket, tenant()->id, $changes));
 
@@ -214,10 +233,9 @@ class TicketController extends Controller implements HasMiddleware
             ], 400);
         }
         $ticketId = $ticket->id;
+        broadcast(new TicketDeleted($ticket->id, tenant()->id));
         $ticket->delete();
-        broadcast(new TicketUpdated($ticket, tenant()->id, [
-            'ticket' => "deleted"
-        ]));
+
 
         return response()->json([
             'success' => true,
