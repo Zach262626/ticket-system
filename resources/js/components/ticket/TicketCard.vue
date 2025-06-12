@@ -21,8 +21,17 @@ let channel
 onMounted(() => {
     channel = window.Echo.private(`tenant-${props.tenantId}`)
 
-    channel.listen('.ticket.updated', ({ ticket }) => ticket.id === t.id && merge(ticket))
-    channel.listen('.ticket.status.change', ({ ticket }) => ticket.id === t.id && merge(ticket))
+    channel.listen('.ticket.updated', (e) => {
+        if (e.ticket.id === t.id) {
+            merge(e.ticket)
+        }
+    })
+
+    channel.listen('.ticket.status.change', (e) => {
+        if (e.ticket.id === t.id) {
+            merge(e.ticket)
+        }
+    })
 })
 
 onUnmounted(() => channel && window.Echo.leave(`tenant-${props.tenantId}`))

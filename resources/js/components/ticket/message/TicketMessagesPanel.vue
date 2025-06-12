@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, onUnmounted } from 'vue'
+import { onMounted, ref, onUnmounted, watch } from 'vue'
 
 const props = defineProps({
   ticketMessages: Object,
@@ -10,7 +10,15 @@ const props = defineProps({
 })
 
 const messages = ref([])
+const status = ref('')
 let channel
+let channel2
+
+watch(
+  () => props.ticket.status?.name,
+  newName => (status.value = newName),
+  { immediate: true }
+)
 
 const addMessage = (newMessage) => {
   const exists = messages.value.some((m) => m.id === newMessage.id)
@@ -21,11 +29,15 @@ const addMessage = (newMessage) => {
 
 onMounted(() => {
   messages.value = [...props.ticketMessages]
-
   channel = Echo.private('tenant-' + props.tenantId + '.ticket-' + props.ticket.id)
     .listen('.broadcast-message-sent', (e) => {
       const messageReceived = e.message
       addMessage(messageReceived)
+    })
+  channel2 = Echo.private(`tenant-${props.tenantId}`)
+    .listen('.ticket.status.change', (e) => {
+      status.value = e.changes.new
+      console.log(status.value)
     })
 })
 
