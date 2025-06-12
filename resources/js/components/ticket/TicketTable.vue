@@ -48,11 +48,9 @@ onMounted(() => {
         e.ticket.status_id ?? null
       )
     })
-})
-onUnmounted(() => {
-  if (channel) {
-    Echo.leave('tenant-' + props.tenantId)
-  }
+    .listen('.ticket.updated', (e) => {
+      window.location.reload()
+    })
 })
 </script>
 <template>

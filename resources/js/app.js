@@ -2,6 +2,7 @@ import { createApp } from 'vue';
 import { createPinia } from 'pinia'
 // Tickets
 import TicketTable from './components/ticket/TicketTable.vue';
+import TicketCard from './components/ticket/TicketCard.vue';
 // Messages
 import TicketMessage from './components/ticket/message/TicketMessage.vue';
 import TicketMessagesPanel from './components/ticket/message/TicketMessagesPanel.vue';
@@ -40,7 +41,7 @@ const pinia = createPinia()
 app.use(pinia)
 // Tickets
 app.component('ticket-table', TicketTable);
-
+app.component('ticket-card', TicketCard);
 // Messages
 app.component('ticket-message', TicketMessage);
 app.component('ticket-messages-panel', TicketMessagesPanel);
