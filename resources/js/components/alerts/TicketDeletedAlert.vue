@@ -14,7 +14,7 @@ const store = useAlertStore()
 let channel
 
 onMounted(() => {
-  channel = window.Echo.private(`viewall.tenant-${props.tenantId}`)
+  channel = window.Echo.private(`tenant-${props.tenantId}.user-${props.userId}`)
     .listen('.ticket.deleted', (e) => {
       store.addAlert({
         message: `<div>Ticket ${e.ticketId} Deleted</div>`,
@@ -25,7 +25,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   if (channel) {
-    window.Echo.leave(`viewall.tenant-${props.tenantId}`)
+    window.Echo.leave(`tenant-${props.tenantId}`)
   }
 })
 </script>

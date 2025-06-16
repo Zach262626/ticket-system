@@ -247,8 +247,12 @@ class TicketController extends Controller implements HasMiddleware
                 'message' => 'Close ticket before deleting.'
             ], 400);
         }
-        $ticketId = $ticket->id;
-        broadcast(new TicketDeleted($ticket->id, tenant()->id));
+        TicketDeleted::dispatch(
+            $ticket->id,
+            tenant()->id,
+            $ticket->created_by,
+            $ticket->accepted_by
+        );
         $ticket->delete();
 
 

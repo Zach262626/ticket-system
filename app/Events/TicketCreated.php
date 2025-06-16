@@ -3,6 +3,7 @@
 namespace App\Events;
 
 use App\Models\Ticket\Ticket;
+use App\Models\User;
 use GuzzleHttp\Psr7\Message;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
@@ -37,8 +38,33 @@ class TicketCreated implements ShouldBroadcast
      */
     public function broadcastOn(): array
     {
-        return [new PrivateChannel("viewall.tenant-{$this->tenantId}")];
+        $channels = [];
+
+        try {
+            $channels[] = new PrivateChannel("tenant-{$this->tenantId}.user-{$this->ticket->created_by}");
+
+            if ($this->ticket->accepted_by) {
+                $channels[] = new PrivateChannel("tenant-{$this->tenantId}.user-{$this->ticket->accepted_by}");
+            }
+
+            $excludedIds = [$this->ticket->created_by, $this->ticket->accepted_by];
+            $editors = User::permission('edit tickets')
+                ->whereNotIn('id', array_filter($excludedIds))
+                ->pluck('id');
+
+            foreach ($editors as $userId) {
+                $channels[] = new PrivateChannel("tenant-{$this->tenantId}.user-{$userId}");
+            }
+        } catch (\Throwable $e) {
+            \Log::error('TicketCreated broadcastOn failed', [
+                'error' => $e->getMessage(),
+                'ticket_id' => $this->ticket->id,
+            ]);
+        }
+
+        return $channels;
     }
+
     /**
      * The name of the queue on which to place the broadcasting job.
      */

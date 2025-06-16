@@ -3,6 +3,7 @@
 namespace App\Events;
 
 use App\Models\Ticket\Ticket;
+use App\Models\User;
 use GuzzleHttp\Psr7\Message;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
@@ -23,6 +24,8 @@ class TicketDeleted implements ShouldBroadcast
     public function __construct(
         public int $ticketId,
         public int $tenantId,
+        public int $createdBy,
+        public ?int $acceptedBy
     ) {}
 
     /**
@@ -32,8 +35,27 @@ class TicketDeleted implements ShouldBroadcast
      */
     public function broadcastOn(): array
     {
-        return [new PrivateChannel("viewall.tenant-{$this->tenantId}")];
+        $channels = [];
+
+        $channels[] = new PrivateChannel("tenant-{$this->tenantId}.user-{$this->createdBy}");
+
+        if ($this->acceptedBy) {
+            $channels[] = new PrivateChannel("tenant-{$this->tenantId}.user-{$this->acceptedBy}");
+        }
+
+        $excludedIds = [$this->createdBy, $this->acceptedBy];
+
+        $editors = User::permission('edit tickets')
+            ->whereNotIn('id', array_filter($excludedIds))
+            ->pluck('id');
+
+        foreach ($editors as $userId) {
+            $channels[] = new PrivateChannel("tenant-{$this->tenantId}.user-{$userId}");
+        }
+
+        return $channels;
     }
+
     /**
      * The name of the queue on which to place the broadcasting job.
      */

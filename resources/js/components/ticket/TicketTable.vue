@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 
 const props = defineProps({
   tickets: Array,
@@ -13,46 +13,73 @@ const tickets = ref([])
 let channel
 
 const addTicket = (newTicket) => {
-  const exists = tickets.value.some((m) => m.id === newTicket.id)
-  if (!exists) {
+  const alreadyExists = tickets.value.some(ticket => ticket.id === newTicket.id)
+  if (!alreadyExists) {
     tickets.value.push(newTicket)
   }
 }
-const updateTicketStatus = (id, newStatus, newStatusId = null) => {
-  const idx = tickets.value.findIndex(t => t.id === id)
-  if (idx === -1) return
 
-  const old = tickets.value[idx]
-  const statusObj = {
-    ...(old.status ?? {}),
-    id: newStatusId ?? old.status?.id,
-    name: newStatus,
+const updateTicketStatus = (ticketId, newStatusName, newStatusId = null) => {
+  const index = tickets.value.findIndex(ticket => ticket.id === ticketId)
+  if (index === -1) return
+
+  const ticket = tickets.value[index]
+  const currentStatus = ticket.status ?? {}
+
+  const updatedStatus = {
+    ...currentStatus,
+    id: newStatusId ?? currentStatus.id,
+    name: newStatusName,
   }
-  tickets.value[idx] = { ...old, status: statusObj }
+
+  tickets.value[index] = {
+    ...ticket,
+    status: updatedStatus,
+  }
+}
+
+const replaceTicket = (updatedTicket) => {
+  const index = tickets.value.findIndex(ticket => ticket.id === updatedTicket.id)
+  if (index !== -1) {
+    tickets.value[index] = updatedTicket
+  }
+}
+const removeTicket = (ticketId) => {
+  tickets.value = tickets.value.filter(ticket => ticket.id !== ticketId)
 }
 
 onMounted(() => {
   tickets.value = [...props.tickets]
+
   if (props.can.viewAll) {
-    Echo.private('viewall.tenant-' + props.tenantId)
+    Echo.private(`tenant-${props.tenantId}.user-${props.userId}`)
       .listen('.ticket.created', (e) => {
         console.log('ticket received')
         addTicket(e.ticket)
       })
   }
-  Echo.private('tenant-' + props.tenantId)
+
+  Echo.private(`tenant-${props.tenantId}`)
     .listen('.ticket.status.change', (e) => {
       updateTicketStatus(
         e.ticket.id,
-        e.status_name ?? e.change?.new ?? 'Unknown',
+        e.ticket.status?.name ?? e.changes?.new ?? 'Unknown',
         e.ticket.status_id ?? null
       )
     })
     .listen('.ticket.updated', (e) => {
-      window.location.reload()
+      replaceTicket(e.ticket)
     })
 })
+
+onUnmounted(() => {
+  Echo.leave(`tenant-${props.tenantId}`)
+  if (props.can.viewAll) {
+    Echo.leave(`tenant-${props.tenantId}`)
+  }
+})
 </script>
+
 <template>
   <div>
     <table class="table mt-2 w-100 table-fixed align-middle text-break">

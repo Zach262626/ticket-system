@@ -14,9 +14,11 @@ const store = useAlertStore()
 let channel
 
 onMounted(() => {
-  channel = window.Echo.private(`viewall.tenant-${props.tenantId}`)
+  const channelName = `tenant-${props.tenantId}.user-${props.userId}`
+
+  channel = window.Echo.private(channelName)
     .listen('.ticket.created', (e) => {
-      // console.log('here', window.location.pathname)
+      console.log('Ticket Created Event:', e)
       store.addAlert({
         message: `<div>New Ticket Created: 
                     <a href="/ticket/${e.ticket.id}" 
@@ -25,13 +27,14 @@ onMounted(() => {
                     </a>
                   </div>`,
         type: 'success',
+        isHtml: true,
       })
     })
 })
 
 onUnmounted(() => {
   if (channel) {
-    window.Echo.leave(`viewall.tenant-${props.tenantId}`)
+    Echo.leave(`tenant-${props.tenantId}.user-${props.userId}`)
   }
 })
 </script>
