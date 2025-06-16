@@ -66,7 +66,7 @@
                         :current-user-id="{{ auth()->id() }}" :ticket-status="'{{ $ticket->status->name }}'"
                         :initial-messages='@json($ticketMessages)'></ticket-messages> --}}
                     <ticket-messages-panel :ticket-messages='@json($messages)' :ticket='@json($ticket)'
-                        :sender-id='{{ Auth::id() }}' :tenant-id='{{ tenant()->id }}' csrf-token='{{ csrf_token() }}'>
+                        :user-id='{{ Auth::id() }}' :tenant-id='{{ tenant()->id }}' csrf-token='{{ csrf_token() }}'>
                     </ticket-messages-panel>
                 </div>
             </div>

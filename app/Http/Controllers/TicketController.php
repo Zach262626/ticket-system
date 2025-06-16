@@ -312,18 +312,27 @@ class TicketController extends Controller implements HasMiddleware
      */
     public function assign(Ticket $ticket)
     {
+
         $oldStatus = $ticket->status?->name;
+
         $ticket->accepted_by = Auth::id();
         $ticket->status_id = TicketStatus::where('name', 'in_progress')->first()->id;
         $ticket->save();
+
+        $ticket->load(['status', 'acceptedBy']);
+
+        broadcast(new TicketUpdated($ticket, tenant()->id, [
+            'accepted by' => [
+                'old' => $ticket->acceptedBy?->name,
+                'new' => Auth::user()->name,
+            ],
+        ]));
         $statusChange = [
             'old' => $oldStatus,
             'new' => $ticket->status?->name,
         ];
         broadcast(new TicketStatusChange($ticket, tenant()->id, $statusChange));
-        broadcast(new TicketUpdated($ticket, tenant()->id, [
-            'accepted by' => Auth::user()->name,
-        ]));
+
         return redirect()->back()->with('success', 'Ticket #' . $ticket->id . " has been accepted by " . Auth::user()->name . "");
     }
     /**

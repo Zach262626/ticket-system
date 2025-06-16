@@ -4,7 +4,7 @@ import axios from 'axios'
 
 const props = defineProps({
     status: String,
-    senderId: Number,
+    userId: Number,
     ticketId: Number,
     tenantId: Number,
     csrfToken: String,
@@ -18,7 +18,7 @@ const sendMessage = async () => {
     try {
         const response = await axios.post('/ticket/message', {
             ticket_id: props.ticketId,
-            sender_id: props.senderId,
+            sender_id: props.userId,
             content: message.value,
             _token: props.csrfToken,
         })

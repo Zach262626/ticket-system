@@ -5,7 +5,7 @@ import dayjs from 'dayjs' // You can also use Carbon-like libraries
 
 const props = defineProps({
   message: Object,
-  senderId: Number,
+  userId: Number,
   tenantId: Number,
   ticketId: Number,
 })
@@ -23,7 +23,7 @@ const avatarUrl = computed(() => {
 </script>
 
 <template>
-  <div v-if="senderId === message.sender_id" class="d-flex flex-row justify-content-start w-100">
+  <div v-if="userId === message.sender_id" class="d-flex flex-row justify-content-start w-100">
     <div class="d-flex flex-column align-items-end w-100 pe-2">
       <div class="bg-primary text-white rounded-3 p-2 mb-1 text-end" style="max-width: 75%; word-wrap: break-word;">
         {{ message.content }}

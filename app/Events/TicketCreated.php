@@ -27,7 +27,11 @@ class TicketCreated implements ShouldBroadcast
     ) {}
     public function broadcastWith(): array
     {
-        return ['ticket' => $this->ticket->toArray()];
+        return [
+            'ticket' => $this->ticket
+                ->load(['status', 'level', 'type', 'createdBy', 'acceptedBy', 'attachments'])
+                ->toArray()
+        ];
     }
 
 

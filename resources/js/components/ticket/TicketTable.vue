@@ -9,47 +9,31 @@ const props = defineProps({
   tenantId: Number,
 })
 
-const tickets = ref([])
+const localTickets = ref([])
 
 const addTicket = (newTicket) => {
-  const alreadyExists = tickets.value.some(ticket => ticket.id === newTicket.id)
+  const alreadyExists = localTickets.value.some(ticket => ticket.id === newTicket.id)
   if (!alreadyExists) {
-    tickets.value.push(newTicket)
-  }
-}
-
-const updateTicketStatus = (ticketId, newStatusName, newStatusId = null) => {
-  const index = tickets.value.findIndex(ticket => ticket.id === ticketId)
-  if (index === -1) return
-
-  const ticket = tickets.value[index]
-  const currentStatus = ticket.status ?? {}
-
-  tickets.value[index] = {
-    ...ticket,
-    status: {
-      ...currentStatus,
-      id: newStatusId ?? currentStatus.id,
-      name: newStatusName,
-    },
+    console.log(newTicket)
+    localTickets.value.push(newTicket)
   }
 }
 
 const replaceTicket = (updatedTicket) => {
-  const index = tickets.value.findIndex(ticket => ticket.id === updatedTicket.id)
+  const index = localTickets.value.findIndex(ticket => ticket.id === updatedTicket.id)
   if (index !== -1) {
-    tickets.value[index] = updatedTicket
+    localTickets.value[index] = updatedTicket
   }
 }
 
 const removeTicket = (ticketId) => {
-  tickets.value = tickets.value.filter(ticket => ticket.id !== ticketId)
+  localTickets.value = localTickets.value.filter(ticket => ticket.id !== ticketId)
 }
 
 let channel
 
 onMounted(() => {
-  tickets.value = [...props.tickets]
+  localTickets.value = [...props.tickets]
 
   const channelName = `tenant-${props.tenantId}.user-${props.userId}`
   channel = Echo.private(channelName)
@@ -57,11 +41,7 @@ onMounted(() => {
       addTicket(e.ticket)
     })
     .listen('.ticket.status.change', (e) => {
-      updateTicketStatus(
-        e.ticket.id,
-        e.ticket.status?.name ?? e.changes?.new ?? 'Unknown',
-        e.ticket.status_id ?? null
-      )
+      replaceTicket(e.ticket)
     })
     .listen('.ticket.updated', (e) => {
       replaceTicket(e.ticket)
@@ -103,7 +83,7 @@ onUnmounted(() => {
       </thead>
 
       <tbody>
-        <tr v-for="ticket in tickets" :key="ticket.id">
+        <tr v-for="ticket in localTickets" :key="ticket.id">
           <td scope="row">{{ ticket.id }}</td>
           <td>{{ ticket.description }}</td>
           <td>{{ ticket.type?.name || '—' }}</td>
@@ -154,7 +134,7 @@ onUnmounted(() => {
           </td>
         </tr>
 
-        <tr v-if="tickets.length === 0">
+        <tr v-if="localTickets.length === 0">
           <td colspan="8" class="text-center">No tickets available.</td>
         </tr>
       </tbody>
