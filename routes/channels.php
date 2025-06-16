@@ -12,9 +12,12 @@ use Stancl\Tenancy\Middleware\ScopeSessions;
 
 
 
-
-Broadcast::channel('tenant-{tenantId}.user-{userId}', function ($user, $tenantId, $userId) {
-    return tenant()->id == (int) $tenantId && $user->id === (int) $userId;
+Broadcast::channel('tenant-{tenantId}.ticket-{ticketId}', function ($user, $tenantId, $ticketId) {
+    return ($tenantId == tenant()->id) && Ticket::where('id', $ticketId)
+        ->where(function ($query) use ($user) {
+            $query->where('created_by', $user->id)
+                ->orWhere('accepted_by', $user->id);
+        })->exists();
 });
 
 Broadcast::channel('tenant-{tenantId}.user-{userId}', function ($user, $tenantId, $userId) {
