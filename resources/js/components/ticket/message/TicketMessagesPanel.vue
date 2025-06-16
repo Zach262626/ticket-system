@@ -12,7 +12,6 @@ const props = defineProps({
 const messages = ref([])
 const status = ref('')
 let channel
-let channel2
 
 watch(
   () => props.ticket.status?.name,
@@ -34,11 +33,6 @@ onMounted(() => {
       const messageReceived = e.message
       addMessage(messageReceived)
     })
-  channel2 = Echo.private(`tenant-${props.tenantId}`)
-    .listen('.ticket.status.change', (e) => {
-      status.value = e.changes.new
-      console.log(status.value)
-    })
 })
 
 onUnmounted(() => {
@@ -56,6 +50,6 @@ onUnmounted(() => {
 
   <div>
     <ticket-message-input :sender-id="senderId" :ticket-id="ticket.id" :csrf-token="csrfToken"
-      :status="ticket.status.name" @message-sent="addMessage" />
+      :status="ticket.status.name" @message-sent="addMessage" :tenant-id="tenantId" />
   </div>
 </template>
