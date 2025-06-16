@@ -14,8 +14,9 @@ const store = useAlertStore()
 let channel
 
 onMounted(() => {
+  const channelName = `tenant-${props.tenantId}.user-${props.userId}`
   channel = window.Echo
-    .private(`tenant-${props.tenantId}`)
+    .private(channelName)
     .listen('.ticket.status.change', (e) => {
       const ticketId = e.ticket?.id ?? 'Unknown'
       const newStatus = e.changes?.new ?? 'Unknown'

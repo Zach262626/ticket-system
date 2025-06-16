@@ -14,8 +14,9 @@ const store = useAlertStore()
 let channel
 
 onMounted(() => {
+    const channelName = `tenant-${props.tenantId}.user-${props.userId}`
     channel = window.Echo
-        .private(`tenant-${props.tenantId}`)
+        .private(channelName)
         .listen('.ticket.updated', (e) => {
             const listHtml = Object.entries(e.changes)
                 .map(([field, value]) => {

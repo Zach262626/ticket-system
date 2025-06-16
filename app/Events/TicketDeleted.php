@@ -45,7 +45,7 @@ class TicketDeleted implements ShouldBroadcast
 
         $excludedIds = [$this->createdBy, $this->acceptedBy];
 
-        $editors = User::permission('edit tickets')
+        $editors = User::permission('view all tickets')
             ->whereNotIn('id', array_filter($excludedIds))
             ->pluck('id');
 

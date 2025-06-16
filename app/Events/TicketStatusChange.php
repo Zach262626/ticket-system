@@ -3,6 +3,7 @@
 namespace App\Events;
 
 use App\Models\Ticket\Ticket;
+use App\Models\User;
 use GuzzleHttp\Psr7\Message;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
@@ -27,10 +28,10 @@ class TicketStatusChange implements ShouldBroadcast
     ) {
         // Make sure every relation the card relies on is present
         $this->ticket->load([
-            'createdBy',   
-            'status',     
-            'type',     
-            'level',       
+            'createdBy',
+            'status',
+            'type',
+            'level',
             'acceptedBy'
         ]);
     }
@@ -51,7 +52,28 @@ class TicketStatusChange implements ShouldBroadcast
      */
     public function broadcastOn(): array
     {
-        return [new PrivateChannel("tenant-{$this->tenantId}")];
+        $channels = [];
+
+        try {
+            $channels[] = new PrivateChannel("tenant-{$this->tenantId}.user-{$this->ticket->created_by}");
+
+            if ($this->ticket->accepted_by) {
+                $channels[] = new PrivateChannel("tenant-{$this->tenantId}.user-{$this->ticket->accepted_by}");
+            }
+
+            $excludedIds = [$this->ticket->created_by, $this->ticket->accepted_by];
+            $editors = User::permission('view all tickets')
+                ->whereNotIn('id', array_filter($excludedIds))
+                ->pluck('id');
+
+            foreach ($editors as $userId) {
+                $channels[] = new PrivateChannel("tenant-{$this->tenantId}.user-{$userId}");
+            }
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+
+        return $channels;
     }
     /**
      * The name of the queue on which to place the broadcasting job.

@@ -48,7 +48,7 @@ class TicketCreated implements ShouldBroadcast
             }
 
             $excludedIds = [$this->ticket->created_by, $this->ticket->accepted_by];
-            $editors = User::permission('edit tickets')
+            $editors = User::permission('view all tickets')
                 ->whereNotIn('id', array_filter($excludedIds))
                 ->pluck('id');
 
@@ -56,10 +56,7 @@ class TicketCreated implements ShouldBroadcast
                 $channels[] = new PrivateChannel("tenant-{$this->tenantId}.user-{$userId}");
             }
         } catch (\Throwable $e) {
-            \Log::error('TicketCreated broadcastOn failed', [
-                'error' => $e->getMessage(),
-                'ticket_id' => $this->ticket->id,
-            ]);
+            throw $e;
         }
 
         return $channels;

@@ -3,12 +3,13 @@
 namespace App\Events;
 
 use App\Models\Ticket\Ticket;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Bus\Batchable;
+use App\Models\User;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Bus\Batchable;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
 
 class TicketUpdated implements ShouldBroadcast
 {
@@ -40,7 +41,28 @@ class TicketUpdated implements ShouldBroadcast
 
     public function broadcastOn(): array
     {
-        return [new PrivateChannel("tenant-{$this->tenantId}")];
+        $channels = [];
+
+        try {
+            $channels[] = new PrivateChannel("tenant-{$this->tenantId}.user-{$this->ticket->created_by}");
+
+            if ($this->ticket->accepted_by) {
+                $channels[] = new PrivateChannel("tenant-{$this->tenantId}.user-{$this->ticket->accepted_by}");
+            }
+
+            $excludedIds = [$this->ticket->created_by, $this->ticket->accepted_by];
+            $editors = User::permission('view all tickets')
+                ->whereNotIn('id', array_filter($excludedIds))
+                ->pluck('id');
+
+            foreach ($editors as $userId) {
+                $channels[] = new PrivateChannel("tenant-{$this->tenantId}.user-{$userId}");
+            }
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+
+        return $channels;
     }
 
     public function broadcastQueue(): string
