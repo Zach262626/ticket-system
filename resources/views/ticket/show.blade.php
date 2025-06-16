@@ -51,7 +51,7 @@
         </div>
         <div class="row gy-4">
             <div class="col-md-3">
-                <ticket-card :tenant-id='{{ tenant()->id }}' :ticket='@json($ticket)'></ticket-card>
+                <ticket-card :tenant-id='{{ tenant()->id }}' :ticket='@json($ticket)' :user-id="{{ Auth::id() }}"></ticket-card>
             </div>
             <div class="col-md-9">
                 <div class="bg-dark px-3 py-2 rounded-1 text-light">

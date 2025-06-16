@@ -10,7 +10,6 @@ const props = defineProps({
 })
 
 const tickets = ref([])
-let channel
 
 const addTicket = (newTicket) => {
   const alreadyExists = tickets.value.some(ticket => ticket.id === newTicket.id)
@@ -26,15 +25,13 @@ const updateTicketStatus = (ticketId, newStatusName, newStatusId = null) => {
   const ticket = tickets.value[index]
   const currentStatus = ticket.status ?? {}
 
-  const updatedStatus = {
-    ...currentStatus,
-    id: newStatusId ?? currentStatus.id,
-    name: newStatusName,
-  }
-
   tickets.value[index] = {
     ...ticket,
-    status: updatedStatus,
+    status: {
+      ...currentStatus,
+      id: newStatusId ?? currentStatus.id,
+      name: newStatusName,
+    },
   }
 }
 
@@ -44,22 +41,21 @@ const replaceTicket = (updatedTicket) => {
     tickets.value[index] = updatedTicket
   }
 }
+
 const removeTicket = (ticketId) => {
   tickets.value = tickets.value.filter(ticket => ticket.id !== ticketId)
 }
 
+let channel
+
 onMounted(() => {
   tickets.value = [...props.tickets]
 
-  if (props.can.viewAll) {
-    Echo.private(`tenant-${props.tenantId}.user-${props.userId}`)
-      .listen('.ticket.created', (e) => {
-        console.log('ticket received')
-        addTicket(e.ticket)
-      })
-  }
-
-  Echo.private(`tenant-${props.tenantId}`)
+  const channelName = `tenant-${props.tenantId}.user-${props.userId}`
+  channel = Echo.private(channelName)
+    .listen('.ticket.created', (e) => {
+      addTicket(e.ticket)
+    })
     .listen('.ticket.status.change', (e) => {
       updateTicketStatus(
         e.ticket.id,
@@ -70,15 +66,16 @@ onMounted(() => {
     .listen('.ticket.updated', (e) => {
       replaceTicket(e.ticket)
     })
+    .listen('.ticket.deleted', (e) => {
+      removeTicket(e.ticketId)
+    })
 })
 
 onUnmounted(() => {
-  Echo.leave(`tenant-${props.tenantId}`)
-  if (props.can.viewAll) {
-    Echo.leave(`tenant-${props.tenantId}`)
-  }
+  Echo.leave(`tenant-${props.tenantId}.user-${props.userId}`)
 })
 </script>
+
 
 <template>
   <div>

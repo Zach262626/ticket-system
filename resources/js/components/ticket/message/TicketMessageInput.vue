@@ -32,7 +32,7 @@ const sendMessage = async () => {
 }
 
 onMounted(() => {
-    channel = Echo.private(`tenant-${props.tenantId}`)
+    channel = Echo.private(`tenant-${props.tenantId}.user-${props.userId}`)
         .listen('.ticket.status.change', (e) => {
             localStatus.value = e.changes.new
         })

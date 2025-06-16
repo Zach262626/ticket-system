@@ -2,7 +2,7 @@
 <script setup>
 import { reactive, watch, onMounted, onUnmounted } from 'vue'
 
-const props = defineProps({ ticket: Object, tenantId: Number })
+const props = defineProps({ ticket: Object, tenantId: Number, userId: Number })
 const t = reactive({ ...props.ticket })
 
 const merge = (src) => {
@@ -19,7 +19,7 @@ watch(() => props.ticket, merge)
 
 let channel
 onMounted(() => {
-    channel = window.Echo.private(`tenant-${props.tenantId}`)
+    channel = window.Echo.private(`tenant-${props.tenantId}.user-${props.userId}`)
 
     channel.listen('.ticket.updated', (e) => {
         if (e.ticket.id === t.id) {
