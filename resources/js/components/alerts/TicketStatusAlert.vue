@@ -17,14 +17,11 @@ onMounted(() => {
   channel = window.Echo
     .private(`tenant-${props.tenantId}`)
     .listen('.ticket.status.change', (e) => {
-      const id = e.ticket.id
-      const newStatus = e.status_name ?? e.change?.new ?? 'Unknown'
+      const ticketId = e.ticket?.id ?? 'Unknown'
+      const newStatus = e.changes?.new ?? 'Unknown'
 
       store.addAlert({
-        message: `
-          <div>
-            Ticket ${id} is ${newStatus}
-          </div>`,
+        message: `<div>Ticket #${ticketId} status changed to <strong>${newStatus}</strong></div>`,
         type: 'warning',
         isHtml: true,
       })
