@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use \Symfony\Component\HttpKernel\Exception\HttpException;
+use App\Events\TicketCreated;
+use App\Events\TicketDeleted;
+use App\Events\TicketStatusChange;
+use App\Events\TicketUpdated;
 use App\Models\Ticket\Ticket;
 use App\Models\Ticket\TicketLevel;
 use App\Models\Ticket\TicketStatus;
@@ -14,7 +19,6 @@ use Illuminate\Support\Facades\Auth;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use Stancl\Tenancy\Middleware\ScopeSessions;
-use \Symfony\Component\HttpKernel\Exception\HttpException;
 
 class TicketController extends Controller implements HasMiddleware
 {
@@ -91,6 +95,7 @@ class TicketController extends Controller implements HasMiddleware
         $data['status_id']  = TicketStatus::where('name', 'Open')->get()->first()->id;
 
         $ticket = Ticket::create($data);
+        broadcast(new TicketCreated($ticket, tenant()->id));
 
         return redirect()
             ->route('ticket-index', $ticket)
@@ -168,7 +173,61 @@ class TicketController extends Controller implements HasMiddleware
             throw new HttpException(403, 'You are not authorized to edit ticket.');
         }
 
+        $oldValues = [];
+        $alias = [
+            'status_id'   => 'status',
+            'level_id'    => 'level',
+            'type_id'     => 'type',
+            'accepted_by' => 'accepted by',
+        ];
+        foreach ($alias as $column => $key) {
+            if (array_key_exists($column, $data)) {
+                $oldValues[$key] = match ($column) {
+                    'status_id'   => $ticket->status?->name,
+                    'level_id'    => $ticket->level?->name,
+                    'type_id'     => $ticket->type?->name,
+                    'accepted_by' => $ticket->acceptedBy?->name,
+                    default       => $ticket->$column,
+                };
+            }
+        }
+
         $ticket->update($data);
+        $ticket->refresh();
+
+        $newValues   = $ticket->getChanges();
+        unset($newValues['updated_at'], $newValues['created_at']);
+        $statusChange = null;
+        if (array_key_exists('status_id', $newValues)) {
+            $statusChange = [
+                'old' => $oldValues['status'] ?? null,
+                'new' => $ticket->status?->name,
+            ];
+            unset($newValues['status_id']);
+        }
+
+        $changes = collect($newValues)->mapWithKeys(function ($value, $column) use ($ticket, $alias, $oldValues) {
+            $display = match ($column) {
+                'status_id'   => $ticket->status?->name,
+                'level_id'    => $ticket->level?->name,
+                'type_id'     => $ticket->type?->name,
+                'accepted_by' => $ticket->acceptedBy?->name,
+                default       => $value,
+            };
+
+            $key = $alias[$column] ?? $column;
+
+            return [$key => [
+                'old' => $oldValues[$key] ?? null,
+                'new' => $display,
+            ]];
+        })->all();
+        if ($statusChange !== null) {
+            broadcast(new TicketStatusChange($ticket, tenant()->id, $statusChange));
+        }
+        if (!empty($changes)) {
+            broadcast(new TicketUpdated($ticket, tenant()->id, $changes));
+        }
 
         return redirect()
             ->back()
@@ -188,8 +247,14 @@ class TicketController extends Controller implements HasMiddleware
                 'message' => 'Close ticket before deleting.'
             ], 400);
         }
-
+        TicketDeleted::dispatch(
+            $ticket->id,
+            tenant()->id,
+            $ticket->created_by,
+            $ticket->accepted_by
+        );
         $ticket->delete();
+
 
         return response()->json([
             'success' => true,
@@ -197,7 +262,7 @@ class TicketController extends Controller implements HasMiddleware
             'message' => 'Ticket deleted successfully.'
         ]);
     }
-    
+
     /**
      * Search for a specific ticket
      */
@@ -247,9 +312,27 @@ class TicketController extends Controller implements HasMiddleware
      */
     public function assign(Ticket $ticket)
     {
+
+        $oldStatus = $ticket->status?->name;
+
         $ticket->accepted_by = Auth::id();
         $ticket->status_id = TicketStatus::where('name', 'in_progress')->first()->id;
         $ticket->save();
+
+        $ticket->load(['status', 'acceptedBy']);
+
+        broadcast(new TicketUpdated($ticket, tenant()->id, [
+            'accepted by' => [
+                'old' => $ticket->acceptedBy?->name,
+                'new' => Auth::user()->name,
+            ],
+        ]));
+        $statusChange = [
+            'old' => $oldStatus,
+            'new' => $ticket->status?->name,
+        ];
+        broadcast(new TicketStatusChange($ticket, tenant()->id, $statusChange));
+
         return redirect()->back()->with('success', 'Ticket #' . $ticket->id . " has been accepted by " . Auth::user()->name . "");
     }
     /**
@@ -257,8 +340,14 @@ class TicketController extends Controller implements HasMiddleware
      */
     public function close(Ticket $ticket)
     {
+        $oldStatus = $ticket->status?->name;
         $ticket->status_id = TicketStatus::where('name', 'closed')->first()->id;
         $ticket->save();
+        $statusChange = [
+            'old' => $oldStatus,
+            'new' => $ticket->status?->name,
+        ];
+        broadcast(new TicketStatusChange($ticket, tenant()->id, $statusChange));
         return redirect()->back()->with('success', 'Ticket #' . $ticket->id . " has been closed by " . Auth::user()->name . "");
     }
 }

@@ -15,20 +15,17 @@ let channel
 
 onMounted(() => {
   channel = window.Echo.private(`tenant-${props.tenantId}.user-${props.userId}`)
-    .listen('.broadcast-message-received', (e) => {
-      if (!window.location.pathname.startsWith(`/ticket/${e.ticket.id}`)) {
-        store.addAlert({
-          message: `<a class="btn btn-link w-100" href="/ticket/${e.ticket.id}">Ticket #${e.ticket.id}: New message</a>`,
-          type: 'light',
-        })
-      }
+    .listen('.ticket.deleted', (e) => {
+      store.addAlert({
+        message: `<div>Ticket ${e.ticketId} Deleted</div>`,
+        type: 'danger',
+      })
     })
-
 })
 
 onUnmounted(() => {
   if (channel) {
-    window.Echo.leave(`tenant-${props.tenantId}.user-${props.userId}`)
+    window.Echo.leave(`tenant-${props.tenantId}`)
   }
 })
 </script>

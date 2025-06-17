@@ -1,3 +1,62 @@
+<script setup>
+import { ref, onMounted, onUnmounted } from 'vue'
+
+const props = defineProps({
+  tickets: Array,
+  can: Object,
+  csrfToken: String,
+  userId: Number,
+  tenantId: Number,
+})
+
+const localTickets = ref([])
+
+const addTicket = (newTicket) => {
+  const alreadyExists = localTickets.value.some(ticket => ticket.id === newTicket.id)
+  if (!alreadyExists) {
+    console.log(newTicket)
+    localTickets.value.push(newTicket)
+  }
+}
+
+const replaceTicket = (updatedTicket) => {
+  const index = localTickets.value.findIndex(ticket => ticket.id === updatedTicket.id)
+  if (index !== -1) {
+    localTickets.value[index] = updatedTicket
+  }
+}
+
+const removeTicket = (ticketId) => {
+  localTickets.value = localTickets.value.filter(ticket => ticket.id !== ticketId)
+}
+
+let channel
+
+onMounted(() => {
+  localTickets.value = [...props.tickets]
+
+  const channelName = `tenant-${props.tenantId}.user-${props.userId}`
+  channel = Echo.private(channelName)
+    .listen('.ticket.created', (e) => {
+      addTicket(e.ticket)
+    })
+    .listen('.ticket.status.change', (e) => {
+      replaceTicket(e.ticket)
+    })
+    .listen('.ticket.updated', (e) => {
+      replaceTicket(e.ticket)
+    })
+    .listen('.ticket.deleted', (e) => {
+      removeTicket(e.ticketId)
+    })
+})
+
+onUnmounted(() => {
+  Echo.leave(`tenant-${props.tenantId}.user-${props.userId}`)
+})
+</script>
+
+
 <template>
   <div>
     <table class="table mt-2 w-100 table-fixed align-middle text-break">
@@ -24,7 +83,7 @@
       </thead>
 
       <tbody>
-        <tr v-for="ticket in tickets" :key="ticket.id">
+        <tr v-for="ticket in localTickets" :key="ticket.id">
           <td scope="row">{{ ticket.id }}</td>
           <td>{{ ticket.description }}</td>
           <td>{{ ticket.type?.name || '—' }}</td>
@@ -33,8 +92,8 @@
           <template v-if="can.edit">
             <template v-if="can.delete">
               <td class="text-center">
-                <template v-if="ticket.acceptedBy">
-                  {{ ticket.acceptedBy.name }}
+                <template v-if="ticket.accepted_by">
+                  {{ ticket.accepted_by.name }}
                 </template>
                 <template v-else>
                   <form :action="`/ticket/${ticket.id}/assign`" method="POST">
@@ -57,7 +116,7 @@
 
             <template v-else>
               <td class="text-center">
-                {{ ticket.acceptedBy?.name || '—' }}
+                {{ ticket.accepted_by?.name || '—' }}
               </td>
             </template>
 
@@ -75,7 +134,7 @@
           </td>
         </tr>
 
-        <tr v-if="tickets.length === 0">
+        <tr v-if="localTickets.length === 0">
           <td colspan="8" class="text-center">No tickets available.</td>
         </tr>
       </tbody>
@@ -86,20 +145,3 @@
     </div>
   </div>
 </template>
-
-<script setup>
-defineProps({
-  tickets: {
-    type: Array,
-    required: true,
-  },
-  can: {
-    type: Object,
-    default: () => ({ edit: false, delete: false }),
-  },
-  csrfToken: {
-    type: String,
-    default: '',
-  },
-})
-</script>

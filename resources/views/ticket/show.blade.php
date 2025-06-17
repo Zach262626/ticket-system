@@ -51,52 +51,7 @@
         </div>
         <div class="row gy-4">
             <div class="col-md-3">
-                <div class="bg-dark px-3 py-2 rounded-1 text-light">
-                    Ticket #{{ $ticket->id }}
-                </div>
-                <div class="px-4 pt-3 pb-2 bg-light">
-                    <div class="w-100">
-                        <x-user-profile :subname="false" width="75" :user="$ticket->createdBy" />
-                    </div>
-                    <div class="w-100">
-                        <div>
-                            <strong>Description:</strong>
-                        </div>
-                        <p class="ms-2">
-                            {{ $ticket->description }}
-                        </p>
-                    </div>
-                    @if(isset($ticket->createdBy->phone_number))
-                        <div class="w-100">
-                            <div><strong>Phone Number:</strong></div>
-                            <p class="ms-2">{{ $ticket->createdBy->phone_number }}</p>
-                        </div>
-                    @endif
-                    <div class="w-100">
-                        <div><strong>Status:</strong></div>
-                        <p class="ms-2">{{ $ticket->status->name }}</p>
-                    </div>
-                    <div class="w-100">
-                        <div><strong>Type:</strong></div>
-                        <p class="ms-2">{{ $ticket->type->name }}</p>
-                    </div>
-                    <div class="w-100">
-                        <div><strong>Level:</strong></div>
-                        <p class="ms-2">{{ $ticket->level->name }}</p>
-                    </div>
-                    {{-- !Temporary! make this responsive so when a user accept in shows him --}}
-                    @if(isset($ticket->acceptedBy))
-                        <div class="w-100 pb-2">
-                            <div class="mb-2"><strong>Accepted By:</strong></div>
-                            <x-user-profile :subname="false" width="50" :user="$ticket->acceptedBy" />
-                        </div>
-                    @else
-                        <div class="w-100 pb-2">
-                            <div><strong>Accepted By:</strong></div>
-                            <div class="ms-2">Name Here</div>
-                        </div>
-                    @endif
-                </div>
+                <ticket-card :tenant-id='{{ tenant()->id }}' :ticket='@json($ticket)' :user-id="{{ Auth::id() }}"></ticket-card>
             </div>
             <div class="col-md-9">
                 <div class="bg-dark px-3 py-2 rounded-1 text-light">
@@ -111,9 +66,10 @@
                         :current-user-id="{{ auth()->id() }}" :ticket-status="'{{ $ticket->status->name }}'"
                         :initial-messages='@json($ticketMessages)'></ticket-messages> --}}
                     <ticket-messages-panel :ticket-messages='@json($messages)' :ticket='@json($ticket)'
-                        :sender-id='{{ Auth::id() }}' :tenant-id='{{ tenant()->id }}' csrf-token='{{ csrf_token() }}'>
+                        :user-id='{{ Auth::id() }}' :tenant-id='{{ tenant()->id }}' csrf-token='{{ csrf_token() }}'>
                     </ticket-messages-panel>
                 </div>
             </div>
         </div>
+    </div>
 @endsection

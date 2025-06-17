@@ -100,9 +100,17 @@
                 </div>
             </nav>
         @endif
-        {{-- Alerts --}}
-        <ticket-message-alert :tenant-id="{{ tenant()?->id }}" :user-id="{{ Auth::id() }}"></ticket-message-alert>
-        <alert-stack></alert-stack>
+        @if(tenant('id') != null)
+            @auth
+                {{-- Alerts --}}
+                <ticket-created-alert :tenant-id="{{ tenant()->id }}" :user-id="{{ Auth::id() }}"></ticket-created-alert>
+                <ticket-deleted-alert :tenant-id="{{ tenant()->id }}" :user-id="{{ Auth::id() }}"></ticket-deleted-alert>
+                <ticket-status-alert :tenant-id="{{ tenant()->id }}" :user-id="{{ Auth::id() }}"></ticket-status-alert>
+                <ticket-updated-alert :tenant-id="{{ tenant()->id }}" :user-id="{{ Auth::id() }}"></ticket-updated-alert>
+                <ticket-message-alert :tenant-id="{{ tenant()->id }}" :user-id="{{ Auth::id() }}"></ticket-message-alert>
+                <alert-stack></alert-stack>
+            @endauth
+        @endif
         @yield('content')
 
     </div>
