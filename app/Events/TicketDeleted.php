@@ -61,7 +61,7 @@ class TicketDeleted implements ShouldBroadcast
      */
     public function broadcastQueue(): string
     {
-        return 'broadcast';
+        return 'broadcasts';
     }
     public function broadcastAs(): string
     {
