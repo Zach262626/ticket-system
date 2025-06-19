@@ -16,7 +16,7 @@ class SendTicketCreatedEmail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, SerializesModels;
     public $queue = 'emails';
-    public $tries = 3;
+    public $tries = 1;
 
     /**
      * Create the event listener.
@@ -29,9 +29,11 @@ class SendTicketCreatedEmail implements ShouldQueue
     public function handle(TicketCreated $event): void
     {
         Tenancy::initialize($event->tenantId);
-        $user = $event->ticket->createdBy;
+        $ticket = \App\Models\Ticket\Ticket::with('createdBy')->findOrFail($event->ticketId);
+        $user = $ticket->createdBy;
         if ($user && $user->email) {
-            Mail::to($user->email)->queue(new TicketCreatedMail($event->ticket));
+            Mail::to($ticket->createdBy->email)
+                ->queue(new TicketCreatedMail($ticket, $event->tenantDomain));
         }
         Tenancy::end();
     }

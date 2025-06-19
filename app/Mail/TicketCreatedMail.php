@@ -14,7 +14,8 @@ class TicketCreatedMail extends Mailable
     use Queueable, SerializesModels;
 
     public function __construct(
-        public Ticket $ticket
+        public Ticket $ticket,
+        public string $tenantDomain
     ) {}
 
     public function envelope(): Envelope
@@ -30,6 +31,7 @@ class TicketCreatedMail extends Mailable
             view: 'emails.tickets.created',
             with: [
                 'ticket' => $this->ticket,
+                'tenantDomain' => $this->tenantDomain
             ]
         );
     }
@@ -38,4 +40,5 @@ class TicketCreatedMail extends Mailable
     {
         return [];
     }
+    
 }

@@ -95,7 +95,7 @@ class TicketController extends Controller implements HasMiddleware
         $data['status_id']  = TicketStatus::where('name', 'Open')->get()->first()->id;
 
         $ticket = Ticket::create($data);
-        broadcast(new TicketCreated($ticket, tenant()->id));
+        broadcast(new TicketCreated($ticket->id, tenant()->id));
 
         return redirect()
             ->route('ticket-index', $ticket)

@@ -85,8 +85,8 @@ Route::middleware([
         })->middleware('role:developer');
         Route::get('/test-email', function () {
             $ticket = Ticket::first();
-            TicketCreated::dispatch($ticket, tenant()->id);
-            return 'Mail sent!';
+            TicketCreated::dispatch($ticket->id, tenant()->id);
+            return redirect()->back();
         });
         // !Temporary!
         Route::get('/ticket', [TicketController::class, 'index'])->name('ticket-index');
