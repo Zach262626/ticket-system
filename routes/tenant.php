@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use App\Events\BroadcastTestAlways;
 use App\Events\TicketCreated;
+use App\Events\TicketStatusChange;
+use App\Events\TicketUpdated;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\HomeController;
@@ -20,6 +22,7 @@ use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use Stancl\Tenancy\Middleware\ScopeSessions;
+
 
 
 
@@ -86,8 +89,10 @@ Route::middleware([
         Route::get('/test-email', function () {
             $ticket = Ticket::first();
             TicketCreated::dispatch($ticket->id, tenant()->id);
+            TicketStatusChange::dispatch($ticket->id, tenant()->id);
+            TicketUpdated::dispatch($ticket->id, tenant()->id);
             return redirect()->back();
-        });
+        })->name('test-email');
         // !Temporary!
         Route::get('/ticket', [TicketController::class, 'index'])->name('ticket-index');
         Route::get('/ticket/search', [TicketController::class, 'search'])->name('ticket-search');

@@ -4,7 +4,6 @@ namespace App\Events;
 
 use App\Models\Ticket\Ticket;
 use App\Models\User;
-use GuzzleHttp\Psr7\Message;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -17,33 +16,37 @@ use Illuminate\Queue\SerializesModels;
 class TicketStatusChange implements ShouldBroadcast
 {
     use Batchable, Dispatchable, InteractsWithSockets, SerializesModels;
+    public string $tenantDomain;
+    /**
+     * @var Ticket|null
+     */
+    protected ?Ticket $ticket = null;
 
     /**
      * Create a new event instance.
      */
     public function __construct(
-        public Ticket $ticket,
+        public int    $ticketId,
         public int    $tenantId,
         public array  $changes = []
     ) {
-        // Make sure every relation the card relies on is present
-        $this->ticket->load([
+        $this->tenantDomain = tenant()->domains->first()?->domain ?? '';
+        $this->ticket = Ticket::with([
             'createdBy',
             'status',
             'type',
             'level',
             'acceptedBy'
-        ]);
+        ])->find($this->ticketId);
     }
 
     public function broadcastWith(): array
     {
         return [
-            'ticket'  => $this->ticket->toArray(),
+            'ticket'  => $this->ticket ? $this->ticket->toArray() : null,
             'changes' => $this->changes,
         ];
     }
-
 
     /**
      * Get the channels the event should broadcast on.
@@ -55,6 +58,10 @@ class TicketStatusChange implements ShouldBroadcast
         $channels = [];
 
         try {
+            if (!$this->ticket) {
+                return $channels;
+            }
+
             $channels[] = new PrivateChannel("tenant-{$this->tenantId}.user-{$this->ticket->created_by}");
 
             if ($this->ticket->accepted_by) {
@@ -75,6 +82,7 @@ class TicketStatusChange implements ShouldBroadcast
 
         return $channels;
     }
+
     /**
      * The name of the queue on which to place the broadcasting job.
      */
@@ -82,6 +90,7 @@ class TicketStatusChange implements ShouldBroadcast
     {
         return 'broadcasts';
     }
+
     public function broadcastAs(): string
     {
         return 'ticket.status.change';

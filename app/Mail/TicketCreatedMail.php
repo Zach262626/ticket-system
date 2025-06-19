@@ -36,7 +36,7 @@ class TicketCreatedMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.tickets.created',
+            view: 'mail.tickets.created',
             with: [
                 'ticket' => $this->ticket,
                 'tenantDomainPath' => $this->tenantDomainPath
@@ -55,7 +55,7 @@ class TicketCreatedMail extends Mailable
     public function headers(): Headers
     {
         return new Headers(
-            references: ["ticket-{$this->ticket->id}@{$this->tenantDomain}"],
+            messageId: "ticket-{$this->ticket->id}@{$this->tenantDomain}",
             text: [
                 'X-Custom-Header' => 'Custom Value',
             ],

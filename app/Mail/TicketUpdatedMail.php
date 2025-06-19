@@ -11,7 +11,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Bus\Queueable;
 
 
-class TicketStatusChangeMail extends Mailable
+class TicketUpdatedMail extends Mailable
 {
     use Queueable, SerializesModels;
     public string $tenantDomainPath;
@@ -30,14 +30,14 @@ class TicketStatusChangeMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "Ticket #{$this->ticket->id} Status Change",
+            subject: "Ticket #{$this->ticket->id} Updated",
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            view: 'mail.tickets.status-change',
+            view: 'mail.tickets.updated',
             with: [
                 'ticket' => $this->ticket,
                 'tenantDomainPath' => $this->tenantDomainPath
