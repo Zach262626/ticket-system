@@ -64,7 +64,7 @@
 
 
         <div class="section" style="margin-top: 20px;">
-            <a href="{{ $tenantDomain }}/ticket/{{ $ticket->id }}">View Ticket</a>
+            <a href="{{ $tenantDomainPath }}/ticket/{{ $ticket->id }}">View Ticket</a>
         </div>
     </div>
 </body>

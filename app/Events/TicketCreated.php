@@ -21,13 +21,15 @@ class TicketCreated implements ShouldBroadcast
         public int $ticketId,
         public int $tenantId
     ) {
-        $domain = tenant()->domains->first()?->domain ?? '';
-        $scheme = app()->environment('local') ? 'http' : 'https';
-        $port   = app()->environment('local') && str_ends_with($domain, '.localhost')
-            ? ':' . env('APP_PORT', 8000)
-            : '';
+        $this->tenantDomain = tenant()->domains->first()?->domain ?? '';
+        // $domain = tenant()->domains->first()?->domain ?? '';
+        // $scheme = app()->environment('local') ? 'http' : 'https';
+        // $port   = app()->environment('local') && str_ends_with($domain, '.localhost')
+        //     ? ':' . env('APP_PORT', 8000)
+        //     : '';
 
-        $this->tenantDomain = "{$scheme}://{$domain}{$port}";
+        // $this->tenantDomain = "{$scheme}://{$domain}{$port}";
+
     }
 
     public function broadcastWith(): array
