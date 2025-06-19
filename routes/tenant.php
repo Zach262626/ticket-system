@@ -85,7 +85,7 @@ Route::middleware([
         })->middleware('role:developer');
         Route::get('/test-email', function () {
             $ticket = Ticket::first();
-            broadcast(new TicketCreated($ticket, tenant()->id));
+            TicketCreated::dispatch($ticket, tenant()->id);
             return 'Mail sent!';
         });
         // !Temporary!

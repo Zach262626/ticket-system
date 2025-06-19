@@ -21,34 +21,18 @@ class SendTicketCreatedEmail implements ShouldQueue
     /**
      * Create the event listener.
      */
-    public function __construct()
-    {
-        logger()->info('[SendTicketCreatedEmail] Constructor called');
-    }
+    public function __construct() {}
 
     /**
      * Handle the event.
      */
     public function handle(TicketCreated $event): void
     {
-
-        logger()->info('[SendTicketCreatedEmail] handle() called with Ticket ID: ' . $event->ticket->id);
-        try {
-            Tenancy::initialize($event->tenantId);
-            $ticket = $event->ticket->loadMissing('user');
-
-            if ($ticket->user?->email) {
-                Mail::to($ticket->user->email)->queue(new TicketCreatedMail($ticket));
-                Log::info('Mail queued for Ticket #' . $ticket->id);
-            } else {
-                Log::warning('No user/email for Ticket #' . $ticket->id);
-            }
-        } catch (\Throwable $e) {
-            Log::error('SendTicketCreatedEmail failed: ' . $e->getMessage(), [
-                'ticket_id' => $event->ticket->id,
-                'trace' => $e->getTraceAsString(),
-            ]);
-            throw $e;
+        Tenancy::initialize($event->tenantId);
+        $user = $event->ticket->createdBy;
+        if ($user && $user->email) {
+            Mail::to($user->email)->queue(new TicketCreatedMail($event->ticket));
         }
+        Tenancy::end();
     }
 }
