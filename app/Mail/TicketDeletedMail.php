@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use App\Models\Ticket\Ticket;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -16,6 +17,8 @@ class TicketDeletedMail extends Mailable
     public string $tenantDomainPath;
     public function __construct(
         public int $ticketId,
+        public User $createdBy,
+        public ?User $acceptedBy,
         public string $tenantDomain
     ) {
         $scheme = app()->environment('local') ? 'http' : 'https';
@@ -29,14 +32,14 @@ class TicketDeletedMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "Ticket #{$this->ticketId} Created",
+            subject: "Ticket #{$this->ticketId} Deleted",
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            view: 'mail.tickets.created',
+            view: 'mail.tickets.deleted',
             with: [
                 'ticketId' => $this->ticketId,
                 'tenantDomainPath' => $this->tenantDomainPath

@@ -35,11 +35,11 @@ class SendTicketDeletedEmail implements ShouldQueue
         $acceptedBy = User::find($event->acceptedBy);
         if ($createdBy && $createdBy->email) {
             Mail::to($createdBy->email)
-                ->queue(new TicketDeletedMail($event->ticketId, $event->tenantDomain));
+                ->queue(new TicketDeletedMail($event->ticketId,  $createdBy, $acceptedBy, $event->tenantDomain));
         }
         if ($acceptedBy && $acceptedBy->email) {
             Mail::to($acceptedBy->email)
-                ->queue(new TicketDeletedMail($event->ticketId, $event->tenantDomain));
+                ->queue(new TicketDeletedMail($event->ticketId,  $createdBy, $acceptedBy, $event->tenantDomain));
         }
         Tenancy::end();
     }

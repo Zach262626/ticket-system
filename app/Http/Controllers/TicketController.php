@@ -95,7 +95,7 @@ class TicketController extends Controller implements HasMiddleware
         $data['status_id']  = TicketStatus::where('name', 'Open')->get()->first()->id;
 
         $ticket = Ticket::create($data);
-        broadcast(new TicketCreated($ticket->id, tenant()->id));
+        TicketCreated::dispatch($ticket->id, tenant()->id);
 
         return redirect()
             ->route('ticket-index', $ticket)
@@ -223,10 +223,10 @@ class TicketController extends Controller implements HasMiddleware
             ]];
         })->all();
         if ($statusChange !== null) {
-            broadcast(new TicketStatusChange($ticket->id, tenant()->id, $statusChange));
+            TicketStatusChange::dispatch($ticket->id, tenant()->id, $statusChange);
         }
         if (!empty($changes)) {
-            broadcast(new TicketUpdated($ticket->id, tenant()->id, $changes));
+            TicketUpdated::dispatch($ticket->id, tenant()->id, $changes);
         }
 
         return redirect()
@@ -321,17 +321,11 @@ class TicketController extends Controller implements HasMiddleware
 
         $ticket->load(['status', 'acceptedBy']);
 
-        broadcast(new TicketUpdated($ticket->id, tenant()->id, [
-            'accepted by' => [
-                'old' => $ticket->acceptedBy?->name,
-                'new' => Auth::user()->name,
-            ],
-        ]));
         $statusChange = [
             'old' => $oldStatus,
             'new' => $ticket->status?->name,
         ];
-        broadcast(new TicketStatusChange($ticket->id, tenant()->id, $statusChange));
+        TicketStatusChange::dispatch($ticket->id, tenant()->id, $statusChange);
 
         return redirect()->back()->with('success', 'Ticket #' . $ticket->id . " has been accepted by " . Auth::user()->name . "");
     }
@@ -347,7 +341,7 @@ class TicketController extends Controller implements HasMiddleware
             'old' => $oldStatus,
             'new' => $ticket->status?->name,
         ];
-        broadcast(new TicketStatusChange($ticket->id, tenant()->id, $statusChange));
+        TicketStatusChange::dispatch($ticket->id, tenant()->id, $statusChange);
         return redirect()->back()->with('success', 'Ticket #' . $ticket->id . " has been closed by " . Auth::user()->name . "");
     }
 }

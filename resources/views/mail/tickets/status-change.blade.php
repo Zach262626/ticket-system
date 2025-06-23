@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>New Ticket Updated</title>
+    <title>Ticket {{ $ticket->id }} Updated</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -39,33 +39,24 @@
 
 <body>
     <div class="card">
-        <div class="header">Ticket Status</div>
+        <div class="header">Ticket {{ $ticket->id }} Status</div>
+
+        <div class="section">
+            <span class="label">Status:</span> {{ $ticket->status->name ?? 'N/A' }}
+        </div>
 
         <div class="section">
             <span class="label">Created By:</span> {{ $ticket->createdBy->name ?? 'N/A' }}
         </div>
 
         <div class="section">
-            <strong><span class="label">Assigned By:</span> {{ $ticket->acceptedBy->name ?? 'N/A' }}</strong>
+            <span class="label">Assigned By:</span> {{ $ticket->acceptedBy->name ?? 'N/A' }}
         </div>
 
         <div class="section">
             <span class="label">Description:</span><br>
             {{ $ticket->description }}
         </div>
-
-        <div class="section">
-            <strong><span class="label">Status:</span> {{ $ticket->status->name ?? 'N/A' }}</strong>
-        </div>
-
-        <div class="section">
-            <span class="label">Level:</span> {{ $ticket->level->name ?? 'N/A' }}
-        </div>
-
-        <div class="section">
-            <span class="label">Type:</span> {{ $ticket->type->name ?? 'N/A' }}
-        </div>
-
 
         <div class="section" style="margin-top: 20px;">
             <a href="{{ $tenantDomainPath }}/ticket/{{ $ticket->id }}">View Ticket</a>

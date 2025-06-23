@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>New Ticket Updated</title>
+    <title>Ticket {{ $ticket->id }} Updated</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -39,7 +39,7 @@
 
 <body>
     <div class="card">
-        <div class="header">Ticket Updated</div>
+        <div class="header">Ticket {{ $ticket->id }} Updated</div>
 
         <div class="section">
             <span class="label">Created By:</span> {{ $ticket->createdBy->name ?? 'N/A' }}

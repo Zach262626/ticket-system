@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Events\BroadcastTestAlways;
 use App\Events\TicketCreated;
+use App\Events\TicketDeleted;
 use App\Events\TicketStatusChange;
 use App\Events\TicketUpdated;
 use App\Http\Controllers\Auth\LoginController;
@@ -91,6 +92,7 @@ Route::middleware([
             TicketCreated::dispatch($ticket->id, tenant()->id);
             TicketStatusChange::dispatch($ticket->id, tenant()->id);
             TicketUpdated::dispatch($ticket->id, tenant()->id);
+            TicketDeleted::dispatch($ticket->id, tenant()->id, $ticket->created_by, $ticket->accepted_by);
             return redirect()->back();
         })->name('test-email');
         // !Temporary!

@@ -42,11 +42,11 @@
         <div class="header">Ticket {{ $ticketId ?? 'N/A' }} Deleted</div>
 
         <div class="section">
-            <span class="label">Created By:</span> {{ $ticket->createdBy->name ?? 'N/A' }}
+            <span class="label">Created By:</span> {{ $createdBy->name ?? 'N/A' }}
         </div>
 
         <div class="section">
-            <span class="label">Assigned By:</span> {{ $ticket->acceptedBy->name ?? 'N/A' }}
+            <span class="label">Assigned By:</span> {{ $acceptedBy->name ?? 'N/A' }}
         </div>
     </div>
 </body>
