@@ -3,6 +3,10 @@
 declare(strict_types=1);
 
 use App\Events\BroadcastTestAlways;
+use App\Events\TicketCreated;
+use App\Events\TicketDeleted;
+use App\Events\TicketStatusChange;
+use App\Events\TicketUpdated;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\HomeController;
@@ -10,13 +14,19 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\Tenant\TenantController;
 use App\Http\Controllers\TicketController;
+use App\Mail\TicketCreatedMail;
 use App\Models\Ticket\Ticket;
 use Illuminate\Broadcasting\BroadcastController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use Stancl\Tenancy\Middleware\ScopeSessions;
+
+
+
+
 
 
 
@@ -77,6 +87,19 @@ Route::middleware([
             App\Models\Ticket\Ticket::factory()->count(300)->create(['created_by' => 1, 'accepted_by' => 1]);
             return back();
         })->middleware('role:developer');
+        Route::get('/test-email', function () {
+            $ticket = Ticket::first();
+            TicketCreated::dispatch($ticket->id, tenant()->id);
+            TicketStatusChange::dispatch($ticket->id, tenant()->id);
+            TicketUpdated::dispatch($ticket->id, tenant()->id);
+            TicketDeleted::dispatch($ticket->load(['status', 'level', 'type', 'createdBy', 'acceptedBy'])->toArray(), tenant()->id);
+            return redirect()->back();
+        })->name('test-email');
+        Route::get('/test-email-create', function () {
+            $ticket = Ticket::first();
+            return new App\Mail\TicketCreatedMail($ticket, '');
+        })->name('test-email-create');
+        // !Temporary!
         Route::get('/ticket', [TicketController::class, 'index'])->name('ticket-index');
         Route::get('/ticket/search', [TicketController::class, 'search'])->name('ticket-search');
         Route::get('/ticket/create', [TicketController::class, 'create'])->name('ticket-create')->middleware('permission:create tickets');

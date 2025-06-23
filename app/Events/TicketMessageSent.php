@@ -48,10 +48,10 @@ class TicketMessageSent implements ShouldBroadcast
      */
     public function broadcastQueue(): string
     {
-        return 'broadcast';
+        return 'broadcasts';
     }
     public function broadcastAs(): string
     {
-        return 'broadcast-message-sent';
+        return 'ticket-message-sent';
     }
 }

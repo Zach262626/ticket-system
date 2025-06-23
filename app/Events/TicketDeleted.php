@@ -17,16 +17,16 @@ use Illuminate\Queue\SerializesModels;
 class TicketDeleted implements ShouldBroadcast
 {
     use Batchable, Dispatchable, InteractsWithSockets, SerializesModels;
-
+    public string $tenantDomain;
     /**
      * Create a new event instance.
      */
     public function __construct(
-        public int $ticketId,
+        public array $ticket,
         public int $tenantId,
-        public int $createdBy,
-        public ?int $acceptedBy
-    ) {}
+    ) {
+        $this->tenantDomain = tenant()->domains->first()?->domain ?? '';
+    }
 
     /**
      * Get the channels the event should broadcast on.
@@ -37,13 +37,13 @@ class TicketDeleted implements ShouldBroadcast
     {
         $channels = [];
 
-        $channels[] = new PrivateChannel("tenant-{$this->tenantId}.user-{$this->createdBy}");
+        $channels[] = new PrivateChannel("tenant-{$this->tenantId}.user-{$this->ticket['created_by']['id']}");
 
-        if ($this->acceptedBy) {
-            $channels[] = new PrivateChannel("tenant-{$this->tenantId}.user-{$this->acceptedBy}");
+        if ($this->ticket['created_by']) {
+            $channels[] = new PrivateChannel("tenant-{$this->tenantId}.user-{$this->ticket['accepted_by']['id']}");
         }
 
-        $excludedIds = [$this->createdBy, $this->acceptedBy];
+        $excludedIds = [$this->ticket['created_by']['id'], $this->ticket['accepted_by']['id']];
 
         $editors = User::permission('view all tickets')
             ->whereNotIn('id', array_filter($excludedIds))
@@ -61,7 +61,7 @@ class TicketDeleted implements ShouldBroadcast
      */
     public function broadcastQueue(): string
     {
-        return 'broadcast';
+        return 'broadcasts';
     }
     public function broadcastAs(): string
     {

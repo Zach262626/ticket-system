@@ -47,7 +47,7 @@ onMounted(() => {
       replaceTicket(e.ticket)
     })
     .listen('.ticket.deleted', (e) => {
-      removeTicket(e.ticketId)
+      removeTicket(e.ticket.id)
     })
 })
 

@@ -49,10 +49,10 @@ class TicketMessageReceived implements ShouldBroadcast
      */
     public function broadcastQueue(): string
     {
-        return 'broadcast';
+        return 'broadcasts';
     }
     public function broadcastAs(): string
     {
-        return 'broadcast-message-received';
+        return 'ticket-message-received';
     }
 }

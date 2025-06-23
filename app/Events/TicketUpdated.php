@@ -15,20 +15,24 @@ class TicketUpdated implements ShouldBroadcast
 {
     use Batchable, Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public Ticket $ticket;
+    public string $tenantDomain;
+
     public function __construct(
-        public Ticket $ticket,
-        public int    $tenantId,
-        public array  $changes = [],
+        public int   $ticketId,
+        public int   $tenantId,
+        public array $changes = [],
     ) {
-        $this->ticket
-            ->refresh()
-            ->loadMissing([
+        $this->tenantDomain = tenant()->domains->first()?->domain ?? '';
+        $this->ticket = Ticket::query()
+            ->with([
                 'createdBy',
                 'acceptedBy',
                 'status',
                 'type',
                 'level',
-            ]);
+            ])
+            ->findOrFail($this->ticketId);
     }
 
     public function broadcastWith(): array
@@ -67,7 +71,7 @@ class TicketUpdated implements ShouldBroadcast
 
     public function broadcastQueue(): string
     {
-        return 'broadcast';
+        return 'broadcasts';
     }
 
     public function broadcastAs(): string

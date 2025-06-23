@@ -25,9 +25,9 @@ window.Echo = new Echo({
 });
 
 window.Echo.connector.pusher.connection.bind('connected', () => {
-    console.log('✅ WebSocket connected!');
+    console.log('WebSocket connected');
 });
 
 window.Echo.connector.pusher.connection.bind('error', (err) => {
-    console.error('❌ WebSocket error:', err);
+    console.error('WebSocket error:', err);
 });

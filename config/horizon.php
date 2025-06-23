@@ -179,52 +179,52 @@ return [
     |
     */
 
-    'defaults' => [
-        'broadcasts-supervisor' => [
-            'connection' => 'redis',
-            'queue' => ['broadcasts'],
-            'processes' => 4,
-            'balance' => 'simple',
-        ],
-        'emails-supervisor' => [
-            'connection' => 'redis',
-            'queue' => ['emails'],
-            'processes' => 2,
-            'balance' => 'simple',
-        ],
-        'default-supervisor' => [
-            'connection' => 'redis',
-            'queue' => ['default'],
-            'processes' => 1,
-        ],
-    ],
-
     'environments' => [
-        'production' => [
-            'supervisor-1' => [
-                'maxProcesses' => 10,
-                'balanceMaxShift' => 1,
-                'balanceCooldown' => 3,
-            ],
-        ],
-
         'local' => [
             'broadcasts-supervisor' => [
                 'connection' => 'redis',
                 'queue' => ['broadcasts'],
-                'processes' => 4,
-                'balance' => 'simple',
+                'balance' => 'auto',
+                'minProcesses' => 1,
+                'maxProcesses' => 4,
             ],
             'emails-supervisor' => [
                 'connection' => 'redis',
                 'queue' => ['emails'],
-                'processes' => 2,
-                'balance' => 'simple',
+                'balance' => 'auto',
+                'minProcesses' => 1,
+                'maxProcesses' => 3,
             ],
             'default-supervisor' => [
                 'connection' => 'redis',
                 'queue' => ['default'],
-                'processes' => 1,
+                'balance' => 'auto',
+                'minProcesses' => 1,
+                'maxProcesses' => 2,
+            ],
+        ],
+
+        'production' => [
+            'broadcasts-supervisor' => [
+                'connection' => 'redis',
+                'queue' => ['broadcasts'],
+                'balance' => 'auto',
+                'minProcesses' => 1,
+                'maxProcesses' => 4,
+            ],
+            'emails-supervisor' => [
+                'connection' => 'redis',
+                'queue' => ['emails'],
+                'balance' => 'auto',
+                'minProcesses' => 1,
+                'maxProcesses' => 3,
+            ],
+            'default-supervisor' => [
+                'connection' => 'redis',
+                'queue' => ['default'],
+                'balance' => 'auto',
+                'minProcesses' => 1,
+                'maxProcesses' => 2,
             ],
         ],
     ],

@@ -17,7 +17,7 @@ onMounted(() => {
   channel = window.Echo.private(`tenant-${props.tenantId}.user-${props.userId}`)
     .listen('.ticket.deleted', (e) => {
       store.addAlert({
-        message: `<div>Ticket ${e.ticketId} Deleted</div>`,
+        message: `<div>Ticket ${e.ticket.id} Deleted</div>`,
         type: 'danger',
       })
     })

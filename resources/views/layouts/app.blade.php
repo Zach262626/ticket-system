@@ -24,6 +24,11 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('ticket-index') }}">Ticket</a>
                                 </li>
+                                {{-- !Temporary! --}}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('test-email') }}">test email</a>
+                                </li>
+                                {{-- !Temporary! --}}
                                 @can('assign roles')
                                     <li class="nav-item">
                                         <a class="nav-link" href="{{ route('users-roles') }}">Assign Roles</a>
