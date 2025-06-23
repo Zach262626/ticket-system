@@ -17,7 +17,7 @@ use Illuminate\Queue\SerializesModels;
 class TicketDeleted implements ShouldBroadcast
 {
     use Batchable, Dispatchable, InteractsWithSockets, SerializesModels;
-
+    public string $tenantDomain;
     /**
      * Create a new event instance.
      */
@@ -26,7 +26,9 @@ class TicketDeleted implements ShouldBroadcast
         public int $tenantId,
         public int $createdBy,
         public ?int $acceptedBy
-    ) {}
+    ) {
+        $this->tenantDomain = tenant()->domains->first()?->domain ?? '';
+    }
 
     /**
      * Get the channels the event should broadcast on.

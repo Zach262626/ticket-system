@@ -39,10 +39,14 @@
 
 <body>
     <div class="card">
-        <div class="header">New Ticket Created</div>
+        <div class="header">Ticket Status</div>
 
         <div class="section">
             <span class="label">Created By:</span> {{ $ticket->createdBy->name ?? 'N/A' }}
+        </div>
+
+        <div class="section">
+            <strong><span class="label">Assigned By:</span> {{ $ticket->acceptedBy->name ?? 'N/A' }}</strong>
         </div>
 
         <div class="section">
@@ -51,7 +55,7 @@
         </div>
 
         <div class="section">
-            <span class="label">Status:</span> {{ $ticket->status->name ?? 'N/A' }}
+            <strong><span class="label">Status:</span> {{ $ticket->status->name ?? 'N/A' }}</strong>
         </div>
 
         <div class="section">

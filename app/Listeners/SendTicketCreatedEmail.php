@@ -8,7 +8,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Stancl\Tenancy\Facades\Tenancy;
 
@@ -16,7 +15,7 @@ class SendTicketCreatedEmail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, SerializesModels;
     public $queue = 'emails';
-    public $tries = 1;
+    public $tries = 3;
 
     /**
      * Create the event listener.

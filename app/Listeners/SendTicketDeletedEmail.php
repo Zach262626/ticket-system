@@ -3,8 +3,10 @@
 namespace App\Listeners;
 
 use \App\Models\Ticket\Ticket;
-use App\Events\TicketStatusChange;
+use App\Events\TicketDeleted;
+use App\Mail\TicketDeletedMail;
 use App\Mail\TicketUpdatedMail;
+use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -12,7 +14,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 use Stancl\Tenancy\Facades\Tenancy;
 
-class SendTicketUpdatedEmail implements ShouldQueue
+class SendTicketDeletedEmail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, SerializesModels;
     public $queue = 'emails';
@@ -26,14 +28,18 @@ class SendTicketUpdatedEmail implements ShouldQueue
     /**
      * Handle the event.
      */
-    public function handle(TicketStatusChange $event): void
+    public function handle(TicketDeleted $event): void
     {
         Tenancy::initialize($event->tenantId);
-        $ticket = Ticket::with('createdBy')->findOrFail($event->ticketId);
-        $user = $ticket->createdBy;
-        if ($user && $user->email) {
-            Mail::to($ticket->createdBy->email)
-                ->queue(new TicketUpdatedMail($ticket, $event->tenantDomain));
+        $createdBy = User::findOrFail($event->createdBy);
+        $acceptedBy = User::find($event->acceptedBy);
+        if ($createdBy && $createdBy->email) {
+            Mail::to($createdBy->email)
+                ->queue(new TicketDeletedMail($event->ticketId, $event->tenantDomain));
+        }
+        if ($acceptedBy && $acceptedBy->email) {
+            Mail::to($acceptedBy->email)
+                ->queue(new TicketDeletedMail($event->ticketId, $event->tenantDomain));
         }
         Tenancy::end();
     }

@@ -4,7 +4,6 @@ namespace App\Listeners;
 
 use \App\Models\Ticket\Ticket;
 use App\Events\TicketStatusChange;
-use App\Mail\TicketCreatedMail;
 use App\Mail\TicketStatusChangeMail;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -17,7 +16,7 @@ class SendTicketStatusChangeEmail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, SerializesModels;
     public $queue = 'emails';
-    public $tries = 1;
+    public $tries = 3;
 
     /**
      * Create the event listener.
