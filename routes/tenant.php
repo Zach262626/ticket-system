@@ -14,6 +14,7 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\Tenant\TenantController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\UserSettingsController;
 use App\Mail\TicketCreatedMail;
 use App\Models\Ticket\Ticket;
 use Illuminate\Broadcasting\BroadcastController;
@@ -23,6 +24,7 @@ use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use Stancl\Tenancy\Middleware\ScopeSessions;
+
 
 
 
@@ -77,6 +79,16 @@ Route::middleware([
     Route::middleware('auth')->group(function () {
         Route::get('logout', [LoginController::class, 'logout'])->name('user-logout');
         Route::get('/', [HomeController::class, 'index'])->name('home');
+        /*
+        |--------------------------------------------------------------------------
+        | User Settings Routes
+        |--------------------------------------------------------------------------
+        */
+        Route::get('/settings', [UserSettingsController::class, 'index'])->name('settings.index');
+        Route::post('/settings/profile', action: [UserSettingsController::class, 'updateProfile'])->name('settings.profile.update');
+        Route::post('/settings/profile/picture', action: [UserSettingsController::class, 'updateProfilePicture'])->name('settings.profile.picture.update');
+        Route::post('/settings/account', [UserSettingsController::class, 'deleteAccount'])->name('settings.account.delete');
+
         /*
         |--------------------------------------------------------------------------
         | Ticket Routes
