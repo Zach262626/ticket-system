@@ -55,7 +55,8 @@ class TicketDeletedMail extends Mailable
     public function headers(): Headers
     {
         return new Headers(
-            messageId: "ticket-{$this->ticketId}@{$this->tenantDomain}",
+            messageId: "ticket-{$this->ticketId}-" . uniqid() . "@{$this->tenantDomain}",
+            references: ["ticket-{$this->ticketId}@{$this->tenantDomain}"],
             text: [
                 'X-Custom-Header' => 'Custom Value',
             ],
