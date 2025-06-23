@@ -114,7 +114,6 @@ Route::middleware([
         Route::post('/ticket/{ticket}/delete', [TicketController::class, 'delete'])->name('ticket-delete')->middleware('permission:delete tickets');
         // Ticket Messages
         Route::post('/ticket/message', [MessageController::class, 'store'])->name('ticket-message-store');
-        Route::post('/ticket/message/typing', [MessageController::class, 'typing'])->name('ticket-message-typing');
         /*
         |--------------------------------------------------------------------------
         | Roles Routes
