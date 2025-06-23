@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted } from 'vue'
 import { computed } from 'vue'
-import dayjs from 'dayjs' // You can also use Carbon-like libraries
+import dayjs from 'dayjs'
 
 const props = defineProps({
   message: Object,
