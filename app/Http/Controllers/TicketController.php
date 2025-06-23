@@ -333,8 +333,12 @@ class TicketController extends Controller implements HasMiddleware
     public function close(Ticket $ticket)
     {
         $oldStatus = $ticket->status?->name;
+
         $ticket->status_id = TicketStatus::where('name', 'closed')->first()->id;
         $ticket->save();
+
+        $ticket->load('status'); 
+
         $statusChange = [
             'old' => $oldStatus,
             'new' => $ticket->status?->name,
