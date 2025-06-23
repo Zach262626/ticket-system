@@ -95,6 +95,10 @@ Route::middleware([
             TicketDeleted::dispatch($ticket->load(['status', 'level', 'type', 'createdBy', 'acceptedBy'])->toArray(), tenant()->id);
             return redirect()->back();
         })->name('test-email');
+        Route::get('/test-email-create', function () {
+            $ticket = Ticket::first();
+            return new App\Mail\TicketCreatedMail($ticket, '');
+        })->name('test-email-create');
         // !Temporary!
         Route::get('/ticket', [TicketController::class, 'index'])->name('ticket-index');
         Route::get('/ticket/search', [TicketController::class, 'search'])->name('ticket-search');
@@ -110,6 +114,7 @@ Route::middleware([
         Route::post('/ticket/{ticket}/delete', [TicketController::class, 'delete'])->name('ticket-delete')->middleware('permission:delete tickets');
         // Ticket Messages
         Route::post('/ticket/message', [MessageController::class, 'store'])->name('ticket-message-store');
+        Route::post('/ticket/message/typing', [MessageController::class, 'typing'])->name('ticket-message-typing');
         /*
         |--------------------------------------------------------------------------
         | Roles Routes

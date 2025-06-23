@@ -53,6 +53,6 @@ class TicketMessageReceived implements ShouldBroadcast
     }
     public function broadcastAs(): string
     {
-        return 'broadcast-message-received';
+        return 'ticket-message-received';
     }
 }

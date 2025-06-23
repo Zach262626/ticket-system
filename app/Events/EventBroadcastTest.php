@@ -44,6 +44,6 @@ class EventBroadcastTest implements ShouldBroadcast
     }
     public function broadcastAs(): string
     {
-        return 'broadcast-message-test';
+        return 'ticket-message-test';
     }
 }

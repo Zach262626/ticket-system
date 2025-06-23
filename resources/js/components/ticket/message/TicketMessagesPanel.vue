@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, onUnmounted, watch } from 'vue'
+import { onMounted, ref, onUnmounted, watch, computed } from 'vue'
 
 const props = defineProps({
   ticketMessages: Object,
@@ -29,7 +29,7 @@ const addMessage = (newMessage) => {
 onMounted(() => {
   messages.value = [...props.ticketMessages]
   channel = Echo.private('tenant-' + props.tenantId + '.ticket-' + props.ticket.id)
-    .listen('.broadcast-message-sent', (e) => {
+    .listen('.ticket-message-sent', (e) => {
       const messageReceived = e.message
       addMessage(messageReceived)
     })
@@ -47,9 +47,27 @@ onUnmounted(() => {
     <ticket-message v-for="message in messages" :key="message.id" :message="message" :user-id="userId"
       :tenant-id="tenantId" :ticket-id="ticket.id" />
   </div>
-
+  <div v-if="typing" class="d-flex flex-row justify-content-start w-100">
+    <img :src="avatarUrl" alt="Avatar" class="avatar" width="45"
+      style="vertical-align: middle; border-radius: 50%; height: 45px" />
+    <div class="d-flex flex-column align-items-start w-100 ps-2">
+      <div class="bg-body-tertiary rounded-3 p-2 mb-1 text-start" style="max-width: 75%; word-wrap: break-word;">
+        <div class="spinner-grow spinner-grow-sm text-dark" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <div class="spinner-grow spinner-grow-sm text-dark" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <div class="spinner-grow spinner-grow-sm text-dark" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+      <p class="small me-3 text-muted" style="font-size:12px">
+      </p>
+    </div>
+  </div>
   <div>
-    <ticket-message-input :user-id="userId" :ticket-id="ticket.id" :csrf-token="csrfToken"
-      :status="ticket.status.name" @message-sent="addMessage" :tenant-id="tenantId" />
+    <ticket-message-input :user-id="userId" :ticket-id="ticket.id" :csrf-token="csrfToken" :status="ticket.status.name"
+      @message-sent="addMessage" :tenant-id="tenantId" />
   </div>
 </template>
