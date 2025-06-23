@@ -30,16 +30,15 @@ class SendTicketDeletedEmail implements ShouldQueue
      */
     public function handle(TicketDeleted $event): void
     {
-        Tenancy::initialize($event->tenantId);
-        $createdBy = User::findOrFail($event->createdBy);
-        $acceptedBy = User::find($event->acceptedBy);
-        if ($createdBy && $createdBy->email) {
-            Mail::to($createdBy->email)
-                ->queue(new TicketDeletedMail($event->ticketId,  $createdBy, $acceptedBy, $event->tenantDomain));
+        $ticket = $event->ticket;
+        Tenancy::initialize($event->tenantId);;
+        if ($ticket['created_by'] && $ticket['created_by']['email']) {
+            Mail::to($ticket['created_by']['email'])
+                ->queue(new TicketDeletedMail($ticket, $event->tenantDomain));
         }
-        if ($acceptedBy && $acceptedBy->email) {
-            Mail::to($acceptedBy->email)
-                ->queue(new TicketDeletedMail($event->ticketId,  $createdBy, $acceptedBy, $event->tenantDomain));
+        if ($ticket['accepted_by'] && $ticket['accepted_by']['email']) {
+            Mail::to($ticket['accepted_by']['email'])
+                ->queue(new TicketDeletedMail($ticket, $event->tenantDomain));
         }
         Tenancy::end();
     }

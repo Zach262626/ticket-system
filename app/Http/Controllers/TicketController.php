@@ -248,10 +248,8 @@ class TicketController extends Controller implements HasMiddleware
             ], 400);
         }
         TicketDeleted::dispatch(
-            $ticket->id,
+            $ticket->load(['status', 'level', 'type', 'createdBy', 'acceptedBy'])->toArray(),
             tenant()->id,
-            $ticket->created_by,
-            $ticket->accepted_by
         );
         $ticket->delete();
 

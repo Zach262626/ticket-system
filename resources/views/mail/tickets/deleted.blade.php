@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Ticket {{ $ticketId ?? 'N/A' }} Deleted</title>
+    <title>Ticket {{ $ticket['id'] }} Deleted</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -39,14 +39,31 @@
 
 <body>
     <div class="card">
-        <div class="header">Ticket {{ $ticketId ?? 'N/A' }} Deleted</div>
+        <div class="header">Ticket {{ $ticket['id'] }} Deleted</div>
 
         <div class="section">
-            <span class="label">Created By:</span> {{ $createdBy->name ?? 'N/A' }}
+            <span class="label">Created By:</span> {{ $ticket['created_by']['name'] ?? 'N/A' }}
         </div>
 
         <div class="section">
-            <span class="label">Assigned By:</span> {{ $acceptedBy->name ?? 'N/A' }}
+            <span class="label">Assigned By:</span> {{ $ticket['accepted_by']['name'] ?? 'N/A' }}
+        </div>
+
+        <div class="section">
+            <span class="label">Description:</span><br>
+            {{ $ticket['description'] }}
+        </div>
+
+        <div class="section">
+            <span class="label">Status:</span> Closed
+        </div>
+
+        <div class="section">
+            <span class="label">Level:</span> {{ $ticket['level']['name'] ?? 'N/A' }}
+        </div>
+
+        <div class="section">
+            <span class="label">Type:</span> {{ $ticket['type']['name'] ?? 'N/A' }}
         </div>
     </div>
 </body>

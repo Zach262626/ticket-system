@@ -92,7 +92,7 @@ Route::middleware([
             TicketCreated::dispatch($ticket->id, tenant()->id);
             TicketStatusChange::dispatch($ticket->id, tenant()->id);
             TicketUpdated::dispatch($ticket->id, tenant()->id);
-            TicketDeleted::dispatch($ticket->id, tenant()->id, $ticket->created_by, $ticket->accepted_by);
+            TicketDeleted::dispatch($ticket->load(['status', 'level', 'type', 'createdBy', 'acceptedBy'])->toArray(), tenant()->id);
             return redirect()->back();
         })->name('test-email');
         // !Temporary!

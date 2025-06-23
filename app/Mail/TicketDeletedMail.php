@@ -16,9 +16,7 @@ class TicketDeletedMail extends Mailable
     use Queueable, SerializesModels;
     public string $tenantDomainPath;
     public function __construct(
-        public int $ticketId,
-        public User $createdBy,
-        public ?User $acceptedBy,
+        public array $ticket,
         public string $tenantDomain
     ) {
         $scheme = app()->environment('local') ? 'http' : 'https';
@@ -32,7 +30,7 @@ class TicketDeletedMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "Ticket #{$this->ticketId} Deleted",
+            subject: "Ticket #{$this->ticket['id']} Deleted",
         );
     }
 
@@ -41,7 +39,7 @@ class TicketDeletedMail extends Mailable
         return new Content(
             view: 'mail.tickets.deleted',
             with: [
-                'ticketId' => $this->ticketId,
+                'ticket' => $this->ticket,
                 'tenantDomainPath' => $this->tenantDomainPath
             ]
         );
@@ -58,8 +56,8 @@ class TicketDeletedMail extends Mailable
     public function headers(): Headers
     {
         return new Headers(
-            messageId: "ticket-{$this->ticketId}-" . uniqid() . "@{$this->tenantDomain}",
-            references: ["ticket-{$this->ticketId}@{$this->tenantDomain}"],
+            messageId: "ticket-{$this->ticket['id']}-" . uniqid() . "@{$this->tenantDomain}",
+            references: ["ticket-{$this->ticket['id']}@{$this->tenantDomain}"],
             text: [
                 'X-Custom-Header' => 'Custom Value',
             ],
