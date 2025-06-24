@@ -60,7 +60,7 @@ const avatarUrl = computed(() => {
   if (!otherUser) return null
 
   return otherUser.profile_picture
-    ? otherUser.profile_picture
+    ? `/storage/${otherUser.profile_picture}`
     : `https://ui-avatars.com/api/?name=${encodeURIComponent(otherUser.name)}&background=random&color=fff`
 })
 

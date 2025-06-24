@@ -15,10 +15,8 @@ const props = defineProps({
 
 const avatarUrl = computed(() =>
     props.user.profile_picture
-        ? props.user.profile_picture
-        : `https://ui-avatars.com/api/?name=${encodeURIComponent(
-            props.user.name
-        )}&background=random&color=fff`
+        ? `/storage/${props.user.profile_picture}`
+        : `https://ui-avatars.com/api/?name=${encodeURIComponent(props.user.name)}&background=random&color=fff`
 )
 
 const nameSize = computed(() => `clamp(16px, ${30 * (props.width / 100)}px, 6vw)`)
@@ -31,6 +29,7 @@ const nameSize = computed(() => `clamp(16px, ${30 * (props.width / 100)}px, 6vw)
                 <div class="image me-3">
                     <img :src="avatarUrl" alt="Avatar" class="avatar" :width="width"
                         style="vertical-align: middle; border-radius: 50%; max-width: 100%;" />
+
                 </div>
                 <div class="flex-grow-1">
                     <div class="text-break" :style="{ fontSize: nameSize }">
