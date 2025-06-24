@@ -16,7 +16,7 @@ const formatDate = (dateString) => {
 const avatarUrl = computed(() =>
   props.message.sender.profile_picture
     ? `/storage/${props.message.sender.profile_picture}`
-    : `https://ui-avatars.com/api/?name=${encodeURIComponent(props.message.sender.profile_picture)}&background=random&color=fff`
+    : `https://ui-avatars.com/api/?name=${encodeURIComponent(props.message.sender.name)}&background=random&color=fff`
 )
 
 </script>
