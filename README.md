@@ -71,6 +71,10 @@
         sail artisan migrate
         sail artisan storage:link
 
+-   If reverb doesn't work
+
+        sail php artisan reverb:restart
+
 -   bootstrap/app.php
 
         change middleware domain and port
