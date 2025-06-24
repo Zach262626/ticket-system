@@ -1,7 +1,7 @@
 @props(['tenantId', 'userId'])
 <nav class="navbar navbar-expand-lg bg-body-tertiary px-3 py-2">
     <div class="container-fluid">
-        <a class="navbar-brand" href="{{ route('home') }}">Support Ticket System</a>
+        <a class="navbar-brand" href="{{ route('home') }}">{{ $tenantName }}</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -30,13 +30,13 @@
 
                 <li class="nav-item"><a class="nav-link" href="{{ route('tenant-logout') }}">Tenant Logout</a></li>
             </ul>
-
-            <ul class="navbar-nav ms-auto">
-                @auth
-                    <li class="nav-item"><a class="nav-link">Name: {{ Auth::user()->name }}</a></li>
-                    <li class="nav-item"><a class="nav-link">Role: {{ Auth::user()->getRoleNames()->first() }}</a></li>
-                @endauth
-            </ul>
+            @auth
+                <div class="d-flex align-items-center ms-auto">
+                    <a href="{{ route('settings-index') }}" class="text-decoration-none text-dark">
+                        <user-profile :user="{{ Auth::user() }}" :width="30" :show-name="true" :show-subname="false" />
+                    </a>
+                </div>
+            @endauth
         </div>
     </div>
 </nav>

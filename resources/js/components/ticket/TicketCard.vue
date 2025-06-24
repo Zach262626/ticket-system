@@ -46,7 +46,7 @@ onUnmounted(() => channel && window.Echo.leave(`tenant-${props.tenantId}`))
 
         <div class="px-4 pt-3 pb-2 bg-light">
             <div class="w-100">
-                <user-profile :user="t.created_by" :width="75" :subname="false" />
+                <user-profile :user="t.created_by" :width="75" :show-name="true" :show-subname="false" />
             </div>
 
             <div class="w-100">
@@ -79,7 +79,7 @@ onUnmounted(() => channel && window.Echo.leave(`tenant-${props.tenantId}`))
                 <strong class="d-block mb-2">Accepted By:</strong>
 
                 <template v-if="t.accepted_by">
-                    <user-profile :user="t.accepted_by" :width="50" :subname="false" />
+                    <user-profile :user="t.accepted_by" :width="30" :show-name="true" :show-subname="false" />
                 </template>
                 <template v-else>
                     <div class="ms-2">Name Here</div>
