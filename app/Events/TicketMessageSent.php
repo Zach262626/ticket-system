@@ -23,7 +23,6 @@ class TicketMessageSent implements ShouldBroadcast
     public function __construct(
         public TicketMessage $message,
         public int $tenantId,
-        public int $ticketId,
     ) {}
     public function broadcastWith()
     {
@@ -39,9 +38,16 @@ class TicketMessageSent implements ShouldBroadcast
      */
     public function broadcastOn(): array
     {
-        return [
-            new PrivateChannel(name: "tenant-{$this->tenantId}.ticket-{$this->ticketId}"),
-        ];
+        $ticket = $this->message->ticket;
+        $senderId = $this->message->sender_id;
+        $channels = [];
+        if ($ticket->created_by && $ticket->created_by != $senderId) {
+            $channels[] = new PrivateChannel("tenant-{$this->tenantId}.user-{$ticket->created_by}");
+        }
+        if ($ticket->accepted_by && $ticket->accepted_by != $senderId) {
+            $channels[] = new PrivateChannel("tenant-{$this->tenantId}.user-{$ticket->accepted_by}");
+        }
+        return $channels;
     }
     /**
      * The name of the queue on which to place the broadcasting job.

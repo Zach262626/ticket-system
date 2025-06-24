@@ -15,10 +15,10 @@ let channel
 
 onMounted(() => {
   channel = window.Echo.private(`tenant-${props.tenantId}.user-${props.userId}`)
-    .listen('.ticket-message-received', (e) => {
-      if (!window.location.pathname.startsWith(`/ticket/${e.ticket.id}`)) {
+    .listen('.ticket-message-sent', (e) => {
+      if (!window.location.pathname.startsWith(`/ticket/${e.message.ticket.id}`)) {
         store.addAlert({
-          message: `<a class="btn btn-link w-100" href="/ticket/${e.ticket.id}">Ticket #${e.ticket.id}: New message</a>`,
+          message: `<a class="btn btn-link w-100" href="/ticket/${e.message.ticket.id}">Ticket #${e.message.ticket.id}: New message</a>`,
           type: 'light',
         })
       }

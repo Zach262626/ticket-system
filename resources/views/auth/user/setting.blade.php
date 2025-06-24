@@ -78,6 +78,23 @@
                 </form>
             </div>
         </div>
+        {{-- <div class="card mb-4">
+            <div class="card-header">Notifications</div>
+            <div class="card-body">
+                <form method="POST" action="{{ route('settings-notifications') }}">
+                    @csrf
+                    <div class="form-check form-switch">
+                        <input type="checkbox" class="form-check-input" id="wantsNotifications" name="wants_notifications"
+                            value="1" {{ auth()->user()->wants_notifications ? 'checked' : '' }}>
+                        <label class="form-check-label" for="wantsNotifications">
+                            Receive notifications
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Save Preferences</button>
+                </form>
+            </div>
+        </div> --}}
+
         <div class="card border-danger">
             <div class="card-body">
                 <p>This action cannot be undone.</p>

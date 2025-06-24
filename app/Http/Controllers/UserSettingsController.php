@@ -47,6 +47,18 @@ class UserSettingsController extends Controller
         $request->session()->regenerateToken();
         return redirect('/')->with('success', 'Your account has been deleted.');
     }
+    public function updateNotification(Request $request)
+    {
+        $user = Auth::user();
+        if ($request->has('wants_notifications')) {
+            $user->wants_notifications = true;
+        } else {
+            $user->wants_notifications = false;
+        }
+        $user->save();
+
+        return back()->with('success', 'Notification preferences updated.');
+    }
     public function updateProfilePicture(Request $request)
     {
         $request->validate([
