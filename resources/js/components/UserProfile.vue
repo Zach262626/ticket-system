@@ -33,8 +33,7 @@ const nameSize = computed(() => `clamp(16px, ${30 * (props.width / 100)}px, 6vw)
 <template>
     <div class="d-flex align-items-center">
         <div class="me-2">
-            <img :src="avatarUrl" alt="Avatar" :width="width"
-                style="border-radius: 50%; max-width: 100%; object-fit: cover;" />
+            <img :src="avatarUrl" :width="width" :height="width" class="rounded-circle object-fit-cover" alt="Avatar" />
         </div>
         <div>
             <div v-if="showName" class="" :style="{ fontSize: nameSize }">
