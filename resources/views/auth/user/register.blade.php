@@ -34,11 +34,11 @@
                             <input name="password_confirmation" type="password" class="form-control"
                                 id="InputComfirmPassword1" required>
                         </div>
-                        <div class="mb-3 form-check">
+                        {{-- <div class="mb-3 form-check">
                             <input name="remember" type="checkbox" class="form-check-input" id="rememberCheck1"
                                 value="{{ true }}">
-                            {{-- <label class="form-check-label" for="rememberCheck1">Remember Me</label> !Temporary!--}}
-                        </div>
+                            <label class="form-check-label" for="rememberCheck1">Remember Me</label>
+                        </div> --}}
                         <button type="submit" class="btn btn-primary">Submit</button>
                         <a href="{{ route('user-login') }}" class="btn btn-secondary">Login</a>
                     </div>

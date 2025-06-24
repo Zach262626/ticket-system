@@ -48,5 +48,16 @@ foreach (config('tenancy.central_domains') as $domain) {
                 Route::post('admin/users/roles', [RoleController::class, 'store'])->name('users-asign-roles');
             });
         });
+        /*
+        |--------------------------------------------------------------------------
+        | Role Routes
+        |--------------------------------------------------------------------------
+        */
+        Route::group(['middleware' => ['role_or_permission:assign roles']], function () {
+            Route::get('admin/users/roles', [RoleController::class, 'index'])->name('users-roles');
+            Route::post('admin/users/roles', [RoleController::class, 'assign'])->name('users-asign-roles');
+        });
+        Route::get('admin/roles', [RoleController::class, 'edit'])->name('edit-roles')->middleware('permission:edit roles');
+        Route::post('admin/roles', [RoleController::class, 'update'])->name('update-roles')->middleware('permission:edit roles');
     });
 }
