@@ -12,7 +12,7 @@ class UserSettingsController extends Controller
 {
     public function index()
     {
-        return view('settings.user');
+        return view('auth.user.setting');
     }
 
     public function updateProfile(UpdateProfileRequest $request)
@@ -34,6 +34,19 @@ class UserSettingsController extends Controller
 
         return back()->with('success', 'Profile updated successfully.');
     }
+    public function deleteAccount(Request $request)
+    {
+        $user = Auth::user();
+        if ($user->profile_picture && Storage::disk('public')->exists($user->profile_picture)) {
+            Storage::disk('public')->delete($user->profile_picture);
+        }
+        Auth::logout();
+        $user->delete();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/')->with('success', 'Your account has been deleted.');
+    }
     public function updateProfilePicture(Request $request)
     {
         $request->validate([
@@ -42,17 +55,23 @@ class UserSettingsController extends Controller
 
         $user = Auth::user();
 
-        // Delete old picture if it exists
         if ($user->profile_picture && Storage::disk('public')->exists($user->profile_picture)) {
             Storage::disk('public')->delete($user->profile_picture);
         }
-
-        // Store in central "public" disk, not tenant storage
         $path = $request->file('profile_picture')->store('profile_pictures/' . tenant()->id, 'public');
-
         $user->profile_picture = $path;
         $user->save();
 
         return back()->with('success', 'Profile picture updated successfully.');
+    }
+    public function deleteProfilePicture(Request $request)
+    {
+        $user = Auth::user();
+        if (Storage::disk('public')->exists($user->profile_picture)) {
+            Storage::disk('public')->delete($user->profile_picture);
+        }
+        $user->profile_picture = null;
+        $user->save();
+        return back()->with('success', 'Profile picture deleted.');
     }
 }

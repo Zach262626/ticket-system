@@ -84,10 +84,11 @@ Route::middleware([
         | User Settings Routes
         |--------------------------------------------------------------------------
         */
-        Route::get('/settings', [UserSettingsController::class, 'index'])->name('settings.index');
-        Route::post('/settings/profile', action: [UserSettingsController::class, 'updateProfile'])->name('settings.profile.update');
-        Route::post('/settings/profile/picture', action: [UserSettingsController::class, 'updateProfilePicture'])->name('settings.profile.picture.update');
-        Route::post('/settings/account', [UserSettingsController::class, 'deleteAccount'])->name('settings.account.delete');
+        Route::get('/settings', [UserSettingsController::class, 'index'])->name('settings-index');
+        Route::post('/settings/profile', action: [UserSettingsController::class, 'updateProfile'])->name('settings-profile-update');
+        Route::post('/settings/profile/picture', action: [UserSettingsController::class, 'updateProfilePicture'])->name('settings-profile-picture-update');
+        Route::post('/settings/profile/picture/delete', action: [UserSettingsController::class, 'deleteProfilePicture'])->name('settings-profile-picture-delete');
+        Route::post('/settings/account', [UserSettingsController::class, 'deleteAccount'])->name('settings-account-delete');
 
         /*
         |--------------------------------------------------------------------------
