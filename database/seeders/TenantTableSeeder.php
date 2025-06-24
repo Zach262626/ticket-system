@@ -32,5 +32,11 @@ class TenantTableSeeder extends Seeder
             ['name' => 'critical'],
         ]);
         $this->call(RoleTableSeeder::class);
+        $user = User::create([
+            'name'     => 'Zachary Gallant',
+            'email'    => 'zachgallant26@gmail.com',
+            'password' => 'Contendo2025!',
+        ]);
+        $user->syncRoles(Role::where('name', 'developer')->get());
     }
 }

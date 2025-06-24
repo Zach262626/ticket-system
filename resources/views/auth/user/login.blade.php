@@ -19,19 +19,18 @@
                         <div class="mb-3">
                             <label for="exampleInputEmail1" class="form-label">Email address</label>
                             <input name="email" type="email" class="form-control" id="exampleInputEmail1"
-                                aria-describedby="emailHelp" value="tempuser@gmail.com">{{--{{ old('email') }}" !Temporary!
-                            --}}
+                                aria-describedby="emailHelp" value="{{ old('email') }}">
                         </div>
                         <div class="mb-3">
                             <label for="exampleInputPassword1" class="form-label">Password</label>
                             <input name="password" type="password" class="form-control" id="exampleInputPassword1"
-                                value="123">
+                               >
                         </div>
-                        <div class="mb-3 form-check">
+                        {{-- <div class="mb-3 form-check">
                             <input name="remember" type="checkbox" class="form-check-input" id="rememberCheck1"
                                 value="{{ true }}">
                             <label class="form-check-label" for="rememberCheck1">Remember Me</label>
-                        </div>
+                        </div> --}}
                         <button type="submit" class="btn btn-primary">Submit</button>
                         <a href="{{ route('user-register') }}" class="btn btn-secondary">Register</a>
                     </div>

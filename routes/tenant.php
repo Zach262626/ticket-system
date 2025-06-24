@@ -9,6 +9,7 @@ use App\Events\TicketStatusChange;
 use App\Events\TicketUpdated;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\UserSettingsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\RoleController;
@@ -23,6 +24,7 @@ use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use Stancl\Tenancy\Middleware\ScopeSessions;
+
 
 
 
@@ -79,14 +81,22 @@ Route::middleware([
         Route::get('/', [HomeController::class, 'index'])->name('home');
         /*
         |--------------------------------------------------------------------------
+        | User Settings Routes
+        |--------------------------------------------------------------------------
+        */
+        Route::get('/settings', [UserSettingsController::class, 'index'])->name('settings-index');
+        Route::post('/settings/profile', action: [UserSettingsController::class, 'updateProfile'])->name('settings-profile-update');
+        Route::post('/settings/profile/picture', action: [UserSettingsController::class, 'updateProfilePicture'])->name('settings-profile-picture-update');
+        Route::post('/settings/profile/picture/delete', action: [UserSettingsController::class, 'deleteProfilePicture'])->name('settings-profile-picture-delete');
+        Route::post('/settings/account', [UserSettingsController::class, 'deleteAccount'])->name('settings-account-delete');
+        Route::post('/settings/notifications', [UserSettingsController::class, 'updateNotification'])->name('settings-notifications');
+
+        /*
+        |--------------------------------------------------------------------------
         | Ticket Routes
         |--------------------------------------------------------------------------
         */
         // !Temporary!
-        Route::get('/ticket/factory', function () {
-            App\Models\Ticket\Ticket::factory()->count(300)->create(['created_by' => 1, 'accepted_by' => 1]);
-            return back();
-        })->middleware('role:developer');
         Route::get('/test-email', function () {
             $ticket = Ticket::first();
             TicketCreated::dispatch($ticket->id, tenant()->id);

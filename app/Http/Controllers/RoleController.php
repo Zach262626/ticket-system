@@ -21,12 +21,6 @@ class RoleController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware([
-                'web',
-                InitializeTenancyByDomain::class,
-                ScopeSessions::class,
-                PreventAccessFromCentralDomains::class,
-            ]),
             new Middleware('permission:edit roles', only: ['edit', 'update']),
             new Middleware('permission:delete roles', only: ['delete']),
             new Middleware('permission:create roles', only: ['create', 'store']),

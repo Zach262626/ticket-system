@@ -13,12 +13,11 @@ const props = defineProps({
 const formatDate = (dateString) => {
   return dayjs(dateString).format('MMM DD, YYYY hh:mm A')
 }
-
-const avatarUrl = computed(() => {
-  return props.message.sender.profile_picture
-    ? props.message.sender.profile_picture
-    : `https://ui-avatars.com/api/?name=${encodeURIComponent(props.message.sender.name)}&background=random&color=fff`
-})
+const avatarUrl = computed(() =>
+  props.message.sender.profile_picture
+    ? `/storage/${props.message.sender.profile_picture}`
+    : `https://ui-avatars.com/api/?name=${encodeURIComponent(props.message.sender.profile_picture)}&background=random&color=fff`
+)
 
 </script>
 
