@@ -97,10 +97,6 @@ Route::middleware([
         |--------------------------------------------------------------------------
         */
         // !Temporary!
-        Route::get('/ticket/factory', function () {
-            App\Models\Ticket\Ticket::factory()->count(300)->create(['created_by' => 1, 'accepted_by' => 1]);
-            return back();
-        })->middleware('role:developer');
         Route::get('/test-email', function () {
             $ticket = Ticket::first();
             TicketCreated::dispatch($ticket->id, tenant()->id);
