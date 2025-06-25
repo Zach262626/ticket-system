@@ -78,3 +78,9 @@
 -   bootstrap/app.php
 
         change middleware domain and port
+
+-   Testing
+        
+        create .env.testing
+        sail a migrate:fresh --seed --env=testing
+        sail php artisan test --env=testing
