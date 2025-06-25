@@ -14,7 +14,6 @@ const localTickets = ref([])
 const addTicket = (newTicket) => {
   const alreadyExists = localTickets.value.some(ticket => ticket.id === newTicket.id)
   if (!alreadyExists) {
-    console.log(newTicket)
     localTickets.value.push(newTicket)
   }
 }

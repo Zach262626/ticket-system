@@ -18,7 +18,6 @@ onMounted(() => {
 
   channel = window.Echo.private(channelName)
     .listen('.ticket.created', (e) => {
-      console.log('Ticket Created Event:', e)
       store.addAlert({
         message: `<div>New Ticket Created: 
                     <a href="/ticket/${e.ticket.id}" 

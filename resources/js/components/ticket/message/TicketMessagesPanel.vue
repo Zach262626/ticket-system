@@ -30,7 +30,7 @@ const addMessage = (newMessage) => {
 
 onMounted(() => {
   messages.value = [...props.ticketMessages]
-  channel = Echo.private('tenant-' + props.tenantId + '.ticket-' + props.ticket.id)
+  channel = Echo.private('tenant-' + props.tenantId + '.user-' + props.userId)
     .listen('.ticket-message-sent', (e) => {
       const messageReceived = e.message
       addMessage(messageReceived)

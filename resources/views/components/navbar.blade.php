@@ -33,7 +33,7 @@
             @auth
                 <div class="d-flex align-items-center ms-auto">
                     <a href="{{ route('settings-index') }}" class="text-decoration-none text-dark">
-                        <user-profile :user="{{ Auth::user() }}" :width="30" :show-name="true" :show-subname="false" />
+                        <user-profile :user="{{ Auth::user() }}" :width="30" :show-name="true" :show-subname="false"  />
                     </a>
                 </div>
             @endauth
