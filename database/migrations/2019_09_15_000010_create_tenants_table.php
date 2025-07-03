@@ -37,8 +37,7 @@ class CreateTenantsTable extends Migration
     public function down(): void
     {
         Tenant::forAll()->each(function ($tenant) {
-            Schema::dropIfExists(config('tenancy.database.tenant_database_prefix')
-                . $tenant->id);
+            $tenant->delete();
         });
         Schema::dropIfExists('tenants');
     }
