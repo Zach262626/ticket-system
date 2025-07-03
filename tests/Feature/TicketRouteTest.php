@@ -11,7 +11,7 @@ beforeEach(function () {
         [
             'id' => fake()->unique()->randomNumber(),
             'name'                => 'Test Company',
-            'tenancy_db_username' => 'testDomain',
+            'tenancy_db_username' => 'testDomain' . fake()->unique()->randomNumber(),
             'tenancy_db_password' => '12345678',
         ]
     );

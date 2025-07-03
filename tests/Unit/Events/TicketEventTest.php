@@ -1,13 +1,39 @@
 <?php
 
 use App\Events\TicketCreated;
-use App\Events\TicketStatusChange;
-use App\Events\TicketUpdated;
 use App\Events\TicketDeleted;
 use App\Events\TicketMessageSent;
-use App\Models\Ticket\TicketMessage;
+use App\Events\TicketStatusChange;
+use App\Events\TicketUpdated;
 use App\Models\Ticket\Ticket;
+use App\Models\Ticket\TicketMessage;
 use Illuminate\Broadcasting\PrivateChannel;
+use Stancl\Tenancy\Facades\Tenancy;
+use App\Models\Tenant;
+
+
+
+beforeEach(function () {
+    $this->tenant    = Tenant::create(
+        [
+            'id' => fake()->unique()->randomNumber(),
+            'name'                => 'Test Company',
+            'tenancy_db_username' => 'testDomain' . fake()->unique()->randomNumber(),
+            'tenancy_db_password' => '12345678',
+        ]
+    );
+    $this->domain = $this->tenant->domains()->create([
+        'domain' => 'testDomain.localhost',
+    ]);
+    Tenancy::initialize(tenant: $this->tenant);
+});
+afterEach(function () {
+    Tenancy::end();
+
+    if ($this->tenant) {
+        $this->tenant->delete();
+    }
+});
 
 it('ticket created event has correct broadcast name and queue', function () {
     $event = new TicketCreated(1, 1);
@@ -22,7 +48,14 @@ it('ticket status change event has correct broadcast name and queue', function (
 });
 
 it('ticket updated event has correct broadcast name and queue', function () {
-    $event = new TicketUpdated(1, 1, []);
+    $ticket = Ticket::create([
+        'description' => 'Test',
+        'created_by' => 1,
+        'type_id' => 1,
+        'level_id' => 1,
+        'status_id' => 1,
+    ]);
+    $event = new TicketUpdated($ticket->id, tenant()->id, []);
     expect($event->broadcastAs())->toBe('ticket.updated')
         ->and($event->broadcastQueue())->toBe('broadcasts');
 });
@@ -46,6 +79,5 @@ it('ticket message sent event channels exclude sender', function () {
 
     expect($channels)->toHaveCount(1)
         ->and($channels[0])->toBeInstanceOf(PrivateChannel::class)
-        ->and($channels[0]->name)->toBe('tenant-5.user-2');
+        ->and($channels[0]->name)->toBe('private-tenant-5.user-2');
 });
-

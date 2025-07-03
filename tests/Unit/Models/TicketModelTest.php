@@ -9,7 +9,30 @@ use App\Models\Ticket\TicketMessage;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Stancl\Tenancy\Facades\Tenancy;
+use App\Models\Tenant;
 
+beforeEach(function () {
+    $this->tenant    = Tenant::create(
+        [
+            'id' => fake()->unique()->randomNumber(),
+            'name'                => 'Test Company',
+            'tenancy_db_username' => 'testDomain' . fake()->unique()->randomNumber(),
+            'tenancy_db_password' => '12345678',
+        ]
+    );
+    $this->domain = $this->tenant->domains()->create([
+        'domain' => 'testDomain.localhost',
+    ]);
+    Tenancy::initialize(tenant: $this->tenant);
+});
+afterEach(function () {
+    Tenancy::end();
+
+    if ($this->tenant) {
+        $this->tenant->delete();
+    }
+});
 it('has a status relation', function () {
     $ticket = new Ticket();
     expect($ticket->status())->toBeInstanceOf(BelongsTo::class);
@@ -44,4 +67,3 @@ it('has messages relation', function () {
     $ticket = new Ticket();
     expect($ticket->messages())->toBeInstanceOf(HasMany::class);
 });
-
