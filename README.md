@@ -1,5 +1,4 @@
 
-
 # Laravel 12 Multi-Tenant Support Ticket System
 
 [![laravel](https://img.shields.io/badge/Github_repository-000?style=for-the-badge&logoColor=white)](https://github.com/Zach262626/broadcast-project)
@@ -20,67 +19,88 @@
  - [Stancl/Tenancy](https://tenancyforlaravel.com/)
 
 
-## Installation
+## Setup
 
--   Clone this Repository
-    
+Follow these steps to run the project locally using Docker and Laravel Sail.
 
-        git clone https://github.com/Zach262626/ticket-system.git
--   Create .env file from .env.example and fill in all field required
--   Install Dependencies
-        
-        npm install
-        composer install
--   Build frontend
+1. **Clone the repository**
 
-        npm run dev
--   install docker desktop
--   create tenant
+   ```bash
+   git clone https://github.com/Zach262626/ticket-system.git
+   cd ticket-system
+   ```
 
-        <?php
+2. **Create a `.env` file** from `.env.example` and fill in the required fields.
 
-        namespace App\Models;
+3. **Install dependencies**
 
-        use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
-        use Stancl\Tenancy\Contracts\TenantWithDatabase;
-        use Stancl\Tenancy\Database\Concerns\HasDatabase;
-        use Stancl\Tenancy\Database\Concerns\HasDomains;
+   ```bash
+   composer install
+   npm install
+   ```
 
-        class Tenant extends BaseTenant implements            TenantWithDatabase
-        {
-            use HasDatabase, HasDomains;
-        }
--   All your route file should be inside this function located in routes/web:
+4. **Build the frontend assets**
 
+   ```bash
+   npm run dev
+   ```
 
-        foreach (config('tenancy.central_domains') as $domain) {
-            Route::domain($domain)->group(function () {
-                // your actual routes
-            });
-        }
--   if on window, install wsl. inside docker resources in option enable wsl. Make sure your project runs directly inside wsl
+5. **Ensure Docker Desktop is installed** (enable WSL on Windows) and create an alias for Sail for easier commands:
 
--   alias sail for easier workflow, create an alias:
+   ```bash
+   alias sail='[ -f sail ] && sh sail || sh vendor/bin/sail'
+   ```
 
-        alias sail='[ -f sail ] && sh sail || sh vendor/bin/sail'
--   start environment:
-        
-        sail up -d
--   migrate
+6. **Start the application containers**
 
-        sail artisan migrate
-        sail artisan storage:link
+   ```bash
+   sail up -d
+   ```
 
--   If reverb doesn't work
+7. **Run migrations and create the storage link**
 
-        sail php artisan reverb:restart
+   ```bash
+   sail artisan migrate
+   sail artisan storage:link
+   ```
 
--   bootstrap/app.php
+8. **Create the tenant model** (if not already present)
 
-        change middleware domain and port
+   ```php
+   <?php
+   namespace App\Models;
 
--   Testing
-        
-        create .env.testing
-        sail a migrate:fresh --seed --env=testing
-        sail php artisan test --env=testing
+   use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
+   use Stancl\Tenancy\Contracts\TenantWithDatabase;
+   use Stancl\Tenancy\Database\Concerns\HasDatabase;
+   use Stancl\Tenancy\Database\Concerns\HasDomains;
+
+   class Tenant extends BaseTenant implements TenantWithDatabase
+   {
+       use HasDatabase, HasDomains;
+   }
+   ```
+
+9. **Place your routes** inside the following block in `routes/web.php`:
+
+   ```php
+   foreach (config('tenancy.central_domains') as $domain) {
+       Route::domain($domain)->group(function () {
+           // your actual routes
+       });
+   }
+   ```
+
+10. **If Reverb does not work**, restart it:
+
+    ```bash
+    sail php artisan reverb:restart
+    ```
+
+11. **Testing**
+
+    ```bash
+    cp .env .env.testing
+    sail artisan migrate:fresh --seed --env=testing
+    sail php artisan test --env=testing
+    ```
