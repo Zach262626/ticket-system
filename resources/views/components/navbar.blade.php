@@ -11,7 +11,6 @@
                     @if($tenantId)
                         <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('ticket-index') }}">Ticket</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ route('test-email') }}">test email</a></li>
                         @can('assign roles')
                             <li class="nav-item"><a class="nav-link" href="{{ route('users-roles') }}">Assign Roles</a></li>
                         @endcan
@@ -33,7 +32,7 @@
             @auth
                 <div class="d-flex align-items-center ms-auto">
                     <a href="{{ route('settings-index') }}" class="text-decoration-none text-dark">
-                        <user-profile :user="{{ Auth::user() }}" :width="30" :show-name="true" :show-subname="false"  />
+                        <user-profile :user="{{ Auth::user() }}" :width="30" :show-name="true" :show-subname="false" />
                     </a>
                 </div>
             @endauth
