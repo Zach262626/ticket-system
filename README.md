@@ -18,6 +18,15 @@
  - [Laravel Reverb](https://laravel.com/docs/12.x/reverb)
  - [Stancl/Tenancy](https://tenancyforlaravel.com/)
 
+## Commands to run everytime the app is starting
+
+   ```bash
+   sail up -d
+   sail php artisan queue:work --queue="broadcasts"
+   sail php artisan queue:work --queue="emails"
+   sail php artisan queue:work
+   npm run dev
+   ```
 
 ## Setup
 
@@ -97,7 +106,7 @@ Follow these steps to run the project locally using Docker and Laravel Sail.
     ```bash
     sail php artisan reverb:restart
     ```
-sail up -d
+
 11. **Testing**
 
     ```bash

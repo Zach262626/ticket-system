@@ -35,7 +35,8 @@ onMounted(() => {
       const messageReceived = e.message
       addMessage(messageReceived)
     })
-    .listenForWhisper("typing", (response) => {
+  channel = Echo.private('tenant-' + props.tenantId + '.ticket-' + props.ticket.id)
+  .listenForWhisper("typing", (response) => {
       isTyping.value = response.userID !== props.userId;
       if (isTypingTimer.value) {
         clearTimeout(isTypingTimer.value);
