@@ -51,10 +51,11 @@ Follow these steps to run the project locally using Docker and Laravel Sail.
    alias sail='[ -f sail ] && sh sail || sh vendor/bin/sail'
    ```
 
-6. **Start the application containers**
+6. **Start the application containers** (only build when starting the project or when you make changes to the docker files)
 
    ```bash
-   sail up -d
+   sail build --no-cache
+   
    ```
 
 7. **Run migrations and create the storage link**
@@ -96,7 +97,7 @@ Follow these steps to run the project locally using Docker and Laravel Sail.
     ```bash
     sail php artisan reverb:restart
     ```
-
+sail up -d
 11. **Testing**
 
     ```bash
